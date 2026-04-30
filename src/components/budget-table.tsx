@@ -91,7 +91,7 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
           Open data:{" "}
           <a className="text-primary underline underline-offset-2" href={`/api/v1/budgets?island=${islandSlug}`}>JSON</a>
           {" · "}
-          <a className="text-primary underline underline-offset-2" href={`/datasets/budgets-${islandSlug}.csv`}>CSV ↓</a>
+          <a className="text-primary underline underline-offset-2" href={`/datasets/budgets.csv?island=${islandSlug}`}>CSV ↓</a>
         </span>
       </div>
     </div>

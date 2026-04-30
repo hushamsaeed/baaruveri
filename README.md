@@ -1,36 +1,32 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Baaruveri · ބާރުވެރި
 
-## Getting Started
+> "Empowered" — a citizen civic platform for the Maldives.
 
-First, run the development server:
+Per-island civic data made legible. Threaded debate by issue × island. eFaas-verified petitions with threshold-triggered government response.
+
+**Status:** v0 in progress. Concept prototype, not an official Government of Maldives product.
+
+## What's in v0
+
+- **Atlas** — civic profiles for 6 representative islands (Malé, Hulhumalé, Addu City, Kulhudhuffushi, Fuvahmulah, Maafaru)
+- **Sandbar** — community forum, threaded by issue and by island
+- **Petitions** — threshold cascade: per-island council response → parliament agenda
+- **Civic-data sidebar** — threads auto-pull the relevant island/issue data
+- **Open-data parity** — every dashboard view exposes the underlying CSV + API
+
+## Stack
+
+Next.js 16 (App Router, RSC) · TypeScript · Tailwind CSS v4 · shadcn/ui · PostgreSQL + Drizzle ORM · Auth.js v5 (anon + eFaas-verified tiers) · next-intl (Dhivehi RTL primary + English) · MapLibre GL · MDX · Playwright + Vitest · Vercel.
+
+## Develop
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
+pnpm install
 pnpm dev
-# or
-bun dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Open [http://localhost:3000](http://localhost:3000).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Project memory
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
-
-## Learn More
-
-To learn more about Next.js, take a look at the following resources:
-
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
-
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
-
-## Deploy on Vercel
-
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+Persistent context for this project lives at `~/.claude/projects/-Users-husham-baaruveri/memory/`. Start with `MEMORY.md` for the index.

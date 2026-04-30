@@ -125,3 +125,7 @@ export const islands: Island[] = [
 export function getIsland(slug: string): Island | undefined {
   return islands.find((i) => i.slug === slug);
 }
+
+export function getIslandById(id: string): Island | undefined {
+  return islands.find((i) => i.id === id);
+}

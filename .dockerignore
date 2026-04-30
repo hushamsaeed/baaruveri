@@ -1,0 +1,16 @@
+**/node_modules
+**/.next
+**/.turbo
+**/.git
+**/.gitignore
+**/.env*
+**/Dockerfile
+**/.dockerignore
+**/README.md
+**/CLAUDE.md
+**/AGENTS.md
+**/design-studies
+**/.vscode
+**/.idea
+**/*.log
+.DS_Store

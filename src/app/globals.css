@@ -181,3 +181,25 @@
   font-family: var(--font-dv);
   line-height: 1.7;
 }
+
+/* Live-dot pulse — used on petition counters per project_design_direction.md */
+/* (Surgical Dhirun graft: motion only on petition surfaces.) */
+.live-dot {
+  display: inline-block;
+  width: 6px;
+  height: 6px;
+  background: var(--primary);
+  border-radius: 50%;
+  margin-right: 6px;
+  vertical-align: middle;
+  box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 50%, transparent);
+  animation: live-pulse 1.8s infinite;
+}
+@keyframes live-pulse {
+  0%   { box-shadow: 0 0 0 0   color-mix(in oklab, var(--primary) 45%, transparent); }
+  70%  { box-shadow: 0 0 0 6px color-mix(in oklab, var(--primary) 0%,  transparent); }
+  100% { box-shadow: 0 0 0 0   color-mix(in oklab, var(--primary) 0%,  transparent); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .live-dot { animation: none; }
+}

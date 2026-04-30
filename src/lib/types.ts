@@ -83,3 +83,15 @@ export interface BudgetLine {
   spent_mvr: number;
   yoy_pct: number;
 }
+
+export interface CouncilMember {
+  id: string;
+  island_id: string;
+  name_dv: string;
+  name_en: string;
+  role_en: "Chair" | "Vice-Chair" | "Member";
+  role_dv: string;
+  party: string;                  // "MDP" | "PNC" | "PPM" | "Independent" | "JP" | "TPM"
+  ward_en?: string;               // for city councils
+  elected_at: string;             // ISO date
+}

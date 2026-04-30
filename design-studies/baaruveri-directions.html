@@ -1,0 +1,1031 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Baaruveri — three direction studies</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://raajjefonts.github.io" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ============= Dhivehi web fonts (RaajjeFonts CDN, CORS-open) ============= */
+  /* MV Faseyha — canonical Maldivian newspaper face, used by gazette.gov.mv tradition */
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_reg_hinted_v2.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_bld_hinted_v2.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  /* MV Vaadhoo — sharper, modern display face; used in Dhirun for headlines */
+  @font-face {
+    font-family: 'MV Vaadhoo';
+    src: url('https://raajjefonts.github.io/fonts/MV%20Vaadhoo_reg_v1.0_hinted.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'MV Vaadhoo';
+    src: url('https://raajjefonts.github.io/fonts/MV%20Vaadhoo_bd_v1.0_hinted.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  /* ============= base ============= */
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: #1a1a1a;
+    background: #f4f4f2;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+  .dv {
+    font-family: 'MV Faseyha', 'MV Boli', 'Noto Sans Thaana', sans-serif;
+    direction: rtl;
+    unicode-bidi: isolate;
+    line-height: 1.7;
+  }
+  /* Dhirun overrides Dhivehi display face to MV Vaadhoo for the modern, instrumented feel */
+  .dir-dhirun h3 .dv,
+  .dir-dhirun .island-name-dv,
+  .dir-dhirun .atlas-card .island-name-dv {
+    font-family: 'MV Vaadhoo', 'MV Faseyha', sans-serif;
+  }
+  .num { font-variant-numeric: tabular-nums; font-feature-settings: 'tnum'; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, SFMono-Regular, monospace; }
+
+  /* ============= page chrome ============= */
+  .page-header {
+    padding: 64px 48px 48px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-bottom: 1px solid #d8d6d2;
+  }
+  .page-header h1 {
+    font-size: 28px;
+    font-weight: 600;
+    margin: 0 0 8px;
+    letter-spacing: -0.01em;
+  }
+  .page-header h1 .dv { font-weight: 600; margin-right: 12px; }
+  .page-header .lede {
+    font-size: 16px;
+    color: #555;
+    max-width: 720px;
+    line-height: 1.55;
+    margin: 8px 0 24px;
+  }
+  .page-header .meta-row {
+    display: flex;
+    gap: 24px;
+    font-size: 12px;
+    color: #777;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    margin-bottom: 24px;
+  }
+  .dir-nav {
+    display: flex;
+    gap: 24px;
+    font-size: 13px;
+    margin-top: 8px;
+  }
+  .dir-nav a {
+    color: #1a1a1a;
+    text-decoration: none;
+    padding: 8px 14px;
+    border: 1px solid #d8d6d2;
+    border-radius: 4px;
+    transition: background 120ms;
+  }
+  .dir-nav a:hover { background: #ebe9e4; }
+  .dir-nav a .dv { margin-left: 6px; opacity: 0.75; font-size: 14px; }
+
+  /* ============= section base ============= */
+  section.dir {
+    padding: 56px 48px 80px;
+  }
+  .dir-meta {
+    max-width: 1280px;
+    margin: 0 auto 40px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 32px;
+    align-items: end;
+    padding-bottom: 24px;
+  }
+  .dir-meta h2 {
+    font-size: 36px;
+    font-weight: 600;
+    margin: 0;
+    letter-spacing: -0.02em;
+  }
+  .dir-meta h2 .dv {
+    font-weight: 600;
+    margin-left: 16px;
+    font-size: 36px;
+    opacity: 0.72;
+  }
+  .dir-meta .school { font-size: 13px; margin: 8px 0 4px; opacity: 0.75; }
+  .dir-meta .atmosphere {
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    opacity: 0.6;
+    margin: 4px 0 0;
+  }
+  .dir-meta .why {
+    font-size: 14px;
+    line-height: 1.6;
+    margin: 0;
+    opacity: 0.85;
+  }
+  .primitives {
+    max-width: 1280px;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 24px;
+  }
+  .primitive {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+  }
+  .primitive-label {
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: #888;
+    font-weight: 600;
+  }
+  .primitive-body { flex: 1; }
+  .primitive.span-2 { grid-column: span 2; }
+
+  /* ============= ============= ============= */
+  /* DIRECTION A · SAAFU — Information architecture */
+  /* ============= ============= ============= */
+  .dir-saafu {
+    --bg: #fafaf8;
+    --paper: #ffffff;
+    --ink: #1a1a1a;
+    --ink-2: #444;
+    --muted: #6b6b6b;
+    --rule: #d8d6d2;
+    --rule-strong: #9a9a9a;
+    --accent: #0d6e6e;
+    --accent-bg: #e8f1f1;
+    --warning: #b54708;
+    --over: #b54708;
+    --under: #1f7a4d;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .dir-saafu .primitive-body {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 20px 22px;
+  }
+  .dir-saafu h3 {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0 0 4px;
+    letter-spacing: -0.01em;
+  }
+  .dir-saafu h3 .dv { font-weight: 600; margin-right: 8px; }
+  .dir-saafu .footnote {
+    font-size: 10.5px;
+    color: var(--muted);
+    margin-top: 12px;
+    padding-top: 10px;
+    border-top: 1px solid var(--rule);
+    line-height: 1.5;
+  }
+  .dir-saafu .footnote sup { color: var(--accent); margin-right: 3px; }
+  .dir-saafu .figure { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+  .dir-saafu .figure-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--rule);
+    font-size: 13px;
+  }
+  .dir-saafu .figure-row:last-child { border-bottom: none; }
+  .dir-saafu .figure-row .label { color: var(--ink-2); }
+  .dir-saafu .pill {
+    display: inline-block;
+    padding: 2px 8px;
+    background: var(--accent-bg);
+    color: var(--accent);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-weight: 600;
+  }
+  .dir-saafu .source-link {
+    color: var(--accent);
+    text-decoration: underline;
+    text-decoration-thickness: 1px;
+    text-underline-offset: 2px;
+    font-size: 11px;
+  }
+  /* Saafu — atlas card */
+  .dir-saafu .atlas-card .name-block { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .dir-saafu .atlas-card .atoll-tag { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  /* Saafu — profile header */
+  .dir-saafu .profile-header .title-block { border-bottom: 2px solid var(--ink); padding-bottom: 12px; margin-bottom: 16px; }
+  .dir-saafu .profile-header .title-block .island-name-dv { font-size: 28px; font-weight: 600; }
+  .dir-saafu .profile-header .title-block .island-name-en { font-size: 13px; color: var(--ink-2); margin-top: 4px; letter-spacing: 0.04em; }
+  .dir-saafu .profile-header .fact-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+  .dir-saafu .profile-header .fact { display: flex; flex-direction: column; gap: 2px; }
+  .dir-saafu .profile-header .fact .v { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; }
+  .dir-saafu .profile-header .fact .l { font-size: 10.5px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  /* Saafu — thread card */
+  .dir-saafu .thread-card .meta { display: flex; gap: 8px; align-items: center; font-size: 11px; color: var(--muted); margin-bottom: 8px; }
+  .dir-saafu .thread-card .stats { display: flex; gap: 16px; font-size: 11px; margin-top: 12px; padding-top: 10px; border-top: 1px solid var(--rule); }
+  .dir-saafu .thread-card .stats .stat .n { font-family: 'IBM Plex Mono', monospace; font-weight: 500; color: var(--ink); }
+  .dir-saafu .thread-card .stats .stat .l { color: var(--muted); margin-left: 4px; }
+  /* Saafu — claim card */
+  .dir-saafu .claim-card { border: 1px solid var(--rule); padding: 0; }
+  .dir-saafu .claim-card .claim-header { padding: 14px 18px; border-bottom: 1px solid var(--rule); font-size: 12px; color: var(--muted); display: flex; justify-content: space-between; }
+  .dir-saafu .claim-card .claim-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .dir-saafu .claim-card .col { padding: 16px 18px; }
+  .dir-saafu .claim-card .col-pro { border-left: 3px solid var(--under); }
+  .dir-saafu .claim-card .col-con { border-left: 3px solid var(--over); }
+  .dir-saafu .claim-card .col-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 600; margin-bottom: 8px; }
+  .dir-saafu .claim-card .col-pro .col-label { color: var(--under); }
+  .dir-saafu .claim-card .col-con .col-label { color: var(--over); }
+  .dir-saafu .claim-card .col-body { font-size: 13px; line-height: 1.5; }
+  .dir-saafu .claim-card .col-foot { font-size: 11px; color: var(--muted); margin-top: 10px; display: flex; justify-content: space-between; font-family: 'IBM Plex Mono', monospace; }
+  /* Saafu — petition card */
+  .dir-saafu .petition-card .progress-row { display: grid; grid-template-columns: 1fr auto; gap: 16px; align-items: end; margin-top: 12px; padding-top: 12px; border-top: 1px solid var(--rule); }
+  .dir-saafu .petition-card .progress-bar { height: 6px; background: #ececec; position: relative; }
+  .dir-saafu .petition-card .progress-fill { background: var(--accent); height: 100%; }
+  .dir-saafu .petition-card .progress-marker { position: absolute; top: -4px; bottom: -4px; width: 1px; background: var(--ink); }
+  .dir-saafu .petition-card .progress-figure { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; }
+  .dir-saafu .petition-card .progress-l { font-size: 11px; color: var(--muted); }
+  .dir-saafu .petition-card .countdown { font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--ink-2); }
+  /* Saafu — data table */
+  .dir-saafu .table-strip table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .dir-saafu .table-strip th { text-align: left; padding: 8px 8px 6px; border-bottom: 1.5px solid var(--ink); font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 600; }
+  .dir-saafu .table-strip th.num, .dir-saafu .table-strip td.num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+  .dir-saafu .table-strip td { padding: 7px 8px; border-bottom: 1px solid var(--rule); }
+  .dir-saafu .table-strip tr:last-child td { border-bottom: none; font-weight: 600; background: #f6f5f2; }
+  .dir-saafu .table-strip .data-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11px; }
+  .dir-saafu .table-strip .data-tools .links a { color: var(--accent); text-decoration: underline; margin-left: 12px; }
+
+  /* ============= ============= ============= */
+  /* DIRECTION B · SUKOONU — Eastern minimalism */
+  /* ============= ============= ============= */
+  .dir-sukoonu {
+    --bg: #fcfbf7;
+    --paper: #fcfbf7;
+    --ink: #222;
+    --ink-2: #555;
+    --muted: #8a8478;
+    --rule: #e8e4d8;
+    --accent: #1a2a44;
+    --accent-soft: rgba(26, 42, 68, 0.08);
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .dir-sukoonu .primitive-body {
+    background: var(--paper);
+    padding: 36px 36px;
+  }
+  .dir-sukoonu h3 {
+    font-size: 22px;
+    font-weight: 400;
+    margin: 0;
+    letter-spacing: -0.005em;
+    line-height: 1.3;
+  }
+  .dir-sukoonu h3 .dv { font-weight: 400; }
+  .dir-sukoonu .figure { font-variant-numeric: tabular-nums; }
+  /* Sukoonu — atlas card */
+  .dir-sukoonu .atlas-card { display: flex; flex-direction: column; gap: 28px; }
+  .dir-sukoonu .atlas-card .island-name-dv { font-size: 32px; font-weight: 400; line-height: 1.1; }
+  .dir-sukoonu .atlas-card .island-name-en { font-size: 13px; color: var(--muted); margin-top: 6px; letter-spacing: 0.04em; }
+  .dir-sukoonu .atlas-card .atoll-tag { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.16em; margin-bottom: 12px; }
+  .dir-sukoonu .atlas-card .stat-line { display: grid; grid-template-columns: 1fr auto; align-items: baseline; padding: 10px 0; }
+  .dir-sukoonu .atlas-card .stat-line .l { font-size: 13px; color: var(--ink-2); }
+  .dir-sukoonu .atlas-card .stat-line .v { font-size: 18px; font-weight: 400; }
+  /* Sukoonu — profile header */
+  .dir-sukoonu .profile-header { padding: 48px 36px; }
+  .dir-sukoonu .profile-header .title-block { margin-bottom: 32px; }
+  .dir-sukoonu .profile-header .title-block .island-name-dv { font-size: 44px; font-weight: 400; line-height: 1.05; }
+  .dir-sukoonu .profile-header .title-block .island-name-en { font-size: 15px; color: var(--ink-2); margin-top: 8px; letter-spacing: 0.04em; }
+  .dir-sukoonu .profile-header .context { font-size: 14px; line-height: 1.7; max-width: 480px; color: var(--ink-2); margin-bottom: 28px; }
+  .dir-sukoonu .profile-header .fact-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 24px; }
+  .dir-sukoonu .profile-header .fact { display: flex; flex-direction: column; gap: 4px; }
+  .dir-sukoonu .profile-header .fact .v { font-size: 22px; font-weight: 400; }
+  .dir-sukoonu .profile-header .fact .l { font-size: 12px; color: var(--muted); }
+  /* Sukoonu — thread card */
+  .dir-sukoonu .thread-card { padding: 28px 30px; }
+  .dir-sukoonu .thread-card .meta { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 14px; }
+  .dir-sukoonu .thread-card h3 { line-height: 1.4; }
+  .dir-sukoonu .thread-card .summary { font-size: 13.5px; line-height: 1.6; color: var(--ink-2); margin: 12px 0 18px; }
+  .dir-sukoonu .thread-card .stats { display: flex; gap: 28px; font-size: 12px; color: var(--muted); }
+  .dir-sukoonu .thread-card .stats .stat .n { font-weight: 500; color: var(--ink); }
+  /* Sukoonu — claim card */
+  .dir-sukoonu .claim-card { padding: 30px 32px; }
+  .dir-sukoonu .claim-card .claim-header { font-size: 12px; color: var(--muted); margin-bottom: 22px; text-transform: uppercase; letter-spacing: 0.14em; }
+  .dir-sukoonu .claim-card .claim-cols { display: flex; flex-direction: column; gap: 22px; }
+  .dir-sukoonu .claim-card .col { padding-left: 20px; }
+  .dir-sukoonu .claim-card .col-pro { border-left: 1px solid #6b9b7a; }
+  .dir-sukoonu .claim-card .col-con { border-left: 1px solid #b87a7a; }
+  .dir-sukoonu .claim-card .col-label { font-size: 11px; text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 8px; opacity: 0.8; }
+  .dir-sukoonu .claim-card .col-pro .col-label { color: #4a7d5d; }
+  .dir-sukoonu .claim-card .col-con .col-label { color: #8a4a4a; }
+  .dir-sukoonu .claim-card .col-body { font-size: 13.5px; line-height: 1.65; }
+  .dir-sukoonu .claim-card .col-foot { font-size: 11.5px; color: var(--muted); margin-top: 10px; }
+  /* Sukoonu — petition card */
+  .dir-sukoonu .petition-card { padding: 32px 32px; }
+  .dir-sukoonu .petition-card .meta { font-size: 11px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.14em; margin-bottom: 14px; }
+  .dir-sukoonu .petition-card .progress-figure { font-size: 36px; font-weight: 400; margin-top: 24px; }
+  .dir-sukoonu .petition-card .progress-l { font-size: 13px; color: var(--muted); margin-top: 4px; }
+  .dir-sukoonu .petition-card .progress-bar { height: 2px; background: var(--rule); margin: 18px 0 6px; }
+  .dir-sukoonu .petition-card .progress-fill { background: var(--accent); height: 100%; }
+  .dir-sukoonu .petition-card .countdown { font-size: 12px; color: var(--ink-2); margin-top: 12px; }
+  /* Sukoonu — data table */
+  .dir-sukoonu .table-strip { padding: 28px 32px; }
+  .dir-sukoonu .table-strip table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .dir-sukoonu .table-strip th { text-align: left; padding: 12px 8px 10px; font-size: 10.5px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; color: var(--muted); }
+  .dir-sukoonu .table-strip th.num, .dir-sukoonu .table-strip td.num { text-align: right; font-variant-numeric: tabular-nums; }
+  .dir-sukoonu .table-strip td { padding: 12px 8px; border-bottom: 1px solid var(--rule); }
+  .dir-sukoonu .table-strip tr:last-child td { border-bottom: none; }
+  .dir-sukoonu .table-strip .data-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 18px; font-size: 12px; color: var(--muted); }
+  .dir-sukoonu .table-strip .data-tools a { color: var(--accent); text-decoration: none; margin-left: 18px; border-bottom: 1px solid currentColor; padding-bottom: 1px; }
+
+  /* ============= ============= ============= */
+  /* DIRECTION C · DHIRUN — Motion poetics */
+  /* ============= ============= ============= */
+  .dir-dhirun {
+    --bg: #0f1419;
+    --paper: #161c24;
+    --paper-2: #1d242e;
+    --ink: #e6e6e6;
+    --ink-2: #b8c2cc;
+    --muted: #6b7785;
+    --rule: #232b36;
+    --rule-strong: #2f3a48;
+    --accent: #65d4ad;
+    --accent-warm: #ffb347;
+    --accent-cold: #6db3e8;
+    --over: #ff8478;
+    --under: #65d4ad;
+    background: var(--bg);
+    color: var(--ink);
+  }
+  .dir-dhirun .primitive-label { color: #8b95a3; }
+  .dir-dhirun .primitive-body {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    padding: 18px 20px;
+    border-radius: 2px;
+  }
+  .dir-dhirun h3 {
+    font-size: 16px;
+    font-weight: 500;
+    margin: 0 0 4px;
+    letter-spacing: -0.005em;
+    color: var(--ink);
+  }
+  .dir-dhirun h3 .dv { font-weight: 500; }
+  .dir-dhirun .figure { font-family: 'IBM Plex Mono', monospace; font-variant-numeric: tabular-nums; }
+  .dir-dhirun .pill {
+    display: inline-block; padding: 2px 8px;
+    background: rgba(101, 212, 173, 0.12);
+    color: var(--accent);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-family: 'IBM Plex Mono', monospace;
+    border-radius: 2px;
+  }
+  .dir-dhirun .live-dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--accent);
+    border-radius: 50%;
+    margin-right: 6px;
+    box-shadow: 0 0 0 0 rgba(101, 212, 173, 0.6);
+    animation: dhirun-pulse 1.6s infinite;
+  }
+  @keyframes dhirun-pulse {
+    0% { box-shadow: 0 0 0 0 rgba(101, 212, 173, 0.5); }
+    70% { box-shadow: 0 0 0 6px rgba(101, 212, 173, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(101, 212, 173, 0); }
+  }
+  .dir-dhirun .sparkline { display: block; margin-top: 8px; }
+  .dir-dhirun .sparkline polyline { fill: none; stroke: var(--accent); stroke-width: 1.5; }
+  .dir-dhirun .sparkline-warm polyline { stroke: var(--accent-warm); }
+  .dir-dhirun .sparkline-cold polyline { stroke: var(--accent-cold); }
+  /* Dhirun — atlas card */
+  .dir-dhirun .atlas-card .name-block { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 12px; }
+  .dir-dhirun .atlas-card .island-name-dv { font-size: 22px; font-weight: 500; }
+  .dir-dhirun .atlas-card .island-name-en { font-size: 12px; color: var(--muted); margin-top: 2px; letter-spacing: 0.04em; }
+  .dir-dhirun .atlas-card .atoll-tag { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.12em; font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .atlas-card .live-row { display: flex; gap: 14px; margin: 14px 0 12px; padding: 10px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); }
+  .dir-dhirun .atlas-card .live-row .live-stat { flex: 1; }
+  .dir-dhirun .atlas-card .live-row .v { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; color: var(--ink); }
+  .dir-dhirun .atlas-card .live-row .l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; margin-top: 2px; }
+  /* Dhirun — profile header */
+  .dir-dhirun .profile-header .title-block { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 14px; }
+  .dir-dhirun .profile-header .island-name-dv { font-size: 28px; font-weight: 500; }
+  .dir-dhirun .profile-header .island-name-en { font-size: 13px; color: var(--muted); margin-top: 4px; letter-spacing: 0.04em; }
+  .dir-dhirun .profile-header .scrub { display: flex; align-items: center; gap: 12px; font-family: 'IBM Plex Mono', monospace; font-size: 11px; color: var(--muted); padding: 8px 0; border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); margin-bottom: 14px; }
+  .dir-dhirun .profile-header .scrub-bar { flex: 1; height: 3px; background: var(--rule-strong); position: relative; border-radius: 1px; }
+  .dir-dhirun .profile-header .scrub-fill { position: absolute; top: 0; left: 0; height: 100%; width: 65%; background: var(--accent-warm); border-radius: 1px; }
+  .dir-dhirun .profile-header .scrub-thumb { position: absolute; top: -3px; left: 65%; width: 9px; height: 9px; background: var(--accent-warm); border-radius: 50%; }
+  .dir-dhirun .profile-header .fact-strip { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; }
+  .dir-dhirun .profile-header .fact { display: flex; flex-direction: column; gap: 2px; }
+  .dir-dhirun .profile-header .fact .v { font-family: 'IBM Plex Mono', monospace; font-size: 18px; font-weight: 500; color: var(--ink); }
+  .dir-dhirun .profile-header .fact .l { font-size: 10px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.08em; }
+  .dir-dhirun .profile-header .fact .delta { font-size: 10px; font-family: 'IBM Plex Mono', monospace; color: var(--accent); margin-top: 1px; }
+  .dir-dhirun .profile-header .fact .delta.down { color: var(--over); }
+  /* Dhirun — thread card */
+  .dir-dhirun .thread-card .meta { display: flex; gap: 10px; align-items: center; font-size: 10px; color: var(--muted); margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .thread-card .stats { display: flex; gap: 18px; font-size: 11px; margin-top: 10px; padding-top: 10px; border-top: 1px solid var(--rule); align-items: center; }
+  .dir-dhirun .thread-card .stats .stat .n { font-family: 'IBM Plex Mono', monospace; color: var(--ink); font-weight: 500; }
+  .dir-dhirun .thread-card .stats .stat .l { color: var(--muted); margin-left: 4px; }
+  /* Dhirun — claim card */
+  .dir-dhirun .claim-card { padding: 0; }
+  .dir-dhirun .claim-card .claim-header { padding: 14px 20px; border-bottom: 1px solid var(--rule); font-size: 11px; color: var(--muted); display: flex; justify-content: space-between; text-transform: uppercase; letter-spacing: 0.1em; font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .claim-card .claim-cols { display: grid; grid-template-columns: 1fr 1fr; }
+  .dir-dhirun .claim-card .col { padding: 16px 20px; }
+  .dir-dhirun .claim-card .col-pro { border-right: 1px solid var(--rule); border-top: 2px solid var(--under); }
+  .dir-dhirun .claim-card .col-con { border-top: 2px solid var(--over); }
+  .dir-dhirun .claim-card .col-label { font-size: 10px; text-transform: uppercase; letter-spacing: 0.12em; font-weight: 500; margin-bottom: 8px; font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .claim-card .col-pro .col-label { color: var(--under); }
+  .dir-dhirun .claim-card .col-con .col-label { color: var(--over); }
+  .dir-dhirun .claim-card .col-body { font-size: 13px; line-height: 1.5; color: var(--ink); }
+  .dir-dhirun .claim-card .col-foot { font-size: 11px; color: var(--muted); margin-top: 10px; display: flex; justify-content: space-between; align-items: center; font-family: 'IBM Plex Mono', monospace; }
+  /* Dhirun — petition card */
+  .dir-dhirun .petition-card .arc-row { display: grid; grid-template-columns: 92px 1fr; gap: 18px; align-items: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--rule); }
+  .dir-dhirun .petition-card .arc { width: 92px; height: 92px; position: relative; }
+  .dir-dhirun .petition-card .arc svg { transform: rotate(-90deg); }
+  .dir-dhirun .petition-card .arc .arc-bg { stroke: var(--rule-strong); fill: none; stroke-width: 6; }
+  .dir-dhirun .petition-card .arc .arc-fill { stroke: var(--accent-warm); fill: none; stroke-width: 6; stroke-linecap: round; }
+  .dir-dhirun .petition-card .arc .arc-figure { position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .petition-card .arc .arc-figure .pct { font-size: 18px; font-weight: 500; color: var(--ink); }
+  .dir-dhirun .petition-card .arc .arc-figure .lbl { font-size: 8px; color: var(--muted); text-transform: uppercase; letter-spacing: 0.1em; }
+  .dir-dhirun .petition-card .arc-stats { display: flex; flex-direction: column; gap: 8px; }
+  .dir-dhirun .petition-card .arc-stats .row { display: flex; justify-content: space-between; font-size: 12px; }
+  .dir-dhirun .petition-card .arc-stats .row .l { color: var(--muted); }
+  .dir-dhirun .petition-card .arc-stats .row .n { font-family: 'IBM Plex Mono', monospace; color: var(--ink); font-weight: 500; }
+  .dir-dhirun .petition-card .arc-stats .row .n.warm { color: var(--accent-warm); }
+  /* Dhirun — data table */
+  .dir-dhirun .table-strip table { width: 100%; border-collapse: collapse; font-size: 12px; }
+  .dir-dhirun .table-strip th { text-align: left; padding: 8px 8px 6px; border-bottom: 1px solid var(--rule-strong); font-size: 10px; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 500; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .table-strip th.num, .dir-dhirun .table-strip td.num { text-align: right; font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .table-strip td { padding: 7px 8px; border-bottom: 1px solid var(--rule); color: var(--ink-2); }
+  .dir-dhirun .table-strip td.num { color: var(--ink); }
+  .dir-dhirun .table-strip tr:last-child td { border-bottom: none; background: rgba(101, 212, 173, 0.04); color: var(--ink); font-weight: 500; }
+  .dir-dhirun .table-strip .bar-cell { width: 60px; }
+  .dir-dhirun .table-strip .bar { display: inline-block; height: 4px; background: var(--accent); border-radius: 1px; vertical-align: middle; }
+  .dir-dhirun .table-strip .bar-warm { background: var(--accent-warm); }
+  .dir-dhirun .table-strip .data-tools { display: flex; justify-content: space-between; align-items: center; margin-top: 12px; font-size: 11px; color: var(--muted); font-family: 'IBM Plex Mono', monospace; }
+  .dir-dhirun .table-strip .data-tools a { color: var(--accent); text-decoration: none; margin-left: 12px; padding: 3px 8px; border: 1px solid var(--accent); border-radius: 2px; }
+
+  /* ============= footer ============= */
+  footer.page-footer {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 40px 48px 48px;
+    border-top: 1px solid #d8d6d2;
+    font-size: 12px;
+    color: #777;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 16px;
+  }
+  footer.page-footer p { margin: 0; }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="meta-row">
+    <span>Design study · 01</span>
+    <span>2026-05-01</span>
+    <span>Internal · pre-pick</span>
+  </div>
+  <h1>Baaruveri <span class="dv">ބާރުވެރި</span> — three direction studies</h1>
+  <p class="lede">
+    Three differentiated visual directions for the Baaruveri civic platform, each from a different design school. Six primitives — atlas index card, island profile header, thread card, claim card, petition card, data-table strip — built identically in each, so visual differences are isolated. Real Maafaru content. Real Maldivian names. Bilingual Dhivehi RTL primary + English. Post-research-aware: no serif body type in any direction.
+  </p>
+  <nav class="dir-nav">
+    <a href="#saafu">A · Saafu <span class="dv">ސާފު</span></a>
+    <a href="#sukoonu">B · Sukoonu <span class="dv">ސުކޫނު</span></a>
+    <a href="#dhirun">C · Dhirun <span class="dv">ދިރުން</span></a>
+  </nav>
+</header>
+
+<!-- ============= ============= ============= -->
+<!-- SECTION A · SAAFU                          -->
+<!-- ============= ============= ============= -->
+<section class="dir dir-saafu" id="saafu">
+  <div class="dir-meta">
+    <div>
+      <h2>A · Saafu <span class="dv">ސާފު</span></h2>
+      <p class="school">Information architecture · Pentagram · Tufte · USDS data work</p>
+      <p class="atmosphere">archival · monumental · transparent · sourced · sober</p>
+    </div>
+    <p class="why">
+      Civic data is the hero; the UI is a chassis for tables, sparklines, year-over-year comparisons. Reads as "the official record, made browsable" — the kind of platform a journalist trusts as a source citation. Tabular numerals dominant, footnoted, hairline rules, single restrained accent.
+    </p>
+  </div>
+  <div class="primitives">
+
+    <!-- 1. Atlas index card -->
+    <div class="primitive">
+      <div class="primitive-label">01 · Atlas index card</div>
+      <div class="primitive-body atlas-card">
+        <div class="name-block">
+          <div>
+            <h3><span class="dv">މާފަރު</span></h3>
+            <div style="font-size:11px;color:var(--ink-2);margin-top:2px;">Maafaru</div>
+          </div>
+          <span class="atoll-tag">Noonu Atoll · ނ.</span>
+        </div>
+        <div class="figure">
+          <div class="figure-row"><span class="label">Population¹</span><span>711</span></div>
+          <div class="figure-row"><span class="label">Registered voters²</span><span>483</span></div>
+          <div class="figure-row"><span class="label">Council members</span><span>5</span></div>
+          <div class="figure-row"><span class="label">FY26 budget</span><span>MVR 12,420,000</span></div>
+          <div class="figure-row"><span class="label">Active threads</span><span>14</span></div>
+          <div class="figure-row"><span class="label">Active petitions</span><span>2</span></div>
+        </div>
+        <div class="footnote"><sup>1</sup>NBS census 2024.<sup style="margin-left:8px">2</sup>Elections Commission, 4 Apr 2026 register.</div>
+      </div>
+    </div>
+
+    <!-- 2. Island profile header -->
+    <div class="primitive">
+      <div class="primitive-label">02 · Island profile header</div>
+      <div class="primitive-body profile-header">
+        <div class="title-block">
+          <div class="island-name-dv dv">މާފަރު · ނ.</div>
+          <div class="island-name-en">Maafaru, Noonu Atoll</div>
+        </div>
+        <div class="fact-strip">
+          <div class="fact"><div class="v">711</div><div class="l">Population</div></div>
+          <div class="fact"><div class="v">5</div><div class="l">Council seats</div></div>
+          <div class="fact"><div class="v">12.4M</div><div class="l">FY26 MVR</div></div>
+          <div class="fact"><div class="v">14</div><div class="l">Threads</div></div>
+        </div>
+        <div class="footnote">Last LGA visit: 12 Mar 2026<sup style="margin-left:6px">·</sup>Maafaru International Airport opened 2019; ongoing public scrutiny of MVR 600M+ public investment vs predominantly tourist transit use<sup>3</sup>. <sup style="margin-left:6px">3</sup><a href="#" class="source-link">MIA annual traffic report 2025</a></div>
+      </div>
+    </div>
+
+    <!-- 3. Thread card -->
+    <div class="primitive">
+      <div class="primitive-label">03 · Thread card</div>
+      <div class="primitive-body thread-card">
+        <div class="meta">
+          <span class="pill">Housing</span>
+          <span>·</span>
+          <span class="dv" style="font-family:'Noto Sans Thaana',sans-serif;">ހުޅުމާލެ</span>
+          <span>Hulhumalé</span>
+          <span>·</span>
+          <span>4 days ago</span>
+        </div>
+        <h3><span class="dv">ހުޅުމާލޭ ދެ ވަނަ ފޭސްގައި 550 މީހުން/ހެކްޓަރ — ޑިޒައިން 329</span></h3>
+        <div style="font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.55;">Hulhumalé Phase 2 density now 550 ppl/ha against design target of 329. HDC's response and any plan for relief.</div>
+        <div class="stats">
+          <div class="stat"><span class="n">42</span><span class="l">replies</span></div>
+          <div class="stat"><span class="n">8</span><span class="l">claims</span></div>
+          <div class="stat"><span class="n">312</span><span class="l">votes</span></div>
+          <div class="stat" style="margin-left:auto;"><span class="l">Started by</span> <span class="dv" style="margin-right:6px;">ޢަލީ ޒާހިރު</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Claim card -->
+    <div class="primitive">
+      <div class="primitive-label">04 · Claim card · pros / cons</div>
+      <div class="primitive-body claim-card">
+        <div class="claim-header">
+          <span>Maafaru airport debate · 18 claims</span>
+          <span>thread #M-007</span>
+        </div>
+        <div class="claim-cols">
+          <div class="col col-pro">
+            <div class="col-label">Pro · supports</div>
+            <div class="col-body">Maafaru airport opens scheduled transport for N. Atoll residents who previously needed seaplane charters at MVR 8,000+ per round-trip.</div>
+            <div class="col-foot"><span><span class="dv">ޙުސައިން މަނިކު</span></span><span>+47 · impact 3.2/4</span></div>
+          </div>
+          <div class="col col-con">
+            <div class="col-label">Con · opposes</div>
+            <div class="col-body">MVR 600M+ public investment delivered an airport used 80%+ for tourist transit; benefit captured by resort operators, not residents.</div>
+            <div class="col-foot"><span><span class="dv">ފާޠިމަތު ސަޢީދު</span></span><span>+89 · impact 3.7/4</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Petition card -->
+    <div class="primitive">
+      <div class="primitive-label">05 · Petition card</div>
+      <div class="primitive-body petition-card">
+        <h3><span class="dv">HDC އިން ފްލެޓް ކުއްޔާއި ނުލިބޭ ފައިސާގެ ފުރިހަމަ ހިސާބު އާންމުކުރުމަށް</span></h3>
+        <div style="font-size:13px;color:var(--ink-2);margin-top:8px;line-height:1.55;">HDC: publish full account of flat rents and arrears, broken down by block and allocation cohort. Context: MVR 728M unpaid across 60% of 8,511 flats per investigative reporting.</div>
+        <div class="progress-row">
+          <div>
+            <div class="progress-figure num">3,247 / 5,000</div>
+            <div class="progress-l">Signatures · Parliament agenda threshold</div>
+            <div class="progress-bar" style="margin-top:8px;"><div class="progress-fill" style="width:64.9%;"></div><div class="progress-marker" style="left:100%;"></div></div>
+          </div>
+          <div style="text-align:right;">
+            <div class="countdown">18 days left</div>
+            <div class="progress-l">Closes 19 May 2026</div>
+          </div>
+        </div>
+        <div class="footnote">Started by <span class="dv">ޚަދީޖާ ނަދީމާ</span> · 13 Apr 2026 · eFaas-verified · <a href="#" class="source-link">read full text</a></div>
+      </div>
+    </div>
+
+    <!-- 6. Data-table strip -->
+    <div class="primitive span-2">
+      <div class="primitive-label">06 · Data-table strip · Maafaru council budget · FY26 Q1</div>
+      <div class="primitive-body table-strip">
+        <table>
+          <thead>
+            <tr>
+              <th>ބަޖެޓު ބައި · Line item</th>
+              <th class="num">Allocated (MVR)</th>
+              <th class="num">Spent Q1 (MVR)</th>
+              <th class="num">% spent</th>
+              <th class="num">vs FY25 Q1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dv">މުވައްޒަފުންގެ މުސާރަ</span> · Staff salaries</td><td class="num">4,800,000</td><td class="num">1,184,000</td><td class="num">24.7%</td><td class="num" style="color:var(--under);">−2.1%</td></tr>
+            <tr><td><span class="dv">ކަރަންޓު، ފެން</span> · Utilities</td><td class="num">920,000</td><td class="num">312,000</td><td class="num">33.9%</td><td class="num" style="color:var(--over);">+18.4%</td></tr>
+            <tr><td><span class="dv">ބެލެހެއްޓުމާއި މަރާމާތު</span> · Maintenance</td><td class="num">1,640,000</td><td class="num">208,000</td><td class="num">12.7%</td><td class="num">−0.8%</td></tr>
+            <tr><td><span class="dv">އުމްރާނީ ތަރައްޤީ</span> · Capital works</td><td class="num">3,200,000</td><td class="num">96,000</td><td class="num">3.0%</td><td class="num" style="color:var(--over);">+44%</td></tr>
+            <tr><td><span class="dv">މުޖުތަމަޢު ޕްރޮގްރާމް</span> · Community programs</td><td class="num">560,000</td><td class="num">142,000</td><td class="num">25.4%</td><td class="num">−1.2%</td></tr>
+            <tr><td><span class="dv">އެހެނިހެން</span> · Other</td><td class="num">1,300,000</td><td class="num">198,000</td><td class="num">15.2%</td><td class="num">+3.4%</td></tr>
+            <tr><td>Total</td><td class="num">12,420,000</td><td class="num">2,140,000</td><td class="num">17.2%</td><td class="num">+5.8%</td></tr>
+          </tbody>
+        </table>
+        <div class="data-tools">
+          <span>Source: Maafaru Council quarterly return · self-reported · last sync 28 Apr 2026</span>
+          <span class="links">Open data · <a href="#">CSV ↓</a> <a href="#">JSON</a> <a href="#">API</a></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============= ============= ============= -->
+<!-- SECTION B · SUKOONU                        -->
+<!-- ============= ============= ============= -->
+<section class="dir dir-sukoonu" id="sukoonu">
+  <div class="dir-meta">
+    <div>
+      <h2>B · Sukoonu <span class="dv">ސުކޫނު</span></h2>
+      <p class="school">Eastern minimalism · Naoto Fukasawa · Sou Fujimoto · Govt.nz restraint</p>
+      <p class="atmosphere">hospitable · dignified · quiet · trustworthy · participable</p>
+    </div>
+    <p class="why">
+      When civic space is "obstructed," a shouty platform feels coercive — citizens flinch. A quiet platform invites participation by refusing to perform. Generous whitespace, a single restrained accent (lacquer indigo), type contrast through size not weight, almost no borders. Dhivehi and English at visual parity throughout — neither feels secondary.
+    </p>
+  </div>
+  <div class="primitives">
+
+    <!-- 1. Atlas index card -->
+    <div class="primitive">
+      <div class="primitive-label">01 · Atlas index card</div>
+      <div class="primitive-body atlas-card">
+        <div>
+          <div class="atoll-tag">Noonu Atoll · ނ.</div>
+          <div class="island-name-dv dv">މާފަރު</div>
+          <div class="island-name-en">Maafaru</div>
+        </div>
+        <div>
+          <div class="stat-line"><span class="l">Population</span><span class="v">711</span></div>
+          <div class="stat-line"><span class="l">Registered voters</span><span class="v">483</span></div>
+          <div class="stat-line"><span class="l">Council seats</span><span class="v">5</span></div>
+          <div class="stat-line"><span class="l">FY26 budget · MVR</span><span class="v">12.4M</span></div>
+          <div class="stat-line"><span class="l">Active conversations</span><span class="v">14</span></div>
+          <div class="stat-line"><span class="l">Open petitions</span><span class="v">2</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2. Island profile header -->
+    <div class="primitive">
+      <div class="primitive-label">02 · Island profile header</div>
+      <div class="primitive-body profile-header">
+        <div class="title-block">
+          <div class="island-name-dv dv">މާފަރު</div>
+          <div class="island-name-en">Maafaru · Noonu Atoll</div>
+        </div>
+        <p class="context">
+          One of 13 inhabited islands in Noonu. Maafaru International Airport opened 2019; ongoing public scrutiny of public investment versus predominantly tourist transit use.
+        </p>
+        <div class="fact-strip">
+          <div class="fact"><div class="v">711</div><div class="l">Residents</div></div>
+          <div class="fact"><div class="v">5</div><div class="l">Council seats</div></div>
+          <div class="fact"><div class="v">12.4M</div><div class="l">FY26 budget</div></div>
+          <div class="fact"><div class="v">14</div><div class="l">Conversations</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Thread card -->
+    <div class="primitive">
+      <div class="primitive-label">03 · Thread card</div>
+      <div class="primitive-body thread-card">
+        <div class="meta">Housing · Hulhumalé · ހުޅުމާލެ · 4 days ago</div>
+        <h3><span class="dv">ހުޅުމާލޭ ދެ ވަނަ ފޭސްގައި 550 މީހުން/ހެކްޓަރ — ޑިޒައިން 329</span></h3>
+        <p class="summary">Hulhumalé Phase 2 density now 550 people per hectare, against the design target of 329. What does HDC's response look like, and is there any relief plan in motion?</p>
+        <div class="stats">
+          <div class="stat"><span class="n">42</span> replies</div>
+          <div class="stat"><span class="n">8</span> claims</div>
+          <div class="stat"><span class="n">312</span> votes</div>
+          <div class="stat" style="margin-left:auto;"><span class="dv">ޢަލީ ޒާހިރު</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Claim card -->
+    <div class="primitive">
+      <div class="primitive-label">04 · Claim card · pros / cons</div>
+      <div class="primitive-body claim-card">
+        <div class="claim-header">Maafaru airport debate · 18 claims</div>
+        <div class="claim-cols">
+          <div class="col col-pro">
+            <div class="col-label">Supports</div>
+            <div class="col-body">Maafaru airport opens scheduled transport for N. Atoll residents who previously needed seaplane charters at MVR 8,000+ per round-trip.</div>
+            <div class="col-foot"><span class="dv">ޙުސައިން މަނިކު</span> · +47 votes · impact 3.2 / 4</div>
+          </div>
+          <div class="col col-con">
+            <div class="col-label">Opposes</div>
+            <div class="col-body">MVR 600M+ public investment delivered an airport used 80%+ for tourist transit. The benefit is captured by resort operators, not residents.</div>
+            <div class="col-foot"><span class="dv">ފާޠިމަތު ސަޢީދު</span> · +89 votes · impact 3.7 / 4</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Petition card -->
+    <div class="primitive">
+      <div class="primitive-label">05 · Petition card</div>
+      <div class="primitive-body petition-card">
+        <div class="meta">Petition · National threshold</div>
+        <h3><span class="dv">HDC އިން ފްލެޓް ކުއްޔާއި ނުލިބޭ ފައިސާގެ ފުރިހަމަ ހިސާބު އާންމުކުރުމަށް</span></h3>
+        <p class="summary" style="font-size:13.5px;line-height:1.65;color:var(--ink-2);margin:14px 0 0;">HDC: publish full account of flat rents and arrears, broken down by block and allocation cohort.</p>
+        <div class="progress-figure"><span class="num">3,247</span> <span style="color:var(--muted);font-size:18px;">of 5,000</span></div>
+        <div class="progress-l">Signatures toward Parliament agenda</div>
+        <div class="progress-bar"><div class="progress-fill" style="width:64.9%;"></div></div>
+        <div class="countdown">18 days left · closes 19 May 2026 · started by <span class="dv">ޚަދީޖާ ނަދީމާ</span></div>
+      </div>
+    </div>
+
+    <!-- 6. Data table -->
+    <div class="primitive span-2">
+      <div class="primitive-label">06 · Data-table strip · Maafaru council budget · FY26 Q1</div>
+      <div class="primitive-body table-strip">
+        <table>
+          <thead>
+            <tr>
+              <th>ބަޖެޓު ބައި · Line item</th>
+              <th class="num">Allocated (MVR)</th>
+              <th class="num">Spent Q1 (MVR)</th>
+              <th class="num">% spent</th>
+              <th class="num">vs FY25 Q1</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dv">މުވައްޒަފުންގެ މުސާރަ</span> · Staff salaries</td><td class="num">4,800,000</td><td class="num">1,184,000</td><td class="num">24.7%</td><td class="num">−2.1%</td></tr>
+            <tr><td><span class="dv">ކަރަންޓު، ފެން</span> · Utilities</td><td class="num">920,000</td><td class="num">312,000</td><td class="num">33.9%</td><td class="num">+18.4%</td></tr>
+            <tr><td><span class="dv">ބެލެހެއްޓުމާއި މަރާމާތު</span> · Maintenance</td><td class="num">1,640,000</td><td class="num">208,000</td><td class="num">12.7%</td><td class="num">−0.8%</td></tr>
+            <tr><td><span class="dv">އުމްރާނީ ތަރައްޤީ</span> · Capital works</td><td class="num">3,200,000</td><td class="num">96,000</td><td class="num">3.0%</td><td class="num">+44%</td></tr>
+            <tr><td><span class="dv">މުޖުތަމަޢު ޕްރޮގްރާމް</span> · Community programs</td><td class="num">560,000</td><td class="num">142,000</td><td class="num">25.4%</td><td class="num">−1.2%</td></tr>
+            <tr><td><span class="dv">އެހެނިހެން</span> · Other</td><td class="num">1,300,000</td><td class="num">198,000</td><td class="num">15.2%</td><td class="num">+3.4%</td></tr>
+          </tbody>
+        </table>
+        <div class="data-tools">
+          <span>Source: Maafaru Council quarterly return · last sync 28 Apr 2026</span>
+          <span><a href="#">CSV</a><a href="#">JSON</a><a href="#">API</a></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ============= ============= ============= -->
+<!-- SECTION C · DHIRUN                         -->
+<!-- ============= ============= ============= -->
+<section class="dir dir-dhirun" id="dhirun">
+  <div class="dir-meta">
+    <div>
+      <h2 style="color:var(--ink);">C · Dhirun <span class="dv">ދިރުން</span></h2>
+      <p class="school" style="color:var(--ink-2);">Motion poetics · Field.io · Stripe Press · Bloomberg calm-mode · Cheong Wa Dae counter</p>
+      <p class="atmosphere" style="color:var(--muted);">alive · instrumented · responsive · urgent-when-it-needs-to-be · modern</p>
+    </div>
+    <p class="why" style="color:var(--ink-2);">
+      Civic data is moving — petition signatures tick up, fiscal-year spends progress, erosion advances. Motion expresses life, not animation. The platform feels like the country is breathing through the screen, useful when you want citizens to feel a 5,000-signature threshold instead of seeing a static fraction. Counter-tape and sparkline language pervasive; Bloomberg-for-citizens, not dashboard-for-execs.
+    </p>
+  </div>
+  <div class="primitives">
+
+    <!-- 1. Atlas index card -->
+    <div class="primitive">
+      <div class="primitive-label">01 · Atlas index card</div>
+      <div class="primitive-body atlas-card">
+        <div class="name-block">
+          <div>
+            <div class="island-name-dv dv">މާފަރު</div>
+            <div class="island-name-en">Maafaru</div>
+          </div>
+          <span class="atoll-tag">N · 04°56′N</span>
+        </div>
+        <div class="live-row">
+          <div class="live-stat">
+            <div class="v">711</div>
+            <div class="l">Pop</div>
+          </div>
+          <div class="live-stat">
+            <div class="v">12.4M</div>
+            <div class="l">FY26 MVR</div>
+          </div>
+          <div class="live-stat">
+            <div class="v"><span class="live-dot"></span>14</div>
+            <div class="l">Threads</div>
+          </div>
+          <div class="live-stat">
+            <div class="v">2</div>
+            <div class="l">Petitions</div>
+          </div>
+        </div>
+        <svg class="sparkline" viewBox="0 0 200 32" width="100%" height="32" preserveAspectRatio="none">
+          <polyline points="0,22 14,20 28,18 42,21 56,17 70,15 84,16 98,12 112,14 126,9 140,11 154,7 168,10 182,5 196,6"/>
+        </svg>
+        <div style="font-size:10px;color:var(--muted);margin-top:4px;font-family:'IBM Plex Mono',monospace;">Civic activity · last 90 days</div>
+      </div>
+    </div>
+
+    <!-- 2. Island profile header -->
+    <div class="primitive">
+      <div class="primitive-label">02 · Island profile header</div>
+      <div class="primitive-body profile-header">
+        <div class="title-block">
+          <div>
+            <div class="island-name-dv dv">މާފަރު · ނ.</div>
+            <div class="island-name-en">Maafaru, Noonu Atoll</div>
+          </div>
+          <span class="pill"><span class="live-dot"></span>LIVE FY26 Q1</span>
+        </div>
+        <div class="scrub">
+          <span>FY22</span>
+          <div class="scrub-bar">
+            <div class="scrub-fill"></div>
+            <div class="scrub-thumb"></div>
+          </div>
+          <span style="color:var(--ink);">FY26 Q1</span>
+        </div>
+        <div class="fact-strip">
+          <div class="fact"><div class="v">711</div><div class="l">Pop</div><div class="delta">+18 vs FY25</div></div>
+          <div class="fact"><div class="v">5</div><div class="l">Council</div><div class="delta">elected 4 Apr</div></div>
+          <div class="fact"><div class="v">12.4M</div><div class="l">FY26 MVR</div><div class="delta down">−4.2% vs FY25</div></div>
+          <div class="fact"><div class="v">14</div><div class="l">Threads</div><div class="delta">+3 this week</div></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3. Thread card -->
+    <div class="primitive">
+      <div class="primitive-label">03 · Thread card</div>
+      <div class="primitive-body thread-card">
+        <div class="meta">
+          <span class="pill">housing</span>
+          <span><span class="dv" style="margin-left:6px;">ހުޅުމާލެ</span> Hulhumalé</span>
+          <span style="margin-left:auto;"><span class="live-dot"></span>active</span>
+        </div>
+        <h3><span class="dv">ހުޅުމާލޭ ދެ ވަނަ ފޭސްގައި 550 މީހުން/ހެކްޓަރ — ޑިޒައިން 329</span></h3>
+        <div style="font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.55;">Density at 550/ha vs design 329. HDC response and relief plan.</div>
+        <svg class="sparkline" viewBox="0 0 200 24" width="100%" height="24" preserveAspectRatio="none">
+          <polyline points="0,18 25,16 50,15 75,14 100,12 125,11 150,8 175,6 200,3"/>
+        </svg>
+        <div style="font-size:10px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:2px;">Replies/day · 14 days · trending up</div>
+        <div class="stats">
+          <div class="stat"><span class="n">42</span><span class="l">replies</span></div>
+          <div class="stat"><span class="n">8</span><span class="l">claims</span></div>
+          <div class="stat"><span class="n">312</span><span class="l">votes</span></div>
+          <div class="stat" style="margin-left:auto;"><span class="dv">ޢަލީ ޒާހިރު</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4. Claim card -->
+    <div class="primitive">
+      <div class="primitive-label">04 · Claim card · pros / cons</div>
+      <div class="primitive-body claim-card">
+        <div class="claim-header">
+          <span>Maafaru airport debate · 18 claims · live</span>
+          <span>thread #M-007</span>
+        </div>
+        <div class="claim-cols">
+          <div class="col col-pro">
+            <div class="col-label">Pro · 47</div>
+            <div class="col-body">Airport opens scheduled transport for N. Atoll residents who previously needed seaplane charters at MVR 8,000+ per round-trip.</div>
+            <div class="col-foot"><span><span class="dv">ޙުސައިން މަނިކު</span></span><span>impact 3.2 ↗</span></div>
+          </div>
+          <div class="col col-con">
+            <div class="col-label">Con · 89</div>
+            <div class="col-body">MVR 600M+ public investment delivered an airport used 80%+ for tourist transit. Benefit captured by resort operators, not residents.</div>
+            <div class="col-foot"><span><span class="dv">ފާޠިމަތު ސަޢީދު</span></span><span>impact 3.7 ↗</span></div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5. Petition card -->
+    <div class="primitive">
+      <div class="primitive-label">05 · Petition card</div>
+      <div class="primitive-body petition-card">
+        <h3><span class="dv">HDC އިން ފްލެޓް ކުއްޔާއި ނުލިބޭ ފައިސާގެ ފުރިހަމަ ހިސާބު އާންމުކުރުމަށް</span></h3>
+        <div style="font-size:12.5px;color:var(--ink-2);margin-top:6px;line-height:1.55;">HDC: publish full account of flat rents and arrears.</div>
+        <div class="arc-row">
+          <div class="arc">
+            <svg width="92" height="92" viewBox="0 0 92 92">
+              <circle class="arc-bg" cx="46" cy="46" r="40" />
+              <circle class="arc-fill" cx="46" cy="46" r="40" stroke-dasharray="251.2" stroke-dashoffset="88.2" />
+            </svg>
+            <div class="arc-figure">
+              <div class="pct">65%</div>
+              <div class="lbl">to threshold</div>
+            </div>
+          </div>
+          <div class="arc-stats">
+            <div class="row"><span class="l">Signatures</span><span class="n">3,247</span></div>
+            <div class="row"><span class="l">Threshold</span><span class="n">5,000</span></div>
+            <div class="row"><span class="l">Closes in</span><span class="n warm">18d 04h</span></div>
+            <div class="row"><span class="l">Verified rate</span><span class="n">82%</span></div>
+          </div>
+        </div>
+        <div style="font-size:10.5px;color:var(--muted);font-family:'IBM Plex Mono',monospace;margin-top:10px;">Started <span class="dv" style="margin-right:4px;">ޚަދީޖާ ނަދީމާ</span> · 13 Apr 2026 · eFaas</div>
+      </div>
+    </div>
+
+    <!-- 6. Data table -->
+    <div class="primitive span-2">
+      <div class="primitive-label">06 · Data-table strip · Maafaru council budget · FY26 Q1 · scrubbable</div>
+      <div class="primitive-body table-strip">
+        <table>
+          <thead>
+            <tr>
+              <th>ބަޖެޓު · Line item</th>
+              <th class="num">Allocated</th>
+              <th class="num">Spent</th>
+              <th class="num">%</th>
+              <th>Pace</th>
+              <th class="num">YoY</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr><td><span class="dv">މުވައްޒަފުންގެ މުސާރަ</span> · Staff salaries</td><td class="num">4,800,000</td><td class="num">1,184,000</td><td class="num">24.7%</td><td class="bar-cell"><span class="bar" style="width:50px;"></span></td><td class="num">−2.1</td></tr>
+            <tr><td><span class="dv">ކަރަންޓު، ފެން</span> · Utilities</td><td class="num">920,000</td><td class="num">312,000</td><td class="num">33.9%</td><td class="bar-cell"><span class="bar bar-warm" style="width:54px;"></span></td><td class="num" style="color:var(--accent-warm);">+18.4</td></tr>
+            <tr><td><span class="dv">ބެލެހެއްޓުމާއި މަރާމާތު</span> · Maintenance</td><td class="num">1,640,000</td><td class="num">208,000</td><td class="num">12.7%</td><td class="bar-cell"><span class="bar" style="width:25px;"></span></td><td class="num">−0.8</td></tr>
+            <tr><td><span class="dv">އުމްރާނީ ތަރައްޤީ</span> · Capital works</td><td class="num">3,200,000</td><td class="num">96,000</td><td class="num">3.0%</td><td class="bar-cell"><span class="bar bar-warm" style="width:8px;"></span></td><td class="num" style="color:var(--accent-warm);">+44</td></tr>
+            <tr><td><span class="dv">މުޖުތަމަޢު ޕްރޮގްރާމް</span> · Community programs</td><td class="num">560,000</td><td class="num">142,000</td><td class="num">25.4%</td><td class="bar-cell"><span class="bar" style="width:51px;"></span></td><td class="num">−1.2</td></tr>
+            <tr><td><span class="dv">އެހެނިހެން</span> · Other</td><td class="num">1,300,000</td><td class="num">198,000</td><td class="num">15.2%</td><td class="bar-cell"><span class="bar" style="width:30px;"></span></td><td class="num">+3.4</td></tr>
+            <tr><td>Total</td><td class="num">12,420,000</td><td class="num">2,140,000</td><td class="num">17.2%</td><td class="bar-cell"><span class="bar" style="width:34px;"></span></td><td class="num">+5.8</td></tr>
+          </tbody>
+        </table>
+        <div class="data-tools">
+          <span>SOURCE · Maafaru Council quarterly · last sync 28 Apr 2026 · self-reported</span>
+          <span><a href="#">CSV</a><a href="#">JSON</a><a href="#">API</a></span>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<footer class="page-footer">
+  <p>Concept prototype · Not an official Government of Maldives product</p>
+  <p>Baaruveri <span class="dv">ބާރުވެރި</span> · design study 01 · 2026-05-01</p>
+</footer>
+
+</body>
+</html>

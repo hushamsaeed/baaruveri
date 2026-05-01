@@ -10,6 +10,28 @@ export type IssueTag =
   | "decentralisation"
   | "procurement";
 
+export const ISSUE_TAGS: readonly IssueTag[] = [
+  "housing",
+  "judiciary",
+  "climate",
+  "fisheries",
+  "education",
+  "decentralisation",
+  "procurement",
+];
+
+export function isIssueTag(s: string): s is IssueTag {
+  return (ISSUE_TAGS as readonly string[]).includes(s);
+}
+
+export type PetitionScope = "island" | "national";
+
+export const PETITION_SCOPES: readonly PetitionScope[] = ["island", "national"];
+
+export function isPetitionScope(s: string): s is PetitionScope {
+  return (PETITION_SCOPES as readonly string[]).includes(s);
+}
+
 export interface Island {
   id: string;
   slug: string;

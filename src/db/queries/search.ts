@@ -9,9 +9,11 @@ import { parseSearchQuery } from "@/lib/search";
 
 // Postgres ILIKE across the bilingual title/body fields of each
 // surface. pg_trgm + ranking is a v3.2 follow-up. For now: bounded
-// sequential scan, capped at LIMIT_PER_SECTION rows per type.
+// sequential scan, capped at DEFAULT_LIMIT_PER_SECTION rows per type
+// (overridable for the full-results /search page).
 
-const LIMIT_PER_SECTION = 5;
+const DEFAULT_LIMIT_PER_SECTION = 5;
+const MAX_LIMIT_PER_SECTION = 100;
 
 export interface SearchHitIsland {
   kind: "island";
@@ -44,11 +46,19 @@ export interface SearchResults {
   totalCount: number;
 }
 
-export async function search(rawQuery: string): Promise<SearchResults> {
+export async function search(
+  rawQuery: string,
+  opts: { limitPerSection?: number } = {}
+): Promise<SearchResults> {
   const q = parseSearchQuery(rawQuery);
   if (!q.isQueryable) {
     return { islands: [], threads: [], petitions: [], totalCount: 0 };
   }
+
+  const cap = Math.max(
+    1,
+    Math.min(opts.limitPerSection ?? DEFAULT_LIMIT_PER_SECTION, MAX_LIMIT_PER_SECTION)
+  );
 
   // The Drizzle `ilike()` operator is parameterised, so the escaped
   // pattern is bound — no SQL injection surface here.
@@ -72,7 +82,7 @@ export async function search(rawQuery: string): Promise<SearchResults> {
           ilike(islandsTable.contextEn, pat)
         )
       )
-      .limit(LIMIT_PER_SECTION),
+      .limit(cap),
 
     db
       .select({
@@ -91,7 +101,7 @@ export async function search(rawQuery: string): Promise<SearchResults> {
         )
       )
       .orderBy(sql`${threadsTable.voteCount} desc`)
-      .limit(LIMIT_PER_SECTION),
+      .limit(cap),
 
     db
       .select({
@@ -109,7 +119,7 @@ export async function search(rawQuery: string): Promise<SearchResults> {
           ilike(petitionsTable.summaryEn, pat)
         )
       )
-      .limit(LIMIT_PER_SECTION),
+      .limit(cap),
   ]);
 
   const islands: SearchHitIsland[] = islandRows.map((r) => ({

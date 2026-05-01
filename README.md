@@ -4,7 +4,7 @@
 
 Per-island civic data made legible. Threaded debate by issue × island. eFaas-verified petitions with threshold-triggered government response.
 
-**Status:** v0 + v1 polish shipped. Concept prototype, not an official Government of Maldives product.
+**Status:** v0 + v1 polish + v2.0 (Postgres) shipped. Concept prototype, not an official Government of Maldives product.
 
 **Live:** https://baaruveri.thecrayfish.tech
 
@@ -19,7 +19,7 @@ Per-island civic data made legible. Threaded debate by issue × island. eFaas-ve
 
 ## Stack
 
-Next.js 16 (App Router, RSC, `proxy.ts` middleware convention) · TypeScript · Tailwind CSS v4 with logical properties for RTL · shadcn/ui · `next-intl` 4 · MV Faseyha + MV Vaadhoo Dhivehi web fonts via [RaajjeFonts](https://raajjefonts.github.io) CDN · IBM Plex Mono for tabular numerals · Inter for Latin body. Petitions use a v0 in-memory store + cookie-based eFaas stub; Postgres + Drizzle + real Auth.js v5 OIDC adapter land post-v0.
+Next.js 16 (App Router, RSC, `proxy.ts` middleware convention) · TypeScript · Tailwind CSS v4 with logical properties for RTL · shadcn/ui · `next-intl` 4 · **Postgres 16 + Drizzle ORM** (postgres-js driver, container-on-overlay-network in prod) · MV Faseyha + MV Vaadhoo Dhivehi web fonts via [RaajjeFonts](https://raajjefonts.github.io) CDN · IBM Plex Mono for tabular numerals · Inter for Latin body. Cookie-based eFaas stub (real Auth.js v5 OIDC adapter post-v2).
 
 Saafu visual direction — a Pentagram-style civic-ledger aesthetic with hairline rules, gazette teal `#0d6e6e` accent, and tabular numerals signature. Picked from a 3-direction `huashu-design` study; the canonical spec lives at [`design-studies/baaruveri-directions.html`](design-studies/baaruveri-directions.html).
 

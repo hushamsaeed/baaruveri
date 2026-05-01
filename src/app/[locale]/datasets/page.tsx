@@ -96,6 +96,18 @@ export default async function DatasetsIndexPage({
                 · {t("json_meta")}
               </span>
             </div>
+            <div className="flex items-baseline gap-3 pt-2 border-t border-border">
+              <span className="font-mono text-[11px] text-muted-foreground w-16">API</span>
+              <Link
+                href="/api/v1"
+                className="text-primary underline underline-offset-2 font-mono text-[13px]"
+              >
+                /api/v1
+              </Link>
+              <span className="font-mono text-[11px] text-muted-foreground">
+                · index of all endpoints (islands, threads, petitions, council, claims, budgets)
+              </span>
+            </div>
           </div>
 
           <div className="pt-5 border-t border-border">

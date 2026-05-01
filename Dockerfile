@@ -30,11 +30,13 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# Migration runner + drizzle/ migrations folder. Drizzle's postgres-js
-# migrator is ~50KB on top of drizzle-orm (already a runtime dep), so the
-# image impact is negligible.
+# Migration runner + drizzle/ migrations folder + the two packages it
+# imports (postgres, drizzle-orm). Next.js's standalone tree-shake doesn't
+# trace into our out-of-tree migrate-prod.mjs, so we copy these explicitly.
 COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate-prod.mjs ./scripts/migrate-prod.mjs
 COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules/postgres ./node_modules/postgres
+COPY --from=deps --chown=nextjs:nodejs /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
 
 USER nextjs
 EXPOSE 3000

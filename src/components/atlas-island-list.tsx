@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { Link } from "@/i18n/navigation";
 import { useTranslations } from "next-intl";
 import { L } from "./i18n-text";
+import type { AtlasSelection } from "./atlas-map";
 
 // Side-panel companion to AtlasMap. Renders all 189 inhabited islands
 // from /atlas/inhabited-islands.geojson grouped by atoll, ordered
@@ -64,7 +65,7 @@ interface InhabitedFC {
 }
 
 interface AtlasIslandListProps {
-  onIslandSelect?: (lon: number, lat: number) => void;
+  onIslandSelect?: (selection: AtlasSelection) => void;
   height?: string;
 }
 
@@ -191,7 +192,15 @@ export function AtlasIslandList({
                     <li key={f.properties.islandName}>
                       <button
                         type="button"
-                        onClick={() => onIslandSelect?.(lon, lat)}
+                        onClick={() =>
+                          onIslandSelect?.({
+                            islandName: f.properties.islandName,
+                            atoll: f.properties.atoll,
+                            coordinates: [lon, lat],
+                            isFeatured: false,
+                            capital: f.properties.capital,
+                          })
+                        }
                         className="w-full text-start flex items-baseline gap-2 px-4 py-1.5 text-[13px] hover:bg-muted/40 transition-colors"
                       >
                         <span

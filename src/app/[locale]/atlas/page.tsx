@@ -1,7 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { AtlasCard } from "@/components/atlas-card";
 import { AtollLadder } from "@/components/atoll-ladder";
-import { AtlasMap } from "@/components/atlas-map";
+import { AtlasIndex } from "@/components/atlas-index";
 import { L } from "@/components/i18n-text";
 import { listIslands } from "@/db/queries/islands";
 
@@ -74,7 +74,7 @@ export default async function AtlasPage({
           <div className="text-[11px] text-muted-foreground uppercase tracking-[0.14em] mb-3 font-mono">
             <L>{t("map_eyebrow")}</L>
           </div>
-          <AtlasMap />
+          <AtlasIndex />
           <p className="text-[11px] text-muted-foreground leading-relaxed mt-3 max-w-3xl">
             <L>{t("map_footnote")}</L>
           </p>

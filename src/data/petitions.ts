@@ -113,7 +113,7 @@ export const petitions: Petition[] = [
     title_en:
       "Public-benefit accounting for Maafaru International Airport (since commissioning)",
     summary_en:
-      "Petition asks MIA and the Ministry of Finance to publish a year-by-year public-benefit accounting since 2019 commissioning: traffic by passenger type, council revenue share, employment statistics for Noonu residents.",
+      "Petition asks MIA and the Ministry of Finance to publish a year-by-year public-benefit accounting since 1 December 2019 commissioning: passenger split by type (with private-jet share), per-flight resort-transit revenue, council revenue share under the FY24 schedule, and verified employment statistics for Noonu residents. Public reporting to date covers aggregate movements (250K+ passengers, 9K+ flights through July 2025) but not per-island benefit.",
     scope: "island",
     island_id: "N-maafaru",
     threshold: 100,

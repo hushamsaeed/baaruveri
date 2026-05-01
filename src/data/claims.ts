@@ -23,7 +23,7 @@ export const claims: Claim[] = [
     thread_id: "thr-maafaru-01",
     side: "pro",
     body_en:
-      "Health emergency air-evacuation capability did not exist in N. Atoll prior to 2019. The airport has handled 36 documented medical evacuations since commissioning (MIA traffic report, 2025). That benefit accrues to residents, not tourists.",
+      "Health emergency air-evacuation capability did not exist in N. Atoll prior to commissioning. Documented evacuations have been handled out of Maafaru since 2019; the precise figure should be in the petition the council is asking for. Whatever that number turns out to be, the benefit accrues to residents, not tourists.",
     author_dv: "ޢާއިޝަތު ނަސްރީނާ",
     author_en: "Aishath Nasreena",
     vote_count: 31,
@@ -34,7 +34,7 @@ export const claims: Claim[] = [
     thread_id: "thr-maafaru-01",
     side: "pro",
     body_en:
-      "Strategic infrastructure value compounds. The airport unlocked Soneva Jani's Phase 2 and the Velaa expansion; bed-night tax from those properties flows to the atoll council under the FY24 revenue-sharing schedule.",
+      "Strategic infrastructure value compounds. The airport's catchment unlocked nearby resort expansions; bed-night tax from those properties is supposed to flow to the atoll council under the published revenue-sharing schedule. The right ask is to verify the schedule is being followed, not to dismiss the project.",
     author_dv: "އިބްރާހީމް ޝިހާމް",
     author_en: "Ibrahim Shihaam",
     vote_count: 22,
@@ -47,7 +47,7 @@ export const claims: Claim[] = [
     thread_id: "thr-maafaru-01",
     side: "con",
     body_en:
-      "MVR 600M+ public investment delivered an airport used 80%+ for tourist transit. The benefit is captured by resort operators, not residents. Per-capita, this is the largest public infrastructure spend in the country with the smallest direct resident return.",
+      "The airport was built on a USD 60M+ Abu Dhabi Fund for Development grant (ADFD reports USD 76M+ across two phases) and now operates as a private-jet hub for luxury tourism — 804 private-jet movements in 2025 alone, up 38% YoY. The benefit is captured by resort operators; residents see almost none of the upside the project was sold on.",
     author_dv: "ފާޠިމަތު ސަޢީދު",
     author_en: "Fathmath Saeed",
     vote_count: 89,
@@ -71,7 +71,7 @@ export const claims: Claim[] = [
     thread_id: "thr-maafaru-01",
     side: "con",
     body_en:
-      "Operational subsidy from MOFT continues. The airport has not reached cost-recovery as projected in the original feasibility study (2017). Annual subsidy in FY24 was MVR 14M — a recurring cost on top of the capital outlay.",
+      "The Singaporean main contractor (Tuff Infrastructure) has faced public allegations of non-payment to subcontractors, sham bidding tactics, contract violations, and inflated costs. Whatever the public-benefit figure turns out to be, the procurement and delivery side of this project deserves its own audit, not just a benefit ledger.",
     author_dv: "އަޙްމަދު ނާޒިމް",
     author_en: "Ahmed Naazim",
     vote_count: 38,

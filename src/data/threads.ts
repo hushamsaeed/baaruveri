@@ -87,7 +87,7 @@ export const threads: Thread[] = [
     title_dv: "މާފަރު އިންޓަރނޭޝަނަލް އެއަރޕޯޓު — ރައްޔިތުންނަށް ވާ ފައިދާ",
     title_en: "Maafaru International Airport — what does the public benefit ledger say?",
     summary_en:
-      "MVR 600M+ public investment, 2019 commissioning. 80%+ of operational traffic is tourist transit per MIA reports. What share of resort-arrival revenue routes back to Noonu Atoll councils, and is there a benefit-sharing schedule on file?",
+      "Opened 1 December 2019. Funded by an Abu Dhabi Fund for Development grant of USD 60M+, with ADFD reporting USD 76M+ across two phases. The airport is now positioned as the country's private-jet hub — 804 private-jet movements in 2025, up 38% year on year. What share of the resulting bed-night and arrival revenue routes back to Noonu Atoll councils, and is there a published benefit-sharing schedule on file?",
     started_by_dv: "އިބްރާހީމް ޝިހާމް",
     started_by_en: "Ibrahim Shihaam",
     started_at: "2026-04-08",

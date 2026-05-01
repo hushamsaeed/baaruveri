@@ -7,10 +7,12 @@ import {
 } from "../schema";
 import { parseSearchQuery } from "@/lib/search";
 
-// Postgres ILIKE across the bilingual title/body fields of each
-// surface. pg_trgm + ranking is a v3.2 follow-up. For now: bounded
-// sequential scan, capped at DEFAULT_LIMIT_PER_SECTION rows per type
-// (overridable for the full-results /search page).
+// Postgres ILIKE matches the WHERE filter; pg_trgm similarity() drives
+// the ORDER BY so the closest title match surfaces above incidental
+// summary/context hits. The 0003 migration creates the gin_trgm_ops
+// indexes the similarity expressions read from. Capped at
+// DEFAULT_LIMIT_PER_SECTION rows per type (overridable for the
+// full-results /search page).
 
 const DEFAULT_LIMIT_PER_SECTION = 5;
 const MAX_LIMIT_PER_SECTION = 100;
@@ -61,8 +63,32 @@ export async function search(
   );
 
   // The Drizzle `ilike()` operator is parameterised, so the escaped
-  // pattern is bound — no SQL injection surface here.
+  // pattern is bound — no SQL injection surface here. The similarity()
+  // expressions bind q.raw the same way (drizzle's sql tag treats raw
+  // values as parameters, not interpolated strings).
   const pat = q.pattern;
+  const raw = q.raw;
+
+  // GREATEST() across the title/name fields. Threads and petitions
+  // weight the title 0.6× over the summary so an exact title match wins
+  // even when the summary contains the term verbatim. Vote count is the
+  // tiebreaker for threads — preserves the prior secondary signal.
+  const islandRank = sql<number>`GREATEST(
+    similarity(${islandsTable.nameEn}, ${raw}),
+    similarity(${islandsTable.nameDv}, ${raw}),
+    similarity(${islandsTable.atollEn}, ${raw}),
+    similarity(${islandsTable.contextEn}, ${raw}) * 0.6
+  )`;
+  const threadRank = sql<number>`GREATEST(
+    similarity(${threadsTable.titleEn}, ${raw}),
+    similarity(${threadsTable.titleDv}, ${raw}),
+    similarity(${threadsTable.summaryEn}, ${raw}) * 0.6
+  )`;
+  const petitionRank = sql<number>`GREATEST(
+    similarity(${petitionsTable.titleEn}, ${raw}),
+    similarity(${petitionsTable.titleDv}, ${raw}),
+    similarity(${petitionsTable.summaryEn}, ${raw}) * 0.6
+  )`;
 
   const [islandRows, threadRows, petitionRows] = await Promise.all([
     db
@@ -82,6 +108,7 @@ export async function search(
           ilike(islandsTable.contextEn, pat)
         )
       )
+      .orderBy(sql`${islandRank} DESC`)
       .limit(cap),
 
     db
@@ -100,7 +127,7 @@ export async function search(
           ilike(threadsTable.summaryEn, pat)
         )
       )
-      .orderBy(sql`${threadsTable.voteCount} desc`)
+      .orderBy(sql`${threadRank} DESC, ${threadsTable.voteCount} DESC`)
       .limit(cap),
 
     db
@@ -119,6 +146,7 @@ export async function search(
           ilike(petitionsTable.summaryEn, pat)
         )
       )
+      .orderBy(sql`${petitionRank} DESC`)
       .limit(cap),
   ]);
 

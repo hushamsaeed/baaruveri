@@ -3,8 +3,9 @@ name: CI
 on:
   push:
     branches: [main]
+  # Fire on every PR regardless of base branch so stacked PRs (e.g. v3.x
+  # branches based on v2.x) still get CI runs.
   pull_request:
-    branches: [main]
 
 concurrency:
   group: ci-${{ github.ref }}

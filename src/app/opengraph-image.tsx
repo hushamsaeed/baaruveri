@@ -1,48 +1,28 @@
 import { ImageResponse } from "next/og";
+import {
+  OG_PALETTE,
+  OG_SIZE,
+  OG_CONTENT_TYPE,
+  loadInterFamily,
+} from "@/lib/og-fonts";
 
 // Site-wide default Open Graph image. Saafu civic-ledger DNA: paper
 // background, gazette teal accent, hairline rules, tabular numerals.
-// Per-segment overrides (atlas/[slug], sandbar/[threadId], petitions/[id])
-// land in v2 of this surface.
+// Per-segment variants live at /atlas/[slug]/opengraph-image.tsx and
+// /sandbar/[threadId]/opengraph-image.tsx and inherit the same DNA.
+//
+// Dhivehi script intentionally absent — see lib/og-fonts.ts header
+// comment + feedback_satori_thaana.md memory.
 
 export const alt = "Baaruveri — Maldives citizen civic platform";
-export const size = { width: 1200, height: 630 };
-export const contentType = "image/png";
+export const size = OG_SIZE;
+export const contentType = OG_CONTENT_TYPE;
 
-const PAPER = "#fafaf8";
-const INK = "#1a1a1a";
-const TEAL = "#0d6e6e";
-const RULE = "#dcdcdc";
-const MUTED = "#6b6b6b";
-
-async function loadInter(weight: 400 | 500 | 700): Promise<ArrayBuffer> {
-  // Latin subset of Inter from Google Fonts. Fetched once at build time
-  // (this image is statically optimized — no per-request network call).
-  const css = await fetch(
-    `https://fonts.googleapis.com/css2?family=Inter:wght@${weight}&display=swap`,
-    { headers: { "User-Agent": "Mozilla/5.0" } }
-  ).then((r) => r.text());
-  const url = css.match(/url\((https:\/\/[^)]+)\)/)?.[1];
-  if (!url) throw new Error("Inter font URL not found in Google Fonts CSS");
-  const res = await fetch(url);
-  return res.arrayBuffer();
-}
-
-// NOTE: Dhivehi script (ބާރުވެރި) is intentionally absent from this v0 of
-// the OG image. Satori (the renderer behind next/og) doesn't shape Thaana
-// correctly even with MV Faseyha loaded from RaajjeFonts — the Thaana
-// characters render as .notdef tofu glyphs because satori's text shaper
-// doesn't handle the script's complex bidirectional + combining-mark
-// composition. The locked Saafu bilingual parity rule applies to the live
-// web pages (where it works); the OG image is a satori-rendered thumbnail
-// with this technical ceiling. Revisit when satori adds Thaana shaping.
+const { paper: PAPER, ink: INK, teal: TEAL, rule: RULE, muted: MUTED } =
+  OG_PALETTE;
 
 export default async function Image() {
-  const [interRegular, interMedium, interBold] = await Promise.all([
-    loadInter(400),
-    loadInter(500),
-    loadInter(700),
-  ]);
+  const fonts = await loadInterFamily();
 
   return new ImageResponse(
     (
@@ -173,14 +153,7 @@ export default async function Image() {
         </div>
       </div>
     ),
-    {
-      ...size,
-      fonts: [
-        { name: "Inter", data: interRegular, weight: 400, style: "normal" },
-        { name: "Inter", data: interMedium, weight: 500, style: "normal" },
-        { name: "Inter", data: interBold, weight: 700, style: "normal" },
-      ],
-    }
+    { ...size, fonts }
   );
 }
 

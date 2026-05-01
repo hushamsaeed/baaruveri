@@ -38,7 +38,23 @@
   },
   "home": {
     "tagline": "Per-island civic data, made browsable.",
-    "lede": "Atlas of council, budget, housing, climate and procurement for every inhabited island. Sandbar for issue × island debate. Threshold-triggered petitions, signed with eFaas."
+    "lede": "Atlas of council, budget, housing, climate and procurement for every inhabited island. Sandbar for issue × island debate. Threshold-triggered petitions, signed with eFaas.",
+    "ribbon_islands": "{count, plural, one {# island} other {# islands}}",
+    "ribbon_threads": "{count, plural, one {# active thread} other {# active threads}}",
+    "ribbon_petitions": "{count, plural, one {# open petition} other {# open petitions}}",
+    "ribbon_signatures": "{count} signatures collected this session",
+    "ribbon_eyebrow": "Live · ledger updates with every signature, vote, and post",
+    "explore_section_label": "Explore by island",
+    "explore_section_meta": "Six representative islands · open the atlas for the full set",
+    "explore_card_open": "Open profile →",
+    "activity_section_label": "Current activity",
+    "activity_section_meta": "Pulled live from the Sandbar + Petitions tables",
+    "activity_thread_label": "Featured thread",
+    "activity_petition_label": "Featured petition",
+    "open_thread": "Read the thread →",
+    "open_petition": "Read the petition →",
+    "what_is_label": "What is this?",
+    "what_is_body": "Baaruveri (“empowered”) is a civic platform that makes per-island accountability legible. Anonymous reading and discussion; eFaas-verified signatures and flagged-issue posting. A concept prototype, not an official Government of Maldives product."
   },
   "atlas": {
     "title": "Per-island civic profiles",
@@ -47,7 +63,12 @@
     "stat_population": "Total population covered",
     "stat_threads": "Active threads",
     "stat_petitions": "Open petitions",
-    "footnote": "Population figures from NBS census (2024). Voter registers from Elections Commission, dated 2026-04-04. Budget figures are illustrative for the prototype pending live council data feeds. Open data: every aggregate above is downloadable as CSV (coming next)."
+    "footnote": "Population figures from NBS census (2024). Voter registers from Elections Commission, dated 2026-04-04. Budget figures are illustrative for the prototype pending live council data feeds. Open data: every aggregate above is downloadable as CSV (coming next).",
+    "ladder_eyebrow": "Maldives · atoll ladder",
+    "ladder_n_label": "North",
+    "ladder_s_label": "South",
+    "ladder_footnote": "The 26 administrative atolls run roughly 870 km north to south. Six are featured on Baaruveri; click a marker for that island's full profile.",
+    "ladder_open": "Open profile"
   },
   "island": {
     "section_council": "Council",

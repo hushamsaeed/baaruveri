@@ -14,6 +14,7 @@ const COLUMNS = [
   "author_dv",
   "vote_count",
   "impact",
+  "parent_claim_id",
 ] as const;
 
 export const OPTIONS = csvOptions;
@@ -32,6 +33,7 @@ export async function GET(request: Request) {
     claims = rows.map((r) => ({
       id: r.id,
       thread_id: r.threadId,
+      parent_claim_id: r.parentClaimId,
       side: r.side,
       body_en: r.bodyEn,
       body_dv: r.bodyDv ?? undefined,
@@ -52,6 +54,7 @@ export async function GET(request: Request) {
     author_dv: c.author_dv,
     vote_count: c.vote_count,
     impact: c.impact,
+    parent_claim_id: c.parent_claim_id ?? "",
   }));
   return csvResponse(buildCsv(COLUMNS, rows), filename);
 }

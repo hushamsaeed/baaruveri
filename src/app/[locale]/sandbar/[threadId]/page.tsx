@@ -4,13 +4,18 @@ import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { getThread } from "@/db/queries/threads";
 import { getClaimsForThread, HERO_THREAD_ID } from "@/db/queries/claims";
+import {
+  getVotedClaimIds,
+  makeVoterKey,
+} from "@/db/queries/claim-votes";
 import { getIslandById } from "@/db/queries/islands";
 import { getCommentsForThread, type Comment } from "@/db/queries/comments";
 import { getCurrentStubUser, type StubUser } from "@/lib/auth-stub";
 import { getAnonId } from "@/lib/anon-cookie";
 import { pseudonymFor } from "@/lib/pseudonym";
 import { commentRequiresVerification } from "@/lib/comment-policy";
-import { ClaimCard } from "@/components/claim-card";
+import { ClaimTree } from "@/components/claim-tree";
+import type { ClaimAuthorAttribution } from "@/components/claim-add-form";
 import { CivicDataSidebar } from "@/components/civic-data-sidebar";
 import { CommentList } from "@/components/comment-list";
 import { CommentForm } from "@/components/comment-form";
@@ -61,6 +66,34 @@ export default async function ThreadDetailPage({
       ? pseudonymFor(anonId, thread.id)
       : null;
 
+  // Voted state for the current viewer across every claim in this thread.
+  // Only meaningful when there's an identity (verified or anon cookie set);
+  // otherwise the "voted" UI state stays false until the first vote mints
+  // an anon cookie.
+  let votedClaimIds: ReadonlySet<string> = new Set();
+  if (user || anonId) {
+    const voterKey = user
+      ? makeVoterKey({ stubUserId: user.id })
+      : makeVoterKey({ anonId: anonId! });
+    votedClaimIds = await getVotedClaimIds(
+      voterKey,
+      claims.map((c) => c.id)
+    );
+  }
+
+  // Add-claim affordance attribution. Hidden when the thread requires
+  // eFaas and the viewer isn't verified.
+  let claimAttribution: ClaimAuthorAttribution | null = null;
+  if (user) {
+    claimAttribution = {
+      kind: "verified",
+      nameDv: user.name_dv,
+      nameEn: user.name_en,
+    };
+  } else if (!verificationRequired && anonPseudonymPreview) {
+    claimAttribution = { kind: "anon", pseudonym: anonPseudonymPreview };
+  }
+
   return (
     <ThreadBody
       thread={thread}
@@ -71,6 +104,8 @@ export default async function ThreadDetailPage({
       user={user}
       anonPseudonymPreview={anonPseudonymPreview}
       verificationRequired={verificationRequired}
+      votedClaimIds={votedClaimIds}
+      claimAttribution={claimAttribution}
     />
   );
 }
@@ -84,6 +119,8 @@ function ThreadBody({
   user,
   anonPseudonymPreview,
   verificationRequired,
+  votedClaimIds,
+  claimAttribution,
 }: {
   thread: Thread;
   island: Island | undefined;
@@ -93,14 +130,21 @@ function ThreadBody({
   user: StubUser | null;
   anonPseudonymPreview: string | null;
   verificationRequired: boolean;
+  votedClaimIds: ReadonlySet<string>;
+  claimAttribution: ClaimAuthorAttribution | null;
 }) {
   const ti = useTranslations("issue");
   const tt = useTranslations("thread");
   const tn = useTranslations("nav");
-  const ttd = useTranslations("thread_detail");
   const tcomment = useTranslations("comment");
-  const pros = claims.filter((c) => c.side === "pro");
-  const cons = claims.filter((c) => c.side === "con");
+  // Root-only counts for the column headers; nested claims are visible
+  // inside the column but don't inflate the header tally.
+  const rootPros = claims.filter(
+    (c) => c.side === "pro" && !c.parent_claim_id
+  );
+  const rootCons = claims.filter(
+    (c) => c.side === "con" && !c.parent_claim_id
+  );
   return (
     <main className="flex-1">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 pt-8 pb-20">
@@ -174,9 +218,12 @@ function ThreadBody({
                   <span className="font-mono text-[11px] text-muted-foreground">
                     <L>
                       {tt("section_claims_meta", {
-                        pros: pros.length,
-                        cons: cons.length,
-                        more: thread.claim_count - claims.length,
+                        pros: rootPros.length,
+                        cons: rootCons.length,
+                        more: Math.max(
+                          0,
+                          thread.claim_count - claims.length
+                        ),
                       })}
                     </L>
                   </span>
@@ -186,38 +233,38 @@ function ThreadBody({
                   <div>
                     <div className="flex items-baseline justify-between mb-3">
                       <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[color:var(--under)]">
-                        <L>{tt("pros_label", { count: pros.length })}</L>
+                        <L>{tt("pros_label", { count: rootPros.length })}</L>
                       </h3>
                       <span className="font-mono text-[11px] text-muted-foreground">
-                        <L>{tt("votes_sum", { sum: pros.reduce((s, c) => s + c.vote_count, 0) })}</L>
+                        <L>{tt("votes_sum", { sum: rootPros.reduce((s, c) => s + c.vote_count, 0) })}</L>
                       </span>
                     </div>
-                    <div className="grid gap-3">
-                      {pros.map((c, i) => (
-                        <ClaimCard key={c.id} claim={c} index={i + 1} />
-                      ))}
-                    </div>
+                    <ClaimTree
+                      claims={claims}
+                      side="pro"
+                      threadId={thread.id}
+                      votedClaimIds={votedClaimIds}
+                      attribution={claimAttribution}
+                    />
                   </div>
                   <div>
                     <div className="flex items-baseline justify-between mb-3">
                       <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[color:var(--over)]">
-                        <L>{tt("cons_label", { count: cons.length })}</L>
+                        <L>{tt("cons_label", { count: rootCons.length })}</L>
                       </h3>
                       <span className="font-mono text-[11px] text-muted-foreground">
-                        <L>{tt("votes_sum", { sum: cons.reduce((s, c) => s + c.vote_count, 0) })}</L>
+                        <L>{tt("votes_sum", { sum: rootCons.reduce((s, c) => s + c.vote_count, 0) })}</L>
                       </span>
                     </div>
-                    <div className="grid gap-3">
-                      {cons.map((c, i) => (
-                        <ClaimCard key={c.id} claim={c} index={i + 1} />
-                      ))}
-                    </div>
+                    <ClaimTree
+                      claims={claims}
+                      side="con"
+                      threadId={thread.id}
+                      votedClaimIds={votedClaimIds}
+                      attribution={claimAttribution}
+                    />
                   </div>
                 </div>
-
-                <p className="mt-10 pt-6 border-t border-border text-[11px] text-muted-foreground leading-relaxed max-w-2xl">
-                  <L>{ttd("v0_voting_note")}</L>
-                </p>
               </section>
             ) : (
               <section className="mt-10 bg-muted/40 border border-border p-6">

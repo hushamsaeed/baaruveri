@@ -23,6 +23,7 @@ export async function GET(request: Request) {
     claims = rows.map((r) => ({
       id: r.id,
       thread_id: r.threadId,
+      parent_claim_id: r.parentClaimId,
       side: r.side,
       body_en: r.bodyEn,
       body_dv: r.bodyDv ?? undefined,

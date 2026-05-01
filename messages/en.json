@@ -120,7 +120,6 @@
     "pros_label": "Pros · {count}",
     "cons_label": "Cons · {count}",
     "votes_sum": "Σ {sum} votes",
-    "v0_voting_note": "Inline voting and add-claim affordances are visual-only in v0; they wire up with the eFaas stub in the next milestone. Vote counts and impact ratings shown are seed values.",
     "v0_stub_title": "Full thread page coming in v1",
     "v0_stub_body": "The Maafaru airport thread is the v0 hero — fully wired with claims, civic-data sidebar, and the Pros/Cons primitive. Other threads route here. The metadata, summary, and stats above are real fixture data that will populate the full thread page in the next milestone.",
     "v0_stub_cta": "See the hero thread (Maafaru airport) →",
@@ -221,7 +220,25 @@
     "view_full_profile": "View full island profile →"
   },
   "thread_detail": {
-    "v0_voting_note": "Inline voting and add-claim affordances are visual-only in v0; they wire up with the eFaas stub in the next milestone. Vote counts and impact ratings shown are seed values."
+    "supports_label": "supports",
+    "rebuts_label": "rebuts",
+    "add_supporting": "+ supporting",
+    "add_rebut": "+ rebut",
+    "view_n_nested": "View {n, plural, one {# more nested claim} other {# more nested claims}} →",
+    "collapse_nested": "Collapse",
+    "vote_aria_upvote": "Upvote — convincing",
+    "vote_aria_unvote": "Retract upvote",
+    "vote_required_efaas": "This issue requires eFaas verification to vote.",
+    "claim_required_efaas": "This issue requires eFaas verification to add a claim.",
+    "add_form_body_en_label": "Claim (English)",
+    "add_form_body_en_placeholder": "Make one specific point. Cite the figure or source if you can.",
+    "add_form_body_dv_label": "Claim (Dhivehi, optional)",
+    "add_form_body_dv_placeholder": "ދިވެހިން ބޭނުންވާ ނަމަ",
+    "add_form_submit": "Add claim",
+    "add_form_submitting": "Adding…",
+    "add_form_cancel": "Cancel",
+    "add_form_attribution_anon": "Posting as {pseudonym}",
+    "add_form_attribution_verified": "Posting as {name_dv} ({name_en})"
   },
   "comment": {
     "section_title": "Comments",

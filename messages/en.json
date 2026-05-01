@@ -164,7 +164,16 @@
     "signed_recorded_under": "Recorded under {name_dv} ({name_en}). You can withdraw your signature any time before close — feature lands with the next petition iteration.",
     "signed_in_as": "Signed in as",
     "sign_out": "sign out",
-    "started_meta": "Started by {name_dv} ({name_en}) · {date} · {pct}% eFaas-verified"
+    "started_meta": "Started by {name_dv} ({name_en}) · {date} · {pct}% eFaas-verified",
+    "synthetic_baseline_footnote": "Signature count includes a seeded prior-signatures baseline plus this session's signs. Real eFaas-verified persistence arrives post-v0."
+  },
+  "petitions_index": {
+    "subtitle": "Petitions · v0 prototype",
+    "lede": "Per-island petitions reaching <strong>5% of registered voters</strong> (floor 100, ceiling 500) require a written council response within 30 days. Petitions reaching <strong>5,000 signatures nationally</strong> are placed on the next available parliamentary agenda. Every signature passes through eFaas to prevent duplicates.",
+    "stat_open": "Open petitions",
+    "stat_total_signatures": "Total signatures",
+    "stat_national": "National scope",
+    "footnote": "Signature counts include this session's signs accumulated in the signatures table; the seed counts represent prior signatures (synthetic baseline). Real persistence with eFaas verification arrives post-v0."
   },
   "auth": {
     "efaas_subtitle": "eFaas · stub provider",

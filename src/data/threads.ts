@@ -43,8 +43,8 @@ export const threads: Thread[] = [
     title_en: "Hithadhoo lagoon protection — what's the plan?",
     summary_en:
       "Equator Village expansion EIA flagged a >40% lagoon-area impact. Council position and proposed mitigations.",
-    started_by_dv: "އިބްރާހީމް ނާޞިރު",
-    started_by_en: "Ibrahim Naasir",
+    started_by_dv: "އިބްރާހީމް ނާއިލް",
+    started_by_en: "Ibrahim Naail",
     started_at: "2026-04-19",
     reply_count: 31,
     claim_count: 7,

@@ -1,6 +1,7 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { AtlasCard } from "@/components/atlas-card";
 import { AtollLadder } from "@/components/atoll-ladder";
+import { AtlasMap } from "@/components/atlas-map";
 import { L } from "@/components/i18n-text";
 import { listIslands } from "@/db/queries/islands";
 
@@ -69,16 +70,32 @@ export default async function AtlasPage({
       </header>
 
       <section className="max-w-6xl mx-auto px-6 sm:px-10 py-10 space-y-10">
-        <AtollLadder
-          islands={islands}
-          labels={{
-            eyebrow: t("ladder_eyebrow"),
-            n_label: t("ladder_n_label"),
-            s_label: t("ladder_s_label"),
-            footnote: t("ladder_footnote"),
-            open: t("ladder_open"),
-          }}
-        />
+        <div>
+          <div className="text-[11px] text-muted-foreground uppercase tracking-[0.14em] mb-3 font-mono">
+            <L>{t("map_eyebrow")}</L>
+          </div>
+          <AtlasMap />
+          <p className="text-[11px] text-muted-foreground leading-relaxed mt-3 max-w-3xl">
+            <L>{t("map_footnote")}</L>
+          </p>
+          {/* Fallback for users without JS — render the v3.3 schematic
+              ladder so the page still surfaces the six featured islands
+              with click-to-navigate. Hidden when JS is on, shown when off. */}
+          <noscript>
+            <div className="mt-6">
+              <AtollLadder
+                islands={islands}
+                labels={{
+                  eyebrow: t("ladder_eyebrow"),
+                  n_label: t("ladder_n_label"),
+                  s_label: t("ladder_s_label"),
+                  footnote: t("ladder_footnote"),
+                  open: t("ladder_open"),
+                }}
+              />
+            </div>
+          </noscript>
+        </div>
 
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {islands.map((island) => (

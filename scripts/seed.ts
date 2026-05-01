@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // Seed the database from the in-repo fixture arrays. Idempotent via
 // onConflictDoNothing, so re-running just logs zero new inserts.
 //
@@ -136,10 +135,11 @@ async function seed() {
     .returning({ id: schema.petitions.id });
   console.log(`  petitions         ${insertedPetitions.length} inserted (of ${petitionsRows.length})`);
 
-  // --- Claims (FK threads) ---
+  // --- Claims (FK threads + self-FK for nested children) ---
   const claimsRows = claimsFixture.map((c) => ({
     id: c.id,
     threadId: c.thread_id,
+    parentClaimId: c.parent_claim_id,
     side: c.side,
     bodyEn: c.body_en,
     bodyDv: c.body_dv ?? null,

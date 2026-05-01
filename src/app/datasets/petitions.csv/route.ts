@@ -1,6 +1,6 @@
 import { listPetitions, getPetitionsForIsland } from "@/db/queries/petitions";
 import { listIslands } from "@/db/queries/islands";
-import { getSignatureCount } from "@/db/queries/signatures";
+import { getSignatureCounts } from "@/db/queries/signatures";
 import { buildCsv, csvOptions, csvResponse } from "@/lib/csv";
 
 export const dynamic = "force-dynamic";
@@ -48,28 +48,28 @@ export async function GET(request: Request) {
     petitions = await listPetitions();
   }
 
-  const rows = await Promise.all(
-    petitions.map(async (p) => {
-      const session = await getSignatureCount(p.id);
-      return {
-        id: p.id,
-        scope: p.scope,
-        island_id: p.island_id ?? "",
-        island_slug: p.island_id ? islandsBySlug.get(p.island_id) ?? "" : "",
-        title_en: p.title_en,
-        title_dv: p.title_dv,
-        summary_en: p.summary_en,
-        threshold: p.threshold,
-        signatures_baseline: p.signatures,
-        signatures_session: session,
-        signatures_total: p.signatures + session,
-        closes_at: p.closes_at,
-        started_by_en: p.started_by_en,
-        started_by_dv: p.started_by_dv,
-        started_at: p.started_at,
-        efaas_verified_pct: p.efaas_verified_pct,
-      };
-    })
-  );
+  // One grouped query for all petitions instead of N round-trips.
+  const sessionCounts = await getSignatureCounts(petitions.map((p) => p.id));
+  const rows = petitions.map((p) => {
+    const session = sessionCounts.get(p.id) ?? 0;
+    return {
+      id: p.id,
+      scope: p.scope,
+      island_id: p.island_id ?? "",
+      island_slug: p.island_id ? islandsBySlug.get(p.island_id) ?? "" : "",
+      title_en: p.title_en,
+      title_dv: p.title_dv,
+      summary_en: p.summary_en,
+      threshold: p.threshold,
+      signatures_baseline: p.signatures,
+      signatures_session: session,
+      signatures_total: p.signatures + session,
+      closes_at: p.closes_at,
+      started_by_en: p.started_by_en,
+      started_by_dv: p.started_by_dv,
+      started_at: p.started_at,
+      efaas_verified_pct: p.efaas_verified_pct,
+    };
+  });
   return csvResponse(buildCsv(COLUMNS, rows), filename);
 }

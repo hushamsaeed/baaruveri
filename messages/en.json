@@ -64,6 +64,8 @@
     "stat_threads": "Active threads",
     "stat_petitions": "Open petitions",
     "footnote": "Population figures from NBS census (2024). Voter registers from Elections Commission, dated 2026-04-04. Budget figures are illustrative for the prototype pending live council data feeds. Open data: every aggregate above is downloadable as CSV (coming next).",
+    "map_eyebrow": "Maldives · 189 inhabited islands across 26 atolls",
+    "map_footnote": "Six islands featured (filled polygons) — click to open the full profile. Other inhabited islands shown as dots for context. Geometry from OneMap.mv, the public Maldives geospatial dataset.",
     "ladder_eyebrow": "Maldives · atoll ladder",
     "ladder_n_label": "North",
     "ladder_s_label": "South",

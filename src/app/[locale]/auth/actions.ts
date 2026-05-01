@@ -3,13 +3,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { setStubUser, clearStubUser } from "@/lib/auth-stub";
-
-// Same-origin path only. Rejects protocol-relative ("//evil.com"),
-// backslash-prefixed ("/\evil.com"), and absolute URLs — Next.js's
-// redirect() will otherwise honour any Location string verbatim.
-function isSafeReturnPath(value: FormDataEntryValue | null): value is string {
-  return typeof value === "string" && /^\/(?![\\/])/.test(value);
-}
+import { isSafeReturnPath } from "@/lib/safe-redirect";
 
 export async function chooseStubUser(formData: FormData): Promise<void> {
   const userId = formData.get("user_id");

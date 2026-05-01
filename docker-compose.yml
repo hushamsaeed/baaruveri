@@ -1,0 +1,25 @@
+# Local Postgres for Baaruveri development.
+# Production runs the same image on dokploy-network — see reference_deploy.md.
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: baaruveri-postgres-dev
+    environment:
+      POSTGRES_DB: baaruveri
+      POSTGRES_USER: baaruveri
+      POSTGRES_PASSWORD: baaruveri_dev
+    ports:
+      # 5444 to avoid colliding with other local Postgres instances
+      # (5432 is system, 5435/5436/5437/5438/5439 are other dev DBs)
+      - "5444:5432"
+    volumes:
+      - baaruveri-pg-data:/var/lib/postgresql/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U baaruveri -d baaruveri"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+volumes:
+  baaruveri-pg-data:

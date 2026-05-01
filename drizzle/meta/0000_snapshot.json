@@ -1,0 +1,779 @@
+{
+  "id": "33e0d254-c654-4e3c-9c25-7711a92911b4",
+  "prevId": "00000000-0000-0000-0000-000000000000",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.budget_lines": {
+      "name": "budget_lines",
+      "schema": "",
+      "columns": {
+        "island_id": {
+          "name": "island_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fiscal_year": {
+          "name": "fiscal_year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "quarter": {
+          "name": "quarter",
+          "type": "smallint",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "line_item_dv": {
+          "name": "line_item_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "line_item_en": {
+          "name": "line_item_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "allocated_mvr": {
+          "name": "allocated_mvr",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "spent_mvr": {
+          "name": "spent_mvr",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "yoy_pct": {
+          "name": "yoy_pct",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "budget_lines_island_id_islands_id_fk": {
+          "name": "budget_lines_island_id_islands_id_fk",
+          "tableFrom": "budget_lines",
+          "tableTo": "islands",
+          "columnsFrom": [
+            "island_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "budget_lines_island_id_fiscal_year_quarter_line_item_en_pk": {
+          "name": "budget_lines_island_id_fiscal_year_quarter_line_item_en_pk",
+          "columns": [
+            "island_id",
+            "fiscal_year",
+            "quarter",
+            "line_item_en"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.claims": {
+      "name": "claims",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "thread_id": {
+          "name": "thread_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "side": {
+          "name": "side",
+          "type": "claim_side",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body_en": {
+          "name": "body_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "body_dv": {
+          "name": "body_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "author_dv": {
+          "name": "author_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "author_en": {
+          "name": "author_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "vote_count": {
+          "name": "vote_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "impact": {
+          "name": "impact",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "claims_thread_id_threads_id_fk": {
+          "name": "claims_thread_id_threads_id_fk",
+          "tableFrom": "claims",
+          "tableTo": "threads",
+          "columnsFrom": [
+            "thread_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.council_members": {
+      "name": "council_members",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "island_id": {
+          "name": "island_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_dv": {
+          "name": "name_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_en": {
+          "name": "role_en",
+          "type": "council_role",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "role_dv": {
+          "name": "role_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "party": {
+          "name": "party",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "ward_en": {
+          "name": "ward_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "elected_at": {
+          "name": "elected_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "council_members_island_id_islands_id_fk": {
+          "name": "council_members_island_id_islands_id_fk",
+          "tableFrom": "council_members",
+          "tableTo": "islands",
+          "columnsFrom": [
+            "island_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.islands": {
+      "name": "islands",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "slug": {
+          "name": "slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_dv": {
+          "name": "name_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atoll_dv": {
+          "name": "atoll_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atoll_en": {
+          "name": "atoll_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "atoll_code": {
+          "name": "atoll_code",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "population": {
+          "name": "population",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "registered_voters": {
+          "name": "registered_voters",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "council_seats": {
+          "name": "council_seats",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "fy26_budget_mvr": {
+          "name": "fy26_budget_mvr",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "active_threads": {
+          "name": "active_threads",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "active_petitions": {
+          "name": "active_petitions",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "context_en": {
+          "name": "context_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "context_dv": {
+          "name": "context_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "population_source_label": {
+          "name": "population_source_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "population_source_year": {
+          "name": "population_source_year",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voters_source_label": {
+          "name": "voters_source_label",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "voters_source_date": {
+          "name": "voters_source_date",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "islands_slug_unique": {
+          "name": "islands_slug_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "slug"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.petitions": {
+      "name": "petitions",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "title_dv": {
+          "name": "title_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title_en": {
+          "name": "title_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary_en": {
+          "name": "summary_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "scope": {
+          "name": "scope",
+          "type": "petition_scope",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "island_id": {
+          "name": "island_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "threshold": {
+          "name": "threshold",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signatures": {
+          "name": "signatures",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "closes_at": {
+          "name": "closes_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_by_dv": {
+          "name": "started_by_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_by_en": {
+          "name": "started_by_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "efaas_verified_pct": {
+          "name": "efaas_verified_pct",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "petitions_island_id_islands_id_fk": {
+          "name": "petitions_island_id_islands_id_fk",
+          "tableFrom": "petitions",
+          "tableTo": "islands",
+          "columnsFrom": [
+            "island_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.signatures": {
+      "name": "signatures",
+      "schema": "",
+      "columns": {
+        "petition_id": {
+          "name": "petition_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "stub_user_id": {
+          "name": "stub_user_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "signed_at": {
+          "name": "signed_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": true,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "signatures_petition_id_petitions_id_fk": {
+          "name": "signatures_petition_id_petitions_id_fk",
+          "tableFrom": "signatures",
+          "tableTo": "petitions",
+          "columnsFrom": [
+            "petition_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        },
+        "signatures_stub_user_id_stub_users_id_fk": {
+          "name": "signatures_stub_user_id_stub_users_id_fk",
+          "tableFrom": "signatures",
+          "tableTo": "stub_users",
+          "columnsFrom": [
+            "stub_user_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "cascade",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {
+        "signatures_petition_id_stub_user_id_pk": {
+          "name": "signatures_petition_id_stub_user_id_pk",
+          "columns": [
+            "petition_id",
+            "stub_user_id"
+          ]
+        }
+      },
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.stub_users": {
+      "name": "stub_users",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "name_dv": {
+          "name": "name_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "name_en": {
+          "name": "name_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "nid": {
+          "name": "nid",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "island_slug": {
+          "name": "island_slug",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "verified_at": {
+          "name": "verified_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {
+        "stub_users_nid_unique": {
+          "name": "stub_users_nid_unique",
+          "nullsNotDistinct": false,
+          "columns": [
+            "nid"
+          ]
+        }
+      },
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.threads": {
+      "name": "threads",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "text",
+          "primaryKey": true,
+          "notNull": true
+        },
+        "issue": {
+          "name": "issue",
+          "type": "issue_tag",
+          "typeSchema": "public",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "island_id": {
+          "name": "island_id",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "title_dv": {
+          "name": "title_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "title_en": {
+          "name": "title_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "summary_en": {
+          "name": "summary_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_by_dv": {
+          "name": "started_by_dv",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_by_en": {
+          "name": "started_by_en",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "started_at": {
+          "name": "started_at",
+          "type": "text",
+          "primaryKey": false,
+          "notNull": true
+        },
+        "reply_count": {
+          "name": "reply_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "claim_count": {
+          "name": "claim_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        },
+        "vote_count": {
+          "name": "vote_count",
+          "type": "integer",
+          "primaryKey": false,
+          "notNull": true,
+          "default": 0
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {
+        "threads_island_id_islands_id_fk": {
+          "name": "threads_island_id_islands_id_fk",
+          "tableFrom": "threads",
+          "tableTo": "islands",
+          "columnsFrom": [
+            "island_id"
+          ],
+          "columnsTo": [
+            "id"
+          ],
+          "onDelete": "set null",
+          "onUpdate": "no action"
+        }
+      },
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {
+    "public.claim_side": {
+      "name": "claim_side",
+      "schema": "public",
+      "values": [
+        "pro",
+        "con"
+      ]
+    },
+    "public.council_role": {
+      "name": "council_role",
+      "schema": "public",
+      "values": [
+        "Chair",
+        "Vice-Chair",
+        "Member"
+      ]
+    },
+    "public.issue_tag": {
+      "name": "issue_tag",
+      "schema": "public",
+      "values": [
+        "housing",
+        "judiciary",
+        "climate",
+        "fisheries",
+        "education",
+        "decentralisation",
+        "procurement"
+      ]
+    },
+    "public.petition_scope": {
+      "name": "petition_scope",
+      "schema": "public",
+      "values": [
+        "island",
+        "national"
+      ]
+    }
+  },
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

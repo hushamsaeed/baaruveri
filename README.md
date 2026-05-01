@@ -27,10 +27,14 @@ Saafu visual direction — a Pentagram-style civic-ledger aesthetic with hairlin
 
 ```bash
 pnpm install
+cp .env.local.example .env.local            # postgres connection string
+docker compose up -d postgres                # local Postgres on 5444
+pnpm db:migrate                              # apply schema
+pnpm db:seed                                 # populate fixtures (after step 3 of the migration plan lands)
 pnpm dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000) — the `proxy.ts` middleware redirects to `/dv` (default locale).
+Open [http://localhost:3000](http://localhost:3000) — the `proxy.ts` middleware redirects to `/dv` (default locale). Drizzle Studio is available via `pnpm db:studio`.
 
 ## Deploy
 

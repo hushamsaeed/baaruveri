@@ -31,7 +31,23 @@
   },
   "home": {
     "tagline": "Per-island civic data, made browsable.",
-    "lede": "Atlas of council, budget, housing, climate and procurement for every inhabited island. Sandbar for issue × island debate. Threshold-triggered petitions, signed with eFaas."
+    "lede": "Atlas of council, budget, housing, climate and procurement for every inhabited island. Sandbar for issue × island debate. Threshold-triggered petitions, signed with eFaas.",
+    "ribbon_islands": "{count, plural, one {# island} other {# islands}}",
+    "ribbon_threads": "{count, plural, one {# active thread} other {# active threads}}",
+    "ribbon_petitions": "{count, plural, one {# open petition} other {# open petitions}}",
+    "ribbon_signatures": "{count} signatures collected this session",
+    "ribbon_eyebrow": "Live · ledger updates with every signature, vote, and post",
+    "explore_section_label": "Explore by island",
+    "explore_section_meta": "Six representative islands · open the atlas for the full set",
+    "explore_card_open": "Open profile →",
+    "activity_section_label": "Current activity",
+    "activity_section_meta": "Pulled live from the Sandbar + Petitions tables",
+    "activity_thread_label": "Featured thread",
+    "activity_petition_label": "Featured petition",
+    "open_thread": "Read the thread →",
+    "open_petition": "Read the petition →",
+    "what_is_label": "What is this?",
+    "what_is_body": "Baaruveri (“empowered”) is a civic platform that makes per-island accountability legible. Anonymous reading and discussion; eFaas-verified signatures and flagged-issue posting. A concept prototype, not an official Government of Maldives product."
   },
   "atlas": {
     "title": "Per-island civic profiles",

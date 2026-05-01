@@ -5,8 +5,12 @@ import { getCurrentStubUser } from "@/lib/auth-stub";
 import { ensureAnonId } from "@/lib/anon-cookie";
 import { pseudonymFor } from "@/lib/pseudonym";
 import { commentRequiresVerification } from "@/lib/comment-policy";
+import { rateLimit } from "@/lib/rate-limit";
 import { getThread } from "@/db/queries/threads";
 import { getCommentsForThread, recordComment } from "@/db/queries/comments";
+
+const COMMENT_LIMIT_PER_MIN = 20;
+const COMMENT_WINDOW_MS = 60_000;
 
 export type SubmitCommentResult =
   | { ok: true; commentId: string; pseudonym?: string }
@@ -49,9 +53,20 @@ export async function submitCommentAction(
   }
 
   let pseudonym: string | undefined;
-  if (!user) {
+  let rateKey: string;
+  if (user) {
+    rateKey = `comment:verified:${user.id}`;
+  } else {
     const anonId = await ensureAnonId();
     pseudonym = pseudonymFor(anonId, threadId);
+    rateKey = `comment:anon:${anonId}`;
+  }
+
+  if (!rateLimit(rateKey, COMMENT_LIMIT_PER_MIN, COMMENT_WINDOW_MS).ok) {
+    return {
+      ok: false,
+      reason: "Too many comments in a short window. Try again in a minute.",
+    };
   }
 
   const commentId = await recordComment({

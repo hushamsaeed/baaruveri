@@ -7,6 +7,7 @@ import {
   apiError,
   buildMetadata,
 } from "@/lib/api-helpers";
+import { ISSUE_TAGS, isIssueTag } from "@/lib/types";
 
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
@@ -16,6 +17,12 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const islandFilter = searchParams.get("island");
   const issueFilter = searchParams.get("issue");
+
+  if (issueFilter && !isIssueTag(issueFilter)) {
+    return apiError(
+      `Invalid issue: ${issueFilter}. Must be one of: ${ISSUE_TAGS.join(", ")}.`
+    );
+  }
 
   let threads;
   if (islandFilter) {

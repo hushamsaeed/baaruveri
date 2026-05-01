@@ -11,6 +11,7 @@ import {
   apiError,
   buildMetadata,
 } from "@/lib/api-helpers";
+import { isPetitionScope } from "@/lib/types";
 
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
@@ -20,6 +21,12 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const islandFilter = searchParams.get("island");
   const scopeFilter = searchParams.get("scope");
+
+  if (scopeFilter && !isPetitionScope(scopeFilter)) {
+    return apiError(
+      `Invalid scope: ${scopeFilter}. Must be 'island' or 'national'.`
+    );
+  }
 
   let petitions;
   if (islandFilter) {

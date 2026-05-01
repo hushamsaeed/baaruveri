@@ -1,5 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { listPetitions } from "@/db/queries/petitions";
+import { getSignatureCounts } from "@/db/queries/signatures";
 import { PetitionListItem } from "@/components/petition-list-item";
 import { L } from "@/components/i18n-text";
 
@@ -20,7 +21,16 @@ export default async function PetitionsIndexPage({
   setRequestLocale(locale);
   const t = await getTranslations({ locale, namespace: "petitions_index" });
 
-  const petitions = await listPetitions();
+  const petitionsRaw = await listPetitions();
+  // Enrich with live session signatures so the displayed totals match
+  // what the detail page shows. The .signatures field becomes
+  // baseline + session at the read site; the seed value still lives in
+  // the DB column unchanged.
+  const sessionCounts = await getSignatureCounts(petitionsRaw.map((p) => p.id));
+  const petitions = petitionsRaw.map((p) => ({
+    ...p,
+    signatures: p.signatures + (sessionCounts.get(p.id) ?? 0),
+  }));
   const totalSigs = petitions.reduce((s, p) => s + p.signatures, 0);
   const sorted = [...petitions].sort((a, b) => {
     // National first, then by signature count descending

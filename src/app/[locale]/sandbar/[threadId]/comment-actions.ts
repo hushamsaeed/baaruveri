@@ -6,7 +6,7 @@ import { ensureAnonId } from "@/lib/anon-cookie";
 import { pseudonymFor } from "@/lib/pseudonym";
 import { commentRequiresVerification } from "@/lib/comment-policy";
 import { getThread } from "@/db/queries/threads";
-import { recordComment } from "@/db/queries/comments";
+import { getCommentsForThread, recordComment } from "@/db/queries/comments";
 
 export type SubmitCommentResult =
   | { ok: true; commentId: string; pseudonym?: string }
@@ -25,6 +25,17 @@ export async function submitCommentAction(
 
   const thread = await getThread(threadId);
   if (!thread) return { ok: false, reason: "Thread not found." };
+
+  // Mirrors submitClaimAction's parentClaimId guard. Without this, a
+  // forged parentCommentId can orphan-link a reply across threads (the
+  // 0004 self-FK keeps the row referentially valid but the action layer
+  // is the right place to enforce same-thread reply scope).
+  if (parentCommentId) {
+    const threadComments = await getCommentsForThread(threadId);
+    if (!threadComments.some((c) => c.id === parentCommentId)) {
+      return { ok: false, reason: "Parent comment not found in this thread." };
+    }
+  }
 
   const user = await getCurrentStubUser();
 

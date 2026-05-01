@@ -4,7 +4,7 @@ import {
   getPetitionsForIsland,
 } from "@/db/queries/petitions";
 import { listIslands } from "@/db/queries/islands";
-import { getSignatureCount } from "@/db/queries/signatures";
+import { getSignatureCounts } from "@/db/queries/signatures";
 import {
   CORS_HEADERS,
   CACHE_HEADERS,
@@ -42,13 +42,13 @@ export async function GET(request: Request) {
   }
 
   // Surface live signature counts (seed baseline + session signatures) so
-  // API consumers see the same number the UI shows.
-  const data = await Promise.all(
-    petitions.map(async (p) => ({
-      ...p,
-      signatures_total: p.signatures + (await getSignatureCount(p.id)),
-    }))
-  );
+  // API consumers see the same number the UI shows. One grouped query
+  // instead of N round-trips.
+  const sessionCounts = await getSignatureCounts(petitions.map((p) => p.id));
+  const data = petitions.map((p) => ({
+    ...p,
+    signatures_total: p.signatures + (sessionCounts.get(p.id) ?? 0),
+  }));
 
   return NextResponse.json(
     {

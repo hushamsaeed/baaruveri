@@ -7,9 +7,18 @@ const CORS = {
   "Access-Control-Allow-Methods": "GET, OPTIONS",
 } as const;
 
+// Cells whose first character is one of these are interpreted as a
+// formula by Excel / LibreOffice on open and would execute on the
+// downloader's machine. Prefix with a single quote to neutralise. Per
+// the OWASP CSV-injection guidance.
+const FORMULA_INJECTION_PREFIXES = /^[=+\-@\t\r]/;
+
 function csvEscape(value: string | number | null | undefined): string {
   if (value === null || value === undefined) return "";
-  const s = String(value);
+  let s = String(value);
+  if (FORMULA_INJECTION_PREFIXES.test(s)) {
+    s = `'${s}`;
+  }
   if (/[",\n\r]/.test(s) || s !== s.trim()) {
     return `"${s.replace(/"/g, '""')}"`;
   }

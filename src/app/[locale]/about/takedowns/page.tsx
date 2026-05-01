@@ -47,10 +47,20 @@ export default async function TakedownsPage({
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
             <L>{t("page_title")}</L>
           </h1>
-          <p
-            className="max-w-2xl text-base text-muted-foreground leading-relaxed [&_a]:text-primary [&_a]:underline [&_a]:underline-offset-2"
-            dangerouslySetInnerHTML={{ __html: t.raw("page_lede") as string }}
-          />
+          <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
+            <L>
+              {t.rich("page_lede", {
+                policy: (chunks) => (
+                  <Link
+                    href="/about/moderation"
+                    className="text-primary underline underline-offset-2"
+                  >
+                    {chunks}
+                  </Link>
+                ),
+              })}
+            </L>
+          </p>
         </div>
       </header>
 

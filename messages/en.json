@@ -170,7 +170,7 @@
     "efaas_subtitle": "eFaas · stub provider",
     "efaas_title": "eFaas digital ID — development stub",
     "efaas_helper": "In production, this is the redirect to the Maldives Government digital identity service. For the v0 prototype, choose a verified test citizen below to continue.",
-    "efaas_warning": "ⓘ This is not the real eFaas. No identity is verified.",
+    "efaas_warning": "⚠ Public picker — anyone can pick any persona. Posts, signatures, and votes are attributed to the chosen persona but carry no real identity proof. Real eFaas verification is post-v0.",
     "efaas_user_meta": "{name_en} · registered on {island} · verified {date}",
     "efaas_footer": "Stub identity sets a signed httpOnly cookie. No data is sent off this machine. Real eFaas integration follows Maldives Government OIDC and is gated by an MOU.",
     "efaas_nid_label": "NID {nid}"
@@ -260,7 +260,7 @@
   "takedowns": {
     "page_title": "Takedown log",
     "page_subtitle": "Public moderation record",
-    "page_lede": "Every removal happens via the protocol in the <a href=\"/about/moderation\">moderation policy</a>. Each row below is a removed post: what was taken down, why, and how the appeal went. Public so we can be held to it.",
+    "page_lede": "Every removal happens via the protocol in the <policy>moderation policy</policy>. Each row below is a removed post: what was taken down, why, and how the appeal went. Public so we can be held to it.",
     "empty": "No takedowns yet. When the first one happens, the protocol — report, 24h human review, written rationale, public log entry — runs end to end and the row lands here.",
     "col_when": "When",
     "col_kind": "Kind",

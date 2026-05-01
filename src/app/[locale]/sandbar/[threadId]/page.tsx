@@ -1,33 +1,16 @@
 import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { threads } from "@/data/threads";
 import { getClaimsForThread, HERO_THREAD_ID } from "@/data/claims";
 import { getIslandById } from "@/data/islands";
 import { ClaimCard } from "@/components/claim-card";
 import { CivicDataSidebar } from "@/components/civic-data-sidebar";
-
-const ISSUE_LABELS: Record<string, string> = {
-  housing: "Housing",
-  climate: "Climate",
-  judiciary: "Judiciary",
-  fisheries: "Fisheries",
-  education: "Education",
-  decentralisation: "Decentralisation",
-  procurement: "Procurement",
-};
-
-function relativeDate(iso: string): string {
-  const d = new Date(iso);
-  const now = new Date("2026-05-01");
-  const days = Math.round((now.getTime() - d.getTime()) / (1000 * 60 * 60 * 24));
-  if (days === 0) return "today";
-  if (days === 1) return "1 day ago";
-  if (days < 14) return `${days} days ago`;
-  if (days < 60) return `${Math.round(days / 7)} weeks ago`;
-  return d.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
-}
-
+import { L } from "@/components/i18n-text";
+import { relativeDate } from "@/lib/date";
 import { routing } from "@/i18n/routing";
+import type { Thread, Claim, Island } from "@/lib/types";
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -54,17 +37,42 @@ export default async function ThreadDetailPage({
 }: {
   params: Promise<{ locale: string; threadId: string }>;
 }) {
-  const { threadId } = await params;
+  const { locale, threadId } = await params;
+  setRequestLocale(locale);
   const thread = threads.find((t) => t.id === threadId);
   if (!thread) notFound();
 
   const island = thread.island_id ? getIslandById(thread.island_id) : undefined;
-
   const claims = getClaimsForThread(thread.id);
-  const pros = claims.filter((c) => c.side === "pro");
-  const cons = claims.filter((c) => c.side === "con");
   const isHero = thread.id === HERO_THREAD_ID;
 
+  return (
+    <ThreadBody
+      thread={thread}
+      island={island}
+      claims={claims}
+      isHero={isHero}
+    />
+  );
+}
+
+function ThreadBody({
+  thread,
+  island,
+  claims,
+  isHero,
+}: {
+  thread: Thread;
+  island: Island | undefined;
+  claims: Claim[];
+  isHero: boolean;
+}) {
+  const ti = useTranslations("issue");
+  const tt = useTranslations("thread");
+  const tn = useTranslations("nav");
+  const ttd = useTranslations("thread_detail");
+  const pros = claims.filter((c) => c.side === "pro");
+  const cons = claims.filter((c) => c.side === "con");
   return (
     <main className="flex-1">
       <div className="max-w-6xl mx-auto px-6 sm:px-10 pt-8 pb-20">
@@ -72,7 +80,7 @@ export default async function ThreadDetailPage({
           href="/sandbar"
           className="inline-flex items-center text-[12px] text-muted-foreground hover:text-foreground transition-colors mb-8 font-mono"
         >
-          ← Sandbar
+          <L>{tn("back_to_sandbar")}</L>
         </Link>
 
         <div className="grid gap-10 lg:grid-cols-[minmax(0,1fr)_320px] lg:gap-14">
@@ -80,7 +88,7 @@ export default async function ThreadDetailPage({
           <article>
             <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-4 font-mono uppercase tracking-[0.1em]">
               <span className="bg-secondary text-secondary-foreground px-2 py-[2px]">
-                {ISSUE_LABELS[thread.issue]}
+                <L>{ti(thread.issue)}</L>
               </span>
               {island && (
                 <>
@@ -92,7 +100,7 @@ export default async function ThreadDetailPage({
                 </>
               )}
               <span>·</span>
-              <span>{relativeDate(thread.started_at)}</span>
+              <span>{relativeDate(thread.started_at, tt)}</span>
             </div>
 
             <h1 className="text-2xl sm:text-3xl font-semibold leading-snug tracking-tight">
@@ -105,18 +113,22 @@ export default async function ThreadDetailPage({
 
             <div className="flex flex-wrap items-center gap-x-5 gap-y-2 mt-6 pb-6 border-b border-border text-[12px] text-muted-foreground">
               <span>
-                Started by <span className="dv-text mx-1">{thread.started_by_dv}</span>
+                <L>{tt("started_by")}</L>{" "}
+                <span className="dv-text mx-1">{thread.started_by_dv}</span>
                 <span className="font-mono">({thread.started_by_en})</span>
               </span>
               <span>·</span>
               <span>
-                <span className="font-mono font-semibold text-foreground">{thread.reply_count}</span> replies
+                <span className="font-mono font-semibold text-foreground">{thread.reply_count}</span>{" "}
+                <L>{tt("replies")}</L>
               </span>
               <span>
-                <span className="font-mono font-semibold text-foreground">{thread.claim_count}</span> claims
+                <span className="font-mono font-semibold text-foreground">{thread.claim_count}</span>{" "}
+                <L>{tt("claims")}</L>
               </span>
               <span>
-                <span className="font-mono font-semibold text-foreground">{thread.vote_count}</span> votes
+                <span className="font-mono font-semibold text-foreground">{thread.vote_count}</span>{" "}
+                <L>{tt("votes")}</L>
               </span>
             </div>
 
@@ -128,11 +140,17 @@ export default async function ThreadDetailPage({
                       01
                     </span>
                     <h2 className="font-mono text-[12px] uppercase tracking-[0.14em] font-semibold">
-                      Claims · pros & cons
+                      <L>{tt("section_claims")}</L>
                     </h2>
                   </div>
                   <span className="font-mono text-[11px] text-muted-foreground">
-                    {pros.length} pro · {cons.length} con · {thread.claim_count - claims.length} more notional
+                    <L>
+                      {tt("section_claims_meta", {
+                        pros: pros.length,
+                        cons: cons.length,
+                        more: thread.claim_count - claims.length,
+                      })}
+                    </L>
                   </span>
                 </div>
 
@@ -140,10 +158,10 @@ export default async function ThreadDetailPage({
                   <div>
                     <div className="flex items-baseline justify-between mb-3">
                       <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[color:var(--under)]">
-                        Pros · {pros.length}
+                        <L>{tt("pros_label", { count: pros.length })}</L>
                       </h3>
                       <span className="font-mono text-[11px] text-muted-foreground">
-                        Σ {pros.reduce((s, c) => s + c.vote_count, 0)} votes
+                        <L>{tt("votes_sum", { sum: pros.reduce((s, c) => s + c.vote_count, 0) })}</L>
                       </span>
                     </div>
                     <div className="grid gap-3">
@@ -155,10 +173,10 @@ export default async function ThreadDetailPage({
                   <div>
                     <div className="flex items-baseline justify-between mb-3">
                       <h3 className="font-mono text-[11px] uppercase tracking-[0.14em] font-semibold text-[color:var(--over)]">
-                        Cons · {cons.length}
+                        <L>{tt("cons_label", { count: cons.length })}</L>
                       </h3>
                       <span className="font-mono text-[11px] text-muted-foreground">
-                        Σ {cons.reduce((s, c) => s + c.vote_count, 0)} votes
+                        <L>{tt("votes_sum", { sum: cons.reduce((s, c) => s + c.vote_count, 0) })}</L>
                       </span>
                     </div>
                     <div className="grid gap-3">
@@ -170,9 +188,7 @@ export default async function ThreadDetailPage({
                 </div>
 
                 <p className="mt-10 pt-6 border-t border-border text-[11px] text-muted-foreground leading-relaxed max-w-2xl">
-                  Inline voting and add-claim affordances are visual-only in v0;
-                  they wire up with the eFaas stub in the next milestone. Vote
-                  counts and impact ratings shown are seed values.
+                  <L>{ttd("v0_voting_note")}</L>
                 </p>
               </section>
             ) : (
@@ -181,21 +197,17 @@ export default async function ThreadDetailPage({
                   v0 stub
                 </div>
                 <h2 className="text-lg font-semibold mb-2">
-                  Full thread page coming in v1
+                  <L>{tt("v0_stub_title")}</L>
                 </h2>
                 <p className="text-[13.5px] text-muted-foreground leading-relaxed max-w-prose">
-                  The Maafaru airport thread is the v0 hero — fully wired with
-                  claims, civic-data sidebar, and the Pros/Cons primitive. Other
-                  threads route here. The metadata, summary, and stats above are
-                  real fixture data that will populate the full thread page in
-                  the next milestone.
+                  <L>{tt("v0_stub_body")}</L>
                 </p>
                 <div className="mt-5">
                   <Link
                     href={`/sandbar/${HERO_THREAD_ID}`}
                     className="inline-flex items-center text-[13px] text-primary hover:underline font-mono"
                   >
-                    See the hero thread (Maafaru airport) →
+                    <L>{tt("v0_stub_cta")}</L>
                   </Link>
                 </div>
               </section>

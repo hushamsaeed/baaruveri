@@ -2,6 +2,9 @@
 
 import { Link } from "@/i18n/navigation";
 import { useOptimistic, useState, useTransition } from "react";
+import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
+import { fmtDate } from "@/lib/date";
 import { signPetitionAction } from "@/app/[locale]/petitions/[id]/actions";
 import type { StubUser } from "@/lib/auth-stub";
 
@@ -26,6 +29,7 @@ export function PetitionSignBlock({
   alreadySigned,
   returnTo,
 }: PetitionSignBlockProps) {
+  const tp = useTranslations("petition");
   const [signed, setSigned] = useState(alreadySigned);
   const [pending, startTransition] = useTransition();
   const [optimisticDelta, addOptimisticDelta] = useOptimistic(
@@ -58,7 +62,7 @@ export function PetitionSignBlock({
         <div>
           <div className="font-mono text-[10.5px] uppercase tracking-[0.14em] text-muted-foreground mb-2 flex items-center">
             <span className="live-dot" aria-hidden="true" />
-            <span>Signatures · live</span>
+            <L>{tp("live_signatures")}</L>
           </div>
           <div className="font-mono text-3xl sm:text-4xl font-semibold leading-none">
             <span className="num">{displayCount.toLocaleString("en-US")}</span>
@@ -73,24 +77,27 @@ export function PetitionSignBlock({
             />
           </div>
           <div className="font-mono text-[11px] text-muted-foreground mt-2">
-            {reached
-              ? "Threshold reached · government response triggered"
-              : `${(threshold - displayCount).toLocaleString("en-US")} more to trigger response`}
+            {reached ? (
+              <L>{tp("threshold_reached")}</L>
+            ) : (
+              <L>
+                {tp("more_to_threshold", {
+                  remaining: (threshold - displayCount).toLocaleString("en-US"),
+                } as never)}
+              </L>
+            )}
           </div>
         </div>
 
         <div className="text-start sm:text-right">
           <div className="font-mono text-2xl sm:text-3xl font-semibold leading-none">
             <span className="num">{daysLeft}</span>
-            <span className="text-muted-foreground text-xl ms-2">days</span>
+            <span className="text-muted-foreground text-xl ms-2">
+              <L>{tp("days_left")}</L>
+            </span>
           </div>
           <div className="font-mono text-[11px] text-muted-foreground mt-2">
-            Closes{" "}
-            {new Date(closesAt).toLocaleDateString("en-US", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
+            <L>{tp("closes_on", { date: fmtDate(closesAt) })}</L>
           </div>
         </div>
       </div>
@@ -102,26 +109,25 @@ export function PetitionSignBlock({
               href={`/auth/efaas?return_to=${encodeURIComponent(returnTo)}&petition=${petitionId}`}
               className="inline-flex items-center justify-center px-5 py-3 text-[14px] font-semibold bg-primary text-primary-foreground hover:bg-primary/90 transition-colors w-full sm:w-auto"
             >
-              Sign with eFaas →
+              <L>{tp("sign_with_efaas")}</L>
             </Link>
             <p className="text-[11.5px] text-muted-foreground leading-relaxed">
-              eFaas verification is required to sign. Anonymous comments
-              elsewhere on Baaruveri don&rsquo;t require it. The eFaas check
-              prevents duplicate signatures and is what makes the signature
-              count enforceable against the government.
+              <L>{tp("sign_with_efaas_helper")}</L>
             </p>
           </div>
         ) : signed ? (
           <div className="grid gap-2">
             <div className="flex items-baseline gap-2 text-[14px] text-[color:var(--under)] font-semibold">
               <span aria-hidden="true">✓</span>
-              <span>Signed — thank you for adding your name.</span>
+              <span><L>{tp("signed_thanks")}</L></span>
             </div>
             <p className="text-[11.5px] text-muted-foreground">
-              Recorded under <span className="dv-text mx-1">{user.name_dv}</span>{" "}
-              <span className="font-mono">({user.name_en})</span>. You can
-              withdraw your signature any time before close — feature lands with
-              the next petition iteration.
+              <L>
+                {tp("signed_recorded_under", {
+                  name_dv: user.name_dv,
+                  name_en: user.name_en,
+                } as never)}
+              </L>
             </p>
           </div>
         ) : (
@@ -132,12 +138,15 @@ export function PetitionSignBlock({
               disabled={pending}
               className="inline-flex items-center justify-center px-5 py-3 text-[14px] font-semibold bg-primary text-primary-foreground hover:bg-primary/90 disabled:opacity-60 transition-colors w-full sm:w-auto"
             >
-              {pending ? "Signing…" : "Sign this petition"}
+              <L>{pending ? tp("signing") : tp("sign_this_petition")}</L>
             </button>
             <p className="text-[11.5px] text-muted-foreground">
-              Signing as <span className="dv-text mx-1">{user.name_dv}</span>{" "}
-              <span className="font-mono">({user.name_en})</span>. Your name
-              will be public on the petition&rsquo;s signatory page.
+              <L>
+                {tp("signing_as", {
+                  name_dv: user.name_dv,
+                  name_en: user.name_en,
+                } as never)}
+              </L>
             </p>
             {error && (
               <p className="text-[12px] text-[color:var(--over)]">{error}</p>

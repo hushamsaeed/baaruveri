@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
 import type { BudgetLine } from "@/lib/types";
 
 interface BudgetTableProps {
@@ -15,6 +17,7 @@ function fmtPct(n: number): string {
 }
 
 export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
+  const tb = useTranslations("budget_table");
   if (lines.length === 0) return null;
   const totalAlloc = lines.reduce((s, l) => s + l.allocated_mvr, 0);
   const totalSpent = lines.reduce((s, l) => s + l.spent_mvr, 0);
@@ -29,20 +32,19 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
         <thead>
           <tr>
             <th className="text-start pb-2 pe-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground">
-              <span className="dv-text me-2">ބަޖެޓު ބައި</span>
-              <span>· Line item</span>
+              <L>{tb("col_line_item")}</L>
             </th>
             <th className="text-right pb-2 px-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
-              Allocated (MVR)
+              <L>{tb("col_allocated")}</L>
             </th>
             <th className="text-right pb-2 px-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
-              Spent Q1
+              <L>{tb("col_spent")}</L>
             </th>
             <th className="text-right pb-2 px-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
-              % spent
+              <L>{tb("col_pct_spent")}</L>
             </th>
             <th className="text-right pb-2 ps-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
-              vs FY25 Q1
+              <L>{tb("col_yoy")}</L>
             </th>
           </tr>
         </thead>
@@ -75,7 +77,7 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
             );
           })}
           <tr className="bg-muted/40">
-            <td className="py-2.5 pe-3 font-semibold">Total</td>
+            <td className="py-2.5 pe-3 font-semibold"><L>{tb("row_total")}</L></td>
             <td className="py-2.5 px-3 text-right num font-mono font-semibold">{fmtMvr(totalAlloc)}</td>
             <td className="py-2.5 px-3 text-right num font-mono font-semibold">{fmtMvr(totalSpent)}</td>
             <td className="py-2.5 px-3 text-right num font-mono font-semibold">{totalPctSpent.toFixed(1)}%</td>
@@ -84,14 +86,12 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
         </tbody>
       </table>
       <div className="flex flex-col sm:flex-row sm:justify-between gap-3 mt-4 pt-3 border-t border-border text-[11px] text-muted-foreground">
-        <span>
-          Source: council quarterly return · self-reported · last sync 28 Apr 2026
-        </span>
+        <span><L>{tb("source_note")}</L></span>
         <span className="font-mono">
-          Open data:{" "}
-          <a className="text-primary underline underline-offset-2" href={`/api/v1/budgets?island=${islandSlug}`}>JSON</a>
+          <L>{tb("open_data_label")}</L>:{" "}
+          <a className="text-primary underline underline-offset-2" href={`/api/v1/budgets?island=${islandSlug}`}>{tb("json_link")}</a>
           {" · "}
-          <a className="text-primary underline underline-offset-2" href={`/datasets/budgets.csv?island=${islandSlug}`}>CSV ↓</a>
+          <a className="text-primary underline underline-offset-2" href={`/datasets/budgets.csv?island=${islandSlug}`}>{tb("csv_link")}</a>
         </span>
       </div>
     </div>

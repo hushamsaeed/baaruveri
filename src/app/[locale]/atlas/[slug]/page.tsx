@@ -1,4 +1,6 @@
 import { notFound } from "next/navigation";
+import { setRequestLocale } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { islands, getIsland } from "@/data/islands";
 import { getBudgetLines } from "@/data/budget-lines";
 import { getCouncilMembers } from "@/data/council-members";
@@ -8,7 +10,9 @@ import { IslandProfileHeader } from "@/components/island-profile-header";
 import { BudgetTable } from "@/components/budget-table";
 import { ThreadListItem } from "@/components/thread-list-item";
 import { PetitionListItem } from "@/components/petition-list-item";
+import { L } from "@/components/i18n-text";
 import { routing } from "@/i18n/routing";
+import type { Island, BudgetLine, CouncilMember, Thread, Petition } from "@/lib/types";
 
 export async function generateStaticParams() {
   return routing.locales.flatMap((locale) =>
@@ -44,11 +48,11 @@ function SectionLabel({ number, label, meta }: SectionLabelProps) {
           {number}
         </span>
         <h2 className="font-mono text-[12px] uppercase tracking-[0.14em] font-semibold">
-          {label}
+          <L>{label}</L>
         </h2>
       </div>
       {meta && (
-        <span className="font-mono text-[11px] text-muted-foreground">{meta}</span>
+        <span className="font-mono text-[11px] text-muted-foreground"><L>{meta}</L></span>
       )}
     </div>
   );
@@ -59,7 +63,8 @@ export default async function IslandProfilePage({
 }: {
   params: Promise<{ locale: string; slug: string }>;
 }) {
-  const { slug } = await params;
+  const { locale, slug } = await params;
+  setRequestLocale(locale);
   const island = getIsland(slug);
   if (!island) notFound();
 
@@ -69,20 +74,47 @@ export default async function IslandProfilePage({
   const petitions = getPetitionsForIsland(island.id);
 
   return (
+    <ProfileBody
+      island={island}
+      council={council}
+      budgetLines={budgetLines}
+      threads={threads}
+      petitions={petitions}
+    />
+  );
+}
+
+function ProfileBody({
+  island,
+  council,
+  budgetLines,
+  threads,
+  petitions,
+}: {
+  island: Island;
+  council: CouncilMember[];
+  budgetLines: BudgetLine[];
+  threads: Thread[];
+  petitions: Petition[];
+}) {
+  const t = useTranslations("island");
+  return (
     <main className="flex-1">
       <IslandProfileHeader island={island} />
 
       <div className="max-w-6xl mx-auto px-6 sm:px-10 divide-y divide-border">
-
         {/* COUNCIL */}
         <section className="py-12">
           <SectionLabel
             number="01"
-            label="Council"
+            label={t("section_council")}
             meta={
               island.council_seats > 0
-                ? `Showing ${council.length} of ${island.council_seats} seats`
-                : "Administered by HDC · 3 citizen liaison reps shown"
+                ? t("section_council_meta_seats", {
+                    shown: council.length,
+                    total: island.council_seats,
+                  })
+                : t("section_council_meta_hdc")
             }
           />
           <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
@@ -115,8 +147,8 @@ export default async function IslandProfilePage({
         <section className="py-12">
           <SectionLabel
             number="02"
-            label="Budget · FY26 Q1"
-            meta="Tabular numerals · footnoted"
+            label={t("section_budget")}
+            meta={t("section_budget_meta")}
           />
           {budgetLines.length > 0 ? (
             <BudgetTable lines={budgetLines} islandSlug={island.slug} />
@@ -131,29 +163,27 @@ export default async function IslandProfilePage({
         <section className="py-12">
           <SectionLabel
             number="03"
-            label="Active threads"
-            meta={`${island.active_threads} total · ${threads.length} shown`}
+            label={t("section_threads")}
+            meta={t("section_threads_meta", {
+              total: island.active_threads,
+              shown: threads.length,
+            })}
           />
           <ul className="grid gap-4">
-            {threads.map((t) => (
-              <li key={t.id}>
-                <ThreadListItem thread={t} />
+            {threads.map((th) => (
+              <li key={th.id}>
+                <ThreadListItem thread={th} />
               </li>
             ))}
           </ul>
-          {threads.length === 0 && (
-            <p className="text-[13px] text-muted-foreground">
-              No threads seeded for this island in v0.
-            </p>
-          )}
         </section>
 
         {/* PETITIONS */}
         <section className="py-12">
           <SectionLabel
             number="04"
-            label="Open petitions"
-            meta={`${petitions.length} affecting this island`}
+            label={t("section_petitions")}
+            meta={t("section_petitions_meta", { count: petitions.length })}
           />
           <ul className="grid gap-4">
             {petitions.map((p) => (
@@ -167,13 +197,16 @@ export default async function IslandProfilePage({
         {/* FOOTER */}
         <section className="py-10">
           <p className="text-[11px] text-muted-foreground leading-relaxed max-w-3xl">
-            Source notes · Population: {island.population_source.label} {island.population_source.year}.
-            Voters: {island.voters_source.label}, dated {island.voters_source.date}.
-            Budget figures illustrative until live council quarterly returns wire.
-            Threads and petitions are seed content for v0; real participation opens with eFaas integration.
+            <L>
+              {t("footnote", {
+                pop_label: island.population_source.label,
+                pop_year: island.population_source.year,
+                voter_label: island.voters_source.label,
+                voter_date: island.voters_source.date,
+              })}
+            </L>
           </p>
         </section>
-
       </div>
     </main>
   );

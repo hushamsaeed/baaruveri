@@ -51,6 +51,8 @@
     "fact_pop_census": "{label} {year}",
     "fact_council_elected": "{date} ގައި އިންތިޚާބު ވި",
     "fact_budget_meta": "ޖުމްލަ ބަޖެޓު",
+    "fact_open_petitions_one": "{count} ހުޅުވިފައިވާ ޕެޓިޝަން",
+    "fact_open_petitions_other": "{count} ހުޅުވިފައިވާ ޕެޓިޝަންތައް",
     "atlas_card_label_pop": "ޢާއްމު ޢަދަދު",
     "atlas_card_label_voters": "ވޯޓު ދޭ މީހުން",
     "atlas_card_label_seats": "ކައުންސިލް ގޮނޑި",
@@ -97,6 +99,10 @@
   "petition": {
     "scope_national": "ޤައުމީ · 5،000 ސޮއި ޕާލިމަންޓް އެޖެންޑާއަށް",
     "scope_island": "ރަށު · {island} ކައުންސިލް ޖަވާބުގެ ތްރެޝްހޯލްޑު",
+    "scope_island_short": "ރަށު · ކައުންސިލް ޖަވާބު",
+    "scope_national_short": "ޤައުމީ · ޕާލިމަންޓު އެޖެންޑާ",
+    "started_by_label": "ފެށީ",
+    "verified_short": "{pct}% eFaas-ވެރިފައިޑު",
     "national_tag": "ޤައުމީ",
     "island_tag": "ރަށު",
     "section_what_asks": "މި ޕެޓިޝަނުން އެދެނީ",
@@ -152,6 +158,32 @@
     "education": "ތަޢުލީމް",
     "decentralisation": "ލާމަރުކަޒު",
     "procurement": "ޚަރީދު"
+  },
+  "budget_table": {
+    "col_line_item": "ބަޖެޓު ބައި",
+    "col_allocated": "ޖުމްލަ (MVR)",
+    "col_spent": "Q1 ޚަރަދު",
+    "col_pct_spent": "% ޚަރަދު",
+    "col_yoy": "vs FY25 Q1",
+    "row_total": "ޖުމްލަ",
+    "source_note": "ސޯސް: ކައުންސިލް ކުއާޓަލީ ރިޓާން · ސެލްފް-ރިޕޯޓު · 28 އޭޕްރިލް 2026 ގައި އެންމެ ފަހުން",
+    "open_data_label": "ޢާއްމު ޑޭޓާ",
+    "json_link": "JSON",
+    "csv_link": "CSV ↓"
+  },
+  "civic_sidebar": {
+    "header": "ޑޭޓާ · މި ތްރެޑު",
+    "stat_population": "ޢާއްމު ޢަދަދު",
+    "stat_voters": "ވޯޓު ދޭ މީހުން",
+    "stat_budget": "FY26 ބަޖެޓު",
+    "stat_q1_spent": "FY26 Q1 ޚަރަދު",
+    "council_chair": "ކައުންސިލް ރައީސް",
+    "open_petitions_for": "{island} އަށް ގުޅޭ ހުޅުވިފައިވާ ޕެޓިޝަން",
+    "other_threads": "އެހެން އެކްޓިވް ތްރެޑު",
+    "view_full_profile": "ފުރިހަމަ ރަށު ޕްރޮފައިލް ބައްލަވާ →"
+  },
+  "thread_detail": {
+    "v0_voting_note": "v0 ގައި ވޯޓުދިނުމާއި ދަޢުވާ އެޑުކުރުން ވިޝުއަލް އެކަންޏެވެ؛ ދެން ހުރި މައިލްސްޓޯނުގައި eFaas ސްޓަބާއެކު ވަޔަރުވާނެ. ދެއްކޭ ޢަދަދުތަކަކީ ސީޑު ވެލިއުތަކެކެވެ."
   },
   "locale_switcher": {
     "label": "ބަސް",

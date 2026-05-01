@@ -1,5 +1,8 @@
 import { Link } from "@/i18n/navigation";
+import { setRequestLocale } from "next-intl/server";
+import { useTranslations } from "next-intl";
 import { STUB_USERS } from "@/lib/auth-stub";
+import { L } from "@/components/i18n-text";
 import { chooseStubUser } from "../actions";
 
 export const metadata = {
@@ -9,32 +12,38 @@ export const metadata = {
 };
 
 export default async function EfaasStubPage({
+  params,
   searchParams,
 }: {
+  params: Promise<{ locale: string }>;
   searchParams: Promise<{ return_to?: string; petition?: string }>;
 }) {
+  const { locale } = await params;
+  setRequestLocale(locale);
   const sp = await searchParams;
   const returnTo = sp.return_to ?? "/";
+  return <EfaasBody returnTo={returnTo} />;
+}
 
+function EfaasBody({ returnTo }: { returnTo: string }) {
+  const ta = useTranslations("auth");
+  const tc = useTranslations("common");
   return (
     <main className="flex-1 bg-muted/40">
       <div className="max-w-lg mx-auto px-6 py-16">
         <div className="bg-card border border-border p-7 sm:p-8">
           <div className="font-mono text-[10px] uppercase tracking-[0.16em] text-muted-foreground mb-2">
-            eFaas · stub provider
+            <L>{ta("efaas_subtitle")}</L>
           </div>
           <h1 className="text-xl font-semibold mb-2">
-            <span className="dv-text me-2">eFaas ޑިޖިޓަލް ޑީ</span>
-            <span className="text-muted-foreground">— development stub</span>
+            <L>{ta("efaas_title")}</L>
           </h1>
           <p className="text-[13.5px] text-muted-foreground leading-relaxed mb-6">
-            In production, this is the redirect to the Maldives Government
-            digital identity service. For the v0 prototype, choose a verified
-            test citizen below to continue.
+            <L>{ta("efaas_helper")}</L>
           </p>
 
           <div className="bg-secondary/60 border border-border px-3 py-2 mb-5 text-[12px] text-secondary-foreground font-mono">
-            ⓘ This is not the real eFaas. No identity is verified.
+            <L>{ta("efaas_warning")}</L>
           </div>
 
           <ul className="grid gap-2.5">
@@ -52,12 +61,17 @@ export default async function EfaasStubPage({
                         <span className="dv-text me-2">{u.name_dv}</span>
                       </span>
                       <span className="font-mono text-[10.5px] text-muted-foreground">
-                        NID {u.nid}
+                        <L>{ta("efaas_nid_label", { nid: u.nid })}</L>
                       </span>
                     </div>
                     <div className="text-[12px] text-muted-foreground font-mono">
-                      {u.name_en} · registered on {u.island_slug} · verified{" "}
-                      {u.verified_at}
+                      <L>
+                        {ta("efaas_user_meta", {
+                          name_en: u.name_en,
+                          island: u.island_slug,
+                          date: u.verified_at,
+                        })}
+                      </L>
                     </div>
                   </button>
                 </form>
@@ -70,18 +84,16 @@ export default async function EfaasStubPage({
               href={returnTo}
               className="text-muted-foreground hover:text-foreground transition-colors font-mono"
             >
-              ← Cancel
+              ← <L>{tc("cancel")}</L>
             </Link>
             <span className="text-muted-foreground font-mono text-[11px]">
-              v0 stub
+              <L>{tc("v0_stub")}</L>
             </span>
           </div>
         </div>
 
         <p className="text-[11px] text-muted-foreground leading-relaxed text-center mt-6 max-w-md mx-auto">
-          Stub identity sets a signed httpOnly cookie. No data is sent off this
-          machine. Real eFaas integration follows Maldives Government OIDC and
-          is gated by an MOU.
+          <L>{ta("efaas_footer")}</L>
         </p>
       </div>
     </main>

@@ -51,6 +51,8 @@
     "fact_pop_census": "{label} {year}",
     "fact_council_elected": "elected {date}",
     "fact_budget_meta": "gross allocation",
+    "fact_open_petitions_one": "{count} open petition",
+    "fact_open_petitions_other": "{count} open petitions",
     "atlas_card_label_pop": "Population",
     "atlas_card_label_voters": "Registered voters",
     "atlas_card_label_seats": "Council seats",
@@ -97,6 +99,10 @@
   "petition": {
     "scope_national": "National · 5,000 signatures triggers Parliament agenda",
     "scope_island": "Island · {island} council response threshold",
+    "scope_island_short": "Island · Council response threshold",
+    "scope_national_short": "National · Parliament agenda threshold",
+    "started_by_label": "Started by",
+    "verified_short": "{pct}% eFaas-verified",
     "national_tag": "National",
     "island_tag": "Island",
     "section_what_asks": "What this petition asks",
@@ -152,6 +158,32 @@
     "education": "Education",
     "decentralisation": "Decentralisation",
     "procurement": "Procurement"
+  },
+  "budget_table": {
+    "col_line_item": "Line item",
+    "col_allocated": "Allocated (MVR)",
+    "col_spent": "Spent Q1",
+    "col_pct_spent": "% spent",
+    "col_yoy": "vs FY25 Q1",
+    "row_total": "Total",
+    "source_note": "Source: council quarterly return · self-reported · last sync 28 Apr 2026",
+    "open_data_label": "Open data",
+    "json_link": "JSON",
+    "csv_link": "CSV ↓"
+  },
+  "civic_sidebar": {
+    "header": "Civic data · this thread",
+    "stat_population": "Population",
+    "stat_voters": "Registered voters",
+    "stat_budget": "FY26 budget",
+    "stat_q1_spent": "FY26 Q1 spent",
+    "council_chair": "Council Chair",
+    "open_petitions_for": "Open petitions affecting {island}",
+    "other_threads": "Other active threads",
+    "view_full_profile": "View full island profile →"
+  },
+  "thread_detail": {
+    "v0_voting_note": "Inline voting and add-claim affordances are visual-only in v0; they wire up with the eFaas stub in the next milestone. Vote counts and impact ratings shown are seed values."
   },
   "locale_switcher": {
     "label": "Language",

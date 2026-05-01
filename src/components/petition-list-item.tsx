@@ -1,23 +1,21 @@
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
+import { daysUntil, fmtDate } from "@/lib/date";
 import type { Petition } from "@/lib/types";
 
 interface PetitionListItemProps {
   petition: Petition;
 }
 
-function daysUntil(iso: string): number {
-  const target = new Date(iso).getTime();
-  const now = new Date("2026-05-01").getTime();
-  return Math.max(0, Math.round((target - now) / (1000 * 60 * 60 * 24)));
-}
-
 export function PetitionListItem({ petition }: PetitionListItemProps) {
+  const tp = useTranslations("petition");
   const pct = Math.min(100, (petition.signatures / petition.threshold) * 100);
   const days = daysUntil(petition.closes_at);
   const scopeLabel =
     petition.scope === "national"
-      ? "National · Parliament agenda threshold"
-      : "Island · Council response threshold";
+      ? tp("scope_national_short")
+      : tp("scope_island_short");
 
   return (
     <Link
@@ -26,7 +24,7 @@ export function PetitionListItem({ petition }: PetitionListItemProps) {
     >
       <div className="flex items-center gap-2 text-[11px] text-muted-foreground mb-2 font-mono uppercase tracking-[0.1em]">
         <span className="live-dot" aria-hidden="true" />
-        <span>{scopeLabel}</span>
+        <L>{scopeLabel}</L>
       </div>
       <h3 className="text-base font-semibold leading-snug">
         <span className="dv-text">{petition.title_dv}</span>
@@ -45,7 +43,7 @@ export function PetitionListItem({ petition }: PetitionListItemProps) {
             <span className="text-muted-foreground"> / {petition.threshold.toLocaleString("en-US")}</span>
           </div>
           <div className="text-[11px] text-muted-foreground mt-0.5">
-            Signatures
+            <L>{tp("live_signatures")}</L>
           </div>
           <div className="h-[5px] bg-muted mt-2 relative">
             <div className="h-full bg-primary" style={{ width: `${pct}%` }} />
@@ -53,26 +51,24 @@ export function PetitionListItem({ petition }: PetitionListItemProps) {
         </div>
         <div className="text-right">
           <div className="font-mono text-[13px]">
-            <span className="num">{days}</span>
-            <span className="text-muted-foreground"> days left</span>
+            <span className="num">{days}</span>{" "}
+            <span className="text-muted-foreground"><L>{tp("days_left")}</L></span>
           </div>
           <div className="text-[11px] text-muted-foreground mt-0.5">
-            Closes{" "}
-            {new Date(petition.closes_at).toLocaleDateString("en-US", {
-              day: "numeric",
-              month: "short",
-              year: "numeric",
-            })}
+            <L>{tp("closes_on", { date: fmtDate(petition.closes_at) })}</L>
           </div>
         </div>
       </div>
 
       <div className="flex flex-wrap items-center gap-x-4 gap-y-1 mt-3 text-[11px] text-muted-foreground">
         <span>
-          Started by <span className="dv-text mx-1">{petition.started_by_dv}</span>
+          <L>{tp("started_by_label")}</L>{" "}
+          <span className="dv-text mx-1">{petition.started_by_dv}</span>
         </span>
         <span>·</span>
-        <span className="font-mono">{petition.efaas_verified_pct}% eFaas-verified</span>
+        <span className="font-mono">
+          <L>{tp("verified_short", { pct: petition.efaas_verified_pct })}</L>
+        </span>
       </div>
     </Link>
   );

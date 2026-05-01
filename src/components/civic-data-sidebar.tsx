@@ -1,4 +1,6 @@
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
 import type { Island } from "@/lib/types";
 import { getCouncilMembers } from "@/data/council-members";
 import { getBudgetLines } from "@/data/budget-lines";
@@ -17,6 +19,7 @@ function fmtMvr(n: number): string {
 }
 
 export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarProps) {
+  const ts = useTranslations("civic_sidebar");
   const council = getCouncilMembers(island.id);
   const chair = council.find((c) => c.role_en === "Chair");
   const budgetLines = getBudgetLines(island.id);
@@ -30,7 +33,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
   return (
     <aside className="bg-muted/40 border border-border p-5 lg:sticky lg:top-6 self-start">
       <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground mb-3">
-        Civic data · this thread
+        <L>{ts("header")}</L>
       </div>
 
       <div className="pb-4 mb-4 border-b border-border">
@@ -46,19 +49,19 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
 
       <dl className="font-mono text-[12px] mb-4">
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">Population</dt>
+          <dt className="text-muted-foreground"><L>{ts("stat_population")}</L></dt>
           <dd className="num">{island.population.toLocaleString("en-US")}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">Registered voters</dt>
+          <dt className="text-muted-foreground"><L>{ts("stat_voters")}</L></dt>
           <dd className="num">{island.registered_voters.toLocaleString("en-US")}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">FY26 budget</dt>
+          <dt className="text-muted-foreground"><L>{ts("stat_budget")}</L></dt>
           <dd className="num">MVR {fmtMvr(island.fy26_budget_mvr)}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5">
-          <dt className="text-muted-foreground">FY26 Q1 spent</dt>
+          <dt className="text-muted-foreground"><L>{ts("stat_q1_spent")}</L></dt>
           <dd className="num">
             MVR {fmtMvr(totalSpent)}{" "}
             <span className="text-muted-foreground">
@@ -71,7 +74,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
       {chair && (
         <div className="pb-4 mb-4 border-b border-border">
           <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-mono mb-1.5">
-            Council Chair
+            <L>{ts("council_chair")}</L>
           </div>
           <div className="text-[14px] font-semibold leading-tight">
             <span className="dv-text">{chair.name_dv}</span>
@@ -85,7 +88,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
       {petitions.length > 0 && (
         <div className="pb-4 mb-4 border-b border-border">
           <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-mono mb-2">
-            Open petitions affecting {island.name_en}
+            <L>{ts("open_petitions_for", { island: island.name_en })}</L>
           </div>
           <ul className="space-y-2.5">
             {petitions.slice(0, 3).map((p) => {
@@ -103,7 +106,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
                       <span className="num">{p.threshold.toLocaleString("en-US")}</span>
                       <span className="flex-1 h-[3px] bg-muted ms-1 relative overflow-hidden">
                         <span
-                          className="absolute left-0 top-0 h-full bg-primary"
+                          className="absolute start-0 top-0 h-full bg-primary"
                           style={{ width: `${pct}%` }}
                         />
                       </span>
@@ -119,7 +122,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
       {otherThreads.length > 0 && (
         <div className="pb-4 mb-4 border-b border-border">
           <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-mono mb-2">
-            Other active threads
+            <L>{ts("other_threads")}</L>
           </div>
           <ul className="space-y-2 text-[12px]">
             {otherThreads.slice(0, 3).map((t) => (
@@ -140,7 +143,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
         href={`/atlas/${island.slug}`}
         className="inline-flex items-center text-[12px] text-primary hover:underline font-mono"
       >
-        View full island profile →
+        <L>{ts("view_full_profile")}</L>
       </Link>
     </aside>
   );

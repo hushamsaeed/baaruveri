@@ -1,3 +1,5 @@
+import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
 import type { Claim } from "@/lib/types";
 
 interface ClaimCardProps {
@@ -6,6 +8,7 @@ interface ClaimCardProps {
 }
 
 export function ClaimCard({ claim, index }: ClaimCardProps) {
+  const tc = useTranslations("claim");
   const isPro = claim.side === "pro";
   return (
     <article
@@ -19,10 +22,10 @@ export function ClaimCard({ claim, index }: ClaimCardProps) {
             isPro ? "text-[color:var(--under)]" : "text-[color:var(--over)]"
           }`}
         >
-          {isPro ? "Pro" : "Con"} · {String(index).padStart(2, "0")}
+          <L>{isPro ? tc("pro") : tc("con")}</L> · {String(index).padStart(2, "0")}
         </span>
         <span className="font-mono text-[11px] text-muted-foreground">
-          +{claim.vote_count} · impact {claim.impact.toFixed(1)}/4
+          <L>{tc("impact_label", { votes: claim.vote_count, impact: claim.impact })}</L>
         </span>
       </div>
       <p className="text-[13.5px] leading-relaxed">{claim.body_en}</p>

@@ -30,16 +30,12 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
-# Migration runner + drizzle/ migrations folder + the two packages it
-# imports (postgres, drizzle-orm). Next.js's standalone tree-shake doesn't
-# trace into our out-of-tree migrate-prod.mjs, so we copy these explicitly.
-COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate-prod.mjs ./scripts/migrate-prod.mjs
-COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
-COPY --from=deps --chown=nextjs:nodejs /app/node_modules/postgres ./node_modules/postgres
-COPY --from=deps --chown=nextjs:nodejs /app/node_modules/drizzle-orm ./node_modules/drizzle-orm
 
 USER nextjs
 EXPOSE 3000
-# Apply pending migrations, then start the server. Migration is idempotent
-# and skipped if already applied.
-CMD ["sh", "-c", "node scripts/migrate-prod.mjs && node server.js"]
+# Migrations are NOT auto-run from this image — Next.js's standalone
+# tree-shake doesn't follow scripts/migrate-prod.mjs's imports of
+# postgres + drizzle-orm and pnpm's symlink layout makes copying them
+# fragile. Migrations run on the host before container start, see
+# reference_deploy.md.
+CMD ["node", "server.js"]

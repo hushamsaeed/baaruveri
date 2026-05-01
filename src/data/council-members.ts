@@ -16,7 +16,7 @@ export const councilMembers: CouncilMember[] = [
   { id: "K-hulhumale-3", island_id: "K-hulhumale", name_dv: "ޙުސައިން ފައިޞަލް", name_en: "Hussain Faisal", role_en: "Member", role_dv: "މެމްބަރު", party: "PNC", elected_at: "2026-04-04" },
 
   // Addu City
-  { id: "S-addu-1", island_id: "S-addu", name_dv: "އިބްރާހީމް ނާޞިރު", name_en: "Ibrahim Naasir", role_en: "Chair", role_dv: "ރައީސް", party: "MDP", ward_en: "Hithadhoo Medhu", elected_at: "2026-04-04" },
+  { id: "S-addu-1", island_id: "S-addu", name_dv: "އިބްރާހީމް ނާއިލް", name_en: "Ibrahim Naail", role_en: "Chair", role_dv: "ރައީސް", party: "MDP", ward_en: "Hithadhoo Medhu", elected_at: "2026-04-04" },
   { id: "S-addu-2", island_id: "S-addu", name_dv: "ޚަދީޖާ ނަދީމާ", name_en: "Khadheeja Nadheema", role_en: "Vice-Chair", role_dv: "ނައިބު ރައީސް", party: "MDP", ward_en: "Feydhoo", elected_at: "2026-04-04" },
   { id: "S-addu-3", island_id: "S-addu", name_dv: "މުޙައްމަދު ރަޝީދު", name_en: "Mohamed Rasheed", role_en: "Member", role_dv: "މެމްބަރު", party: "PNC", ward_en: "Hulhudhoo", elected_at: "2026-04-04" },
 

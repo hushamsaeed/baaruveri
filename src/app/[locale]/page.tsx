@@ -96,8 +96,10 @@ export default async function Home({
       {/* Live data ribbon */}
       <section className="border-y border-border bg-muted/30">
         <div className="px-6 sm:px-10 py-5 max-w-5xl mx-auto w-full">
-          <div className="flex items-center gap-2 text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-3">
-            <span className="live-dot" />
+          {/* live-dot is petition-only by design — strip it here so the
+              homepage ribbon doesn't claim "live" pulses for the broader
+              ledger. The eyebrow text still names the four signals. */}
+          <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-3">
             <L>{t("ribbon_eyebrow")}</L>
           </div>
           <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 font-mono tabular-nums text-[13px]">

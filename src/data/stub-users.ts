@@ -6,9 +6,13 @@ import type { StubUser } from "@/db/queries/stub-users";
 
 export const STUB_USERS: StubUser[] = [
   {
+    // Stable id retained from v2.x seed; the display-name was changed in
+    // v3.6 to avoid colliding with a recognisable real public figure
+    // ("Mohamed Naseem"). The id stays so existing signatures/claim_votes
+    // FK-cascading from prod don't orphan on re-seed.
     id: "u-naseem",
-    name_dv: "މުޙައްމަދު ނަސީމް",
-    name_en: "Mohamed Naseem",
+    name_dv: "މުޙައްމަދު އައިމަން",
+    name_en: "Mohamed Aiman",
     nid: "A012345",
     island_slug: "maafaru",
     verified_at: "2026-01-15",

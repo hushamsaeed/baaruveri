@@ -219,6 +219,9 @@ function PetitionBody({
                   <L>{tp("verified_short", { pct: petition.efaas_verified_pct })}</L>
                 </span>
               </div>
+              <p className="mt-4 text-[11px] text-muted-foreground leading-relaxed">
+                <L>{tp("synthetic_baseline_footnote")}</L>
+              </p>
             </section>
           </article>
 

@@ -11,7 +11,11 @@ interface LProps {
 export function L({ children }: LProps) {
   const locale = useLocale();
   if (locale === "dv") {
-    return <span className="dv-text">{children}</span>;
+    return (
+      <span className="dv-text" lang="dv">
+        {children}
+      </span>
+    );
   }
   return <>{children}</>;
 }

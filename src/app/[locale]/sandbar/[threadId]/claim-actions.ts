@@ -95,6 +95,14 @@ export async function submitClaimVoteAction(
   const thread = await getThread(threadId);
   if (!thread) return { ok: false, reason: "Thread not found." };
 
+  // Verify the claim is actually in the thread we authorised against.
+  // Without this, an anon caller can post a restricted-tier claimId with
+  // a non-restricted threadId and bypass commentRequiresVerification.
+  const claimsInThread = await getClaimsForThread(threadId);
+  if (!claimsInThread.some((c) => c.id === claimId)) {
+    return { ok: false, reason: "Claim not found in this thread." };
+  }
+
   const user = await getCurrentStubUser();
   if (!user && commentRequiresVerification(thread.issue)) {
     return { ok: false, reason: TIER_REQUIRED_REASON };

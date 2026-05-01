@@ -37,6 +37,39 @@ describe("buildCsv", () => {
     const csv = buildCsv(["a", "b", "c"], []);
     expect(csv).toBe("﻿a,b,c\n");
   });
+
+  it("prefixes formula-leading cells to neutralise CSV injection", () => {
+    // OWASP-class formula injection: cells starting with =, +, -, @, \t,
+    // \r are interpreted as formulas by spreadsheet apps. Each must be
+    // prefixed with a leading apostrophe.
+    const csv = buildCsv(["x"], [
+      { x: "=HYPERLINK(\"http://evil\",\"click\")" },
+      { x: "+1+1" },
+      { x: "-2+5" },
+      { x: "@SUM(A1)" },
+      { x: "\tinjected" },
+    ]);
+    expect(csv).toContain("\"'=HYPERLINK(\"\"http://evil\"\",\"\"click\"\")\"");
+    expect(csv).toContain("'+1+1");
+    expect(csv).toContain("'-2+5");
+    expect(csv).toContain("'@SUM(A1)");
+    // The tab-prefixed cell still gets the apostrophe; the resulting
+    // string then contains a tab so it is also wrapped in quotes by the
+    // existing trim/control-char rule.
+    expect(csv).toMatch(/'\tinjected/);
+  });
+
+  it("leaves benign cells unprefixed", () => {
+    const csv = buildCsv(["x"], [
+      { x: "Maafaru airport" },
+      { x: "100% spent" },
+      { x: "5.5km" },
+    ]);
+    expect(csv).toContain("Maafaru airport");
+    expect(csv).toContain("100% spent");
+    expect(csv).toContain("5.5km");
+    expect(csv).not.toContain("'Maafaru");
+  });
 });
 
 describe("csvResponse", () => {

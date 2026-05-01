@@ -1,4 +1,6 @@
 import { Link } from "@/i18n/navigation";
+import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
 import type { Island } from "@/lib/types";
 
 interface AtlasCardProps {
@@ -12,6 +14,7 @@ function fmtMvr(n: number): string {
 }
 
 export function AtlasCard({ island }: AtlasCardProps) {
+  const t = useTranslations("island");
   return (
     <Link
       href={`/atlas/${island.slug}`}
@@ -34,27 +37,27 @@ export function AtlasCard({ island }: AtlasCardProps) {
 
       <dl className="font-mono text-[13px]">
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">Population</dt>
+          <dt className="text-muted-foreground"><L>{t("atlas_card_label_pop")}</L></dt>
           <dd className="num">{island.population.toLocaleString("en-US")}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">Registered voters</dt>
+          <dt className="text-muted-foreground"><L>{t("atlas_card_label_voters")}</L></dt>
           <dd className="num">{island.registered_voters.toLocaleString("en-US")}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">Council seats</dt>
+          <dt className="text-muted-foreground"><L>{t("atlas_card_label_seats")}</L></dt>
           <dd className="num">{island.council_seats > 0 ? island.council_seats : "—"}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">FY26 budget</dt>
+          <dt className="text-muted-foreground"><L>{t("atlas_card_label_budget")}</L></dt>
           <dd className="num">MVR {fmtMvr(island.fy26_budget_mvr)}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground">Active threads</dt>
+          <dt className="text-muted-foreground"><L>{t("atlas_card_label_threads")}</L></dt>
           <dd className="num">{island.active_threads}</dd>
         </div>
         <div className="grid grid-cols-[1fr_auto] py-1.5">
-          <dt className="text-muted-foreground">Open petitions</dt>
+          <dt className="text-muted-foreground"><L>{t("atlas_card_label_petitions")}</L></dt>
           <dd className="num">{island.active_petitions}</dd>
         </div>
       </dl>

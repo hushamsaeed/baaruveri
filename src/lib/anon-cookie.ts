@@ -23,6 +23,7 @@ export async function ensureAnonId(): Promise<string> {
   c.set(COOKIE_NAME, id, {
     httpOnly: true,
     sameSite: "lax",
+    secure: process.env.NODE_ENV === "production",
     path: "/",
     maxAge: ONE_YEAR_SECONDS,
   });

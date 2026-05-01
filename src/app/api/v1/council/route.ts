@@ -5,6 +5,7 @@ import { listIslands } from "@/db/queries/islands";
 import {
   CORS_HEADERS,
   CACHE_HEADERS,
+  apiError,
   buildMetadata,
 } from "@/lib/api-helpers";
 
@@ -23,10 +24,7 @@ export async function GET(request: Request) {
       (i) => i.slug === islandFilter || i.id === islandFilter
     );
     if (!match) {
-      return NextResponse.json(
-        { error: `Unknown island: ${islandFilter}` },
-        { status: 400, headers: CORS_HEADERS }
-      );
+      return apiError(`Unknown island: ${islandFilter}`);
     }
     members = await getCouncilMembers(match.id);
   } else {

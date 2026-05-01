@@ -10,8 +10,10 @@ export const metadata = {
     "Per-island civic profiles: council, budget, housing, climate, procurement, threads, petitions.",
 };
 
-// DB-backed: avoid build-time SSG so the build doesn't need a reachable DB.
-export const dynamic = "force-dynamic";
+// Atlas index changes only when staff adds an island — revalidate-60 is
+// generous and bounds DB load. dynamicParams keeps SSG opt-in for the
+// per-slug detail page.
+export const revalidate = 60;
 
 export default async function AtlasPage({
   params,

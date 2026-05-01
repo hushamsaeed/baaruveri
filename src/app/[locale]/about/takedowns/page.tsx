@@ -9,7 +9,9 @@ export const metadata = {
     "Public moderation record. Every removal documented end-to-end per the moderation policy.",
 };
 
-export const dynamic = "force-dynamic";
+// Takedowns are rare events; 60s revalidate keeps the public log fresh
+// without re-running the query on every visitor.
+export const revalidate = 60;
 
 const REASON_LABEL: Record<string, string> = {
   threat: "Threat of violence",

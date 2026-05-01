@@ -11,7 +11,11 @@ import {
 } from "@/db/queries/signatures";
 import { signOutStubUser } from "@/app/[locale]/auth/actions";
 import { PetitionSignBlock } from "@/components/petition-sign-block";
-import { CivicDataSidebar } from "@/components/civic-data-sidebar";
+import {
+  CivicDataSidebar,
+  loadCivicSidebar,
+  type CivicSidebarData,
+} from "@/components/civic-data-sidebar";
 import { L } from "@/components/i18n-text";
 import { daysUntil, fmtDate } from "@/lib/date";
 import type { Petition, Island } from "@/lib/types";
@@ -44,10 +48,13 @@ export default async function PetitionDetailPage({
   if (!petition) notFound();
 
   const user = await getCurrentStubUser();
-  const [island, sessionSigs, alreadySigned] = await Promise.all([
+  const [island, sessionSigs, alreadySigned, sidebarData] = await Promise.all([
     petition.island_id ? getIslandById(petition.island_id) : Promise.resolve(null),
     getStubSignatureCount(petition.id),
     user ? hasSignedPetition(petition.id, user.id) : Promise.resolve(false),
+    petition.island_id
+      ? loadCivicSidebar(petition.island_id)
+      : Promise.resolve(null),
   ]);
   const totalSignatures = petition.signatures + sessionSigs;
   const days = daysUntil(petition.closes_at);
@@ -65,6 +72,7 @@ export default async function PetitionDetailPage({
     <PetitionBody
       petition={petition}
       island={island}
+      sidebarData={sidebarData}
       user={user}
       totalSignatures={totalSignatures}
       alreadySigned={alreadySigned}
@@ -78,6 +86,7 @@ export default async function PetitionDetailPage({
 function PetitionBody({
   petition,
   island,
+  sidebarData,
   user,
   totalSignatures,
   alreadySigned,
@@ -87,6 +96,7 @@ function PetitionBody({
 }: {
   petition: Petition;
   island: Island | null | undefined;
+  sidebarData: CivicSidebarData | null;
   user: StubUser | null;
   totalSignatures: number;
   alreadySigned: boolean;
@@ -225,7 +235,9 @@ function PetitionBody({
             </section>
           </article>
 
-          {island && <CivicDataSidebar island={island} />}
+          {island && sidebarData && (
+            <CivicDataSidebar island={island} data={sidebarData} />
+          )}
         </div>
       </div>
     </main>

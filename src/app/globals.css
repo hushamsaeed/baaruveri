@@ -168,6 +168,36 @@
   }
 }
 
+/* Skip-to-content link for keyboard / screen-reader users. Hidden
+   off-screen until focused, then snaps to the top-left corner. The
+   anchor target is the layout's #main-content wrapper. */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  z-index: 100;
+  padding: 0.5rem 1rem;
+  background: var(--primary);
+  color: var(--primary-foreground);
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-family: var(--font-mono, ui-monospace, monospace);
+  font-size: 12px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  transition: top 0.15s ease;
+}
+.skip-link:focus,
+.skip-link:focus-visible {
+  top: 0;
+  outline: 2px solid currentColor;
+  outline-offset: 2px;
+}
+[dir="rtl"] .skip-link {
+  left: auto;
+  right: 0;
+}
+
 /* Dhivehi text utility — set direction, isolate bidi, give fili room */
 .font-dv {
   font-family: var(--font-dv);

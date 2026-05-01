@@ -84,8 +84,11 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>
+          <a href="#main-content" className="skip-link">
+            {t("skip_to_content")}
+          </a>
           <TopNav user={user} />
-          {children}
+          <div id="main-content">{children}</div>
           <footer className="mt-auto border-t border-border">
             <div className="max-w-6xl mx-auto px-6 sm:px-10 py-5 text-[11px] text-muted-foreground text-center">
               {t("footer_disclaimer")}

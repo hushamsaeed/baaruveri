@@ -48,13 +48,23 @@ export interface Thread {
 export interface Claim {
   id: string;
   thread_id: string;
-  side: "pro" | "con";
+  parent_claim_id: string | null;
+  side: "pro" | "con";             // root: pro/con of thread question; nested: supports/rebuts parent
   body_en: string;
   body_dv?: string;
   author_dv: string;
   author_en: string;
   vote_count: number;
   impact: number;                 // 0-4
+}
+
+// One vote per (claim, voter). voter_key is "verified:<stub_user_id>" for
+// eFaas-tier voters and "anon:<anon_cookie>" for anonymous tier — single
+// tagged string so dedup composes via a normal composite PK.
+export interface ClaimVote {
+  claim_id: string;
+  voter_key: string;
+  voted_at: string;
 }
 
 export interface Petition {

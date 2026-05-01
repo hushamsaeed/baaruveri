@@ -7,6 +7,7 @@ import {
   smallint,
   timestamp,
   primaryKey,
+  type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
 
@@ -135,14 +136,45 @@ export const claims = pgTable("claims", {
   threadId: text("thread_id")
     .notNull()
     .references(() => threads.id, { onDelete: "cascade" }),
+  // Self-FK for Kialo-style nested claims. NULL = root claim (pro/con
+  // relative to the thread question). Non-null = supports/rebuts the
+  // referenced parent claim. AnyPgColumn cast breaks the typed self-cycle.
+  parentClaimId: text("parent_claim_id").references(
+    (): AnyPgColumn => claims.id,
+    { onDelete: "cascade" }
+  ),
   side: claimSideEnum("side").notNull(),
   bodyEn: text("body_en").notNull(),
   bodyDv: text("body_dv"),
   authorDv: text("author_dv").notNull(),
   authorEn: text("author_en").notNull(),
+  // Denormalised counter — sum of claim_votes rows. Updated in the same
+  // transaction as the vote insert/delete so reads stay cheap. Seed values
+  // are synthetic baselines (same pattern as petitions.signatures); real
+  // session votes accumulate on top via the claim_votes ledger.
   voteCount: integer("vote_count").notNull().default(0),
   impact: real("impact").notNull(),
 });
+
+// One vote per (claim, voter). voter_key is "verified:<stub_user_id>" for
+// eFaas-tier voters or "anon:<anon_cookie>" for anonymous-tier voters —
+// single tagged string keeps dedup as a clean composite PK without
+// nullable per-tier columns.
+export const claimVotes = pgTable(
+  "claim_votes",
+  {
+    claimId: text("claim_id")
+      .notNull()
+      .references(() => claims.id, { onDelete: "cascade" }),
+    voterKey: text("voter_key").notNull(),
+    votedAt: timestamp("voted_at", { withTimezone: true })
+      .notNull()
+      .defaultNow(),
+  },
+  (t) => ({
+    pk: primaryKey({ columns: [t.claimId, t.voterKey] }),
+  })
+);
 
 export const petitions = pgTable("petitions", {
   id: text("id").primaryKey(),
@@ -292,10 +324,24 @@ export const commentsRelations = relations(comments, ({ one, many }) => ({
   }),
 }));
 
-export const claimsRelations = relations(claims, ({ one }) => ({
+export const claimsRelations = relations(claims, ({ one, many }) => ({
   thread: one(threads, {
     fields: [claims.threadId],
     references: [threads.id],
+  }),
+  parent: one(claims, {
+    fields: [claims.parentClaimId],
+    references: [claims.id],
+    relationName: "claim_children",
+  }),
+  children: many(claims, { relationName: "claim_children" }),
+  votes: many(claimVotes),
+}));
+
+export const claimVotesRelations = relations(claimVotes, ({ one }) => ({
+  claim: one(claims, {
+    fields: [claimVotes.claimId],
+    references: [claims.id],
   }),
 }));
 

@@ -38,8 +38,8 @@ export default async function SandbarHomePage({
     getTranslations("issue"),
     listThreads(),
   ]);
-  const totalReplies = threads.reduce((s, x) => s + x.reply_count, 0);
   const totalClaims = threads.reduce((s, x) => s + x.claim_count, 0);
+  const totalVotes = threads.reduce((s, x) => s + x.vote_count, 0);
   const sorted = [...threads].sort(
     (a, b) => new Date(b.started_at).getTime() - new Date(a.started_at).getTime()
   );
@@ -66,15 +66,15 @@ export default async function SandbarHomePage({
             </div>
             <div>
               <dt className="text-[10px] text-muted-foreground uppercase tracking-[0.1em]">
-                <L>{t("stat_replies")}</L>
-              </dt>
-              <dd className="num text-lg mt-0.5">{totalReplies}</dd>
-            </div>
-            <div>
-              <dt className="text-[10px] text-muted-foreground uppercase tracking-[0.1em]">
                 <L>{t("stat_claims")}</L>
               </dt>
               <dd className="num text-lg mt-0.5">{totalClaims}</dd>
+            </div>
+            <div>
+              <dt className="text-[10px] text-muted-foreground uppercase tracking-[0.1em]">
+                <L>{t("stat_votes")}</L>
+              </dt>
+              <dd className="num text-lg mt-0.5">{totalVotes}</dd>
             </div>
           </dl>
         </div>

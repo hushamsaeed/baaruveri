@@ -9,11 +9,10 @@ import {
   makeVoterKey,
 } from "@/db/queries/claim-votes";
 import { getIslandById } from "@/db/queries/islands";
-import { getCommentsForThread, type Comment } from "@/db/queries/comments";
-import { getCurrentStubUser, type StubUser } from "@/lib/auth-stub";
+import { getCurrentStubUser } from "@/lib/auth-stub";
 import { getAnonId } from "@/lib/anon-cookie";
 import { pseudonymFor } from "@/lib/pseudonym";
-import { commentRequiresVerification } from "@/lib/comment-policy";
+import { claimRequiresVerification } from "@/lib/claim-policy";
 import { ClaimTree } from "@/components/claim-tree";
 import type { ClaimAuthorAttribution } from "@/components/claim-add-form";
 import {
@@ -21,8 +20,6 @@ import {
   loadCivicSidebar,
   type CivicSidebarData,
 } from "@/components/civic-data-sidebar";
-import { CommentList } from "@/components/comment-list";
-import { CommentForm } from "@/components/comment-form";
 import { L } from "@/components/i18n-text";
 import { relativeDate } from "@/lib/date";
 import type { Thread, Claim, Island } from "@/lib/types";
@@ -53,24 +50,22 @@ export default async function ThreadDetailPage({
   const thread = await getThread(threadId);
   if (!thread) notFound();
 
-  const [island, claims, comments, user, anonId, sidebarData] =
-    await Promise.all([
-      thread.island_id
-        ? getIslandById(thread.island_id)
-        : Promise.resolve(undefined),
-      getClaimsForThread(thread.id),
-      getCommentsForThread(thread.id),
-      getCurrentStubUser(),
-      getAnonId(),
-      thread.island_id
-        ? loadCivicSidebar(thread.island_id, thread.id)
-        : Promise.resolve(null),
-    ]);
+  const [island, claims, user, anonId, sidebarData] = await Promise.all([
+    thread.island_id
+      ? getIslandById(thread.island_id)
+      : Promise.resolve(undefined),
+    getClaimsForThread(thread.id),
+    getCurrentStubUser(),
+    getAnonId(),
+    thread.island_id
+      ? loadCivicSidebar(thread.island_id, thread.id)
+      : Promise.resolve(null),
+  ]);
   const isHero = thread.id === HERO_THREAD_ID;
-  const verificationRequired = commentRequiresVerification(thread.issue);
+  const verificationRequired = claimRequiresVerification(thread.issue);
   // Pseudonym preview only meaningful when (a) user isn't verified AND (b)
   // they CAN post on this thread. Don't compute it before the anon cookie
-  // exists either — first comment will mint one.
+  // exists either — first claim will mint one.
   const anonPseudonymPreview =
     !user && !verificationRequired && anonId
       ? pseudonymFor(anonId, thread.id)
@@ -110,11 +105,7 @@ export default async function ThreadDetailPage({
       island={island}
       sidebarData={sidebarData}
       claims={claims}
-      comments={comments}
       isHero={isHero}
-      user={user}
-      anonPseudonymPreview={anonPseudonymPreview}
-      verificationRequired={verificationRequired}
       votedClaimIds={votedClaimIds}
       claimAttribution={claimAttribution}
     />
@@ -126,11 +117,7 @@ function ThreadBody({
   island,
   sidebarData,
   claims,
-  comments,
   isHero,
-  user,
-  anonPseudonymPreview,
-  verificationRequired,
   votedClaimIds,
   claimAttribution,
 }: {
@@ -138,18 +125,13 @@ function ThreadBody({
   island: Island | undefined;
   sidebarData: CivicSidebarData | null;
   claims: Claim[];
-  comments: Comment[];
   isHero: boolean;
-  user: StubUser | null;
-  anonPseudonymPreview: string | null;
-  verificationRequired: boolean;
   votedClaimIds: ReadonlySet<string>;
   claimAttribution: ClaimAuthorAttribution | null;
 }) {
   const ti = useTranslations("issue");
   const tt = useTranslations("thread");
   const tn = useTranslations("nav");
-  const tcomment = useTranslations("comment");
   // Root-only counts for the column headers; nested claims are visible
   // inside the column but don't inflate the header tally.
   const rootPros = claims.filter(
@@ -203,10 +185,6 @@ function ThreadBody({
                 <span className="font-mono">({thread.started_by_en})</span>
               </span>
               <span>·</span>
-              <span>
-                <span className="font-mono font-semibold text-foreground">{thread.reply_count}</span>{" "}
-                <L>{tt("replies")}</L>
-              </span>
               <span>
                 <span className="font-mono font-semibold text-foreground">{thread.claim_count}</span>{" "}
                 <L>{tt("claims")}</L>
@@ -301,33 +279,6 @@ function ThreadBody({
               </section>
             )}
 
-            {/* Comments — always shown, regardless of hero/stub state */}
-            <section className="mt-12">
-              <div className="flex items-baseline justify-between mb-6 gap-4 flex-wrap">
-                <div className="flex items-baseline gap-3">
-                  <span className="font-mono text-[10.5px] text-muted-foreground tracking-[0.12em]">
-                    {isHero ? "02" : "01"}
-                  </span>
-                  <h2 className="font-mono text-[12px] uppercase tracking-[0.14em] font-semibold">
-                    <L>{tcomment("section_title")}</L>
-                  </h2>
-                </div>
-                <span className="font-mono text-[11px] text-muted-foreground">
-                  <L>{tcomment("section_meta", { count: comments.length })}</L>
-                </span>
-              </div>
-              <div className="space-y-5">
-                <CommentForm
-                  threadId={thread.id}
-                  threadIssue={thread.issue}
-                  user={user}
-                  anonPseudonymPreview={anonPseudonymPreview}
-                  verificationRequired={verificationRequired}
-                  returnTo={`/sandbar/${thread.id}`}
-                />
-                <CommentList comments={comments} />
-              </div>
-            </section>
           </article>
 
           {/* Sidebar */}

@@ -99,7 +99,6 @@ async function seed() {
     startedByDv: t.started_by_dv,
     startedByEn: t.started_by_en,
     startedAt: t.started_at,
-    replyCount: t.reply_count,
     claimCount: t.claim_count,
     voteCount: t.vote_count,
   }));

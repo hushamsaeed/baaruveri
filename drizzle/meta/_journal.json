@@ -50,6 +50,13 @@
       "when": 1777647738007,
       "tag": "0006_drop_comments",
       "breakpoints": true
+    },
+    {
+      "idx": 7,
+      "version": "7",
+      "when": 1777658674240,
+      "tag": "0007_claim_soft_delete",
+      "breakpoints": true
     }
   ]
 }

@@ -1,11 +1,13 @@
 import { useLocale } from "next-intl";
 
 interface LProps {
-  children: string;
+  children: React.ReactNode;
 }
 
-/** Wraps a translated string in <span class="dv-text"> when the active
- * locale is Dhivehi, so MV Faseyha + RTL apply. Inert in English. */
+/** Wraps translated content in <span class="dv-text"> when the active
+ * locale is Dhivehi, so MV Faseyha + RTL apply. Inert in English.
+ * Accepts ReactNode so it works with both plain t() strings and t.rich()
+ * trees that include nested elements. */
 export function L({ children }: LProps) {
   const locale = useLocale();
   if (locale === "dv") {

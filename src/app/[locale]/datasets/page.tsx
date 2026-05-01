@@ -36,10 +36,15 @@ function DatasetsContent() {
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
             <L>{t("title")}</L>
           </h1>
-          <p
-            className="max-w-2xl text-base text-muted-foreground leading-relaxed [&_em]:not-italic [&_em]:text-foreground [&_em]:font-medium"
-            dangerouslySetInnerHTML={{ __html: t("lede") }}
-          />
+          <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
+            <L>
+              {t.rich("lede", {
+                em: (chunks) => (
+                  <em className="not-italic text-foreground font-medium">{chunks}</em>
+                ),
+              })}
+            </L>
+          </p>
         </div>
       </header>
 
@@ -93,10 +98,15 @@ function DatasetsContent() {
           </div>
 
           <div className="pt-5 border-t border-border">
-            <div
-              className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground mb-3 [&_code]:bg-muted [&_code]:px-1"
-              dangerouslySetInnerHTML={{ __html: t("filter_heading") }}
-            />
+            <div className="font-mono text-[10.5px] uppercase tracking-[0.12em] text-muted-foreground mb-3">
+              <L>
+                {t.rich("filter_heading", {
+                  code: (chunks) => (
+                    <code className="bg-muted px-1">{chunks}</code>
+                  ),
+                })}
+              </L>
+            </div>
             <ul className="grid sm:grid-cols-2 gap-x-6 gap-y-1.5 font-mono text-[12px]">
               {islands.map((i) => (
                 <li key={i.id} className="flex items-baseline gap-2">

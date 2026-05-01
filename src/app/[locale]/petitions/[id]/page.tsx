@@ -180,13 +180,21 @@ function PetitionBody({
                   <span className="font-mono text-muted-foreground w-32 shrink-0">
                     <L>{tp("threshold_council")}</L>
                   </span>
-                  <span dangerouslySetInnerHTML={{ __html: tp("threshold_council_body") }} />
+                  <span>
+                    {tp.rich("threshold_council_body", {
+                      strong: (chunks) => <strong>{chunks}</strong>,
+                    })}
+                  </span>
                 </li>
                 <li className="flex gap-3">
                   <span className="font-mono text-muted-foreground w-32 shrink-0">
                     <L>{tp("threshold_parliament")}</L>
                   </span>
-                  <span dangerouslySetInnerHTML={{ __html: tp("threshold_parliament_body") }} />
+                  <span>
+                    {tp.rich("threshold_parliament_body", {
+                      strong: (chunks) => <strong>{chunks}</strong>,
+                    })}
+                  </span>
                 </li>
                 <li className="flex gap-3">
                   <span className="font-mono text-muted-foreground w-32 shrink-0">

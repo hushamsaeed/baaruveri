@@ -21,10 +21,38 @@ const plexMono = IBM_Plex_Mono({
   display: "swap",
 });
 
+const SITE_URL = "https://baaruveri.thecrayfish.tech";
+
 export const metadata: Metadata = {
-  title: "Baaruveri — Maldives citizen civic platform",
+  metadataBase: new URL(SITE_URL),
+  title: {
+    default: "Baaruveri — Maldives citizen civic platform",
+    template: "%s — Baaruveri",
+  },
   description:
     "ބާރުވެރި — per-island civic data, threaded debate by issue and island, eFaas-verified petitions. Concept prototype.",
+  applicationName: "Baaruveri",
+  authors: [{ name: "hushamsaeed", url: "https://github.com/hushamsaeed" }],
+  openGraph: {
+    type: "website",
+    title: "Baaruveri — Maldives citizen civic platform",
+    description:
+      "Per-island civic data, threaded debate by issue and island, eFaas-verified petitions. Concept prototype.",
+    siteName: "Baaruveri",
+    url: SITE_URL,
+    locale: "en_US",
+    alternateLocale: ["dv_MV"],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Baaruveri — Maldives citizen civic platform",
+    description:
+      "Per-island civic data, threaded debate by issue and island, eFaas-verified petitions.",
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
 };
 
 export function generateStaticParams() {

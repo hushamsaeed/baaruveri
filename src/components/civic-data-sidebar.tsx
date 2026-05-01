@@ -1,16 +1,59 @@
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { L } from "./i18n-text";
-import type { Island } from "@/lib/types";
+import type {
+  Island,
+  CouncilMember,
+  BudgetLine,
+  Thread,
+  Petition,
+} from "@/lib/types";
 import { getCouncilMembers } from "@/db/queries/council";
 import { getBudgetLines } from "@/db/queries/budgets";
 import { getThreadsForIsland } from "@/db/queries/threads";
 import { getPetitionsForIsland } from "@/db/queries/petitions";
 import { getSignatureCounts } from "@/db/queries/signatures";
 
+export interface CivicSidebarData {
+  council: CouncilMember[];
+  budgetLines: BudgetLine[];
+  // Already filtered against excludeThreadId by the loader.
+  otherThreads: Thread[];
+  // Already enriched with live signatures (baseline + session) by the loader.
+  petitions: Petition[];
+}
+
+/**
+ * Loads everything CivicDataSidebar renders, with the live-signature
+ * enrichment already applied. Call this from page-level Promise.all
+ * blocks instead of letting the sidebar component refetch on every
+ * render — the perf-audit flagged the previous "sidebar runs 4
+ * queries" pattern as a redundant round-trip on every thread/petition
+ * detail page render.
+ */
+export async function loadCivicSidebar(
+  islandId: string,
+  excludeThreadId?: string
+): Promise<CivicSidebarData> {
+  const [council, budgetLines, threadsForIsland, petitionsRaw] =
+    await Promise.all([
+      getCouncilMembers(islandId),
+      getBudgetLines(islandId),
+      getThreadsForIsland(islandId),
+      getPetitionsForIsland(islandId),
+    ]);
+  const sessionCounts = await getSignatureCounts(petitionsRaw.map((p) => p.id));
+  const petitions = petitionsRaw.map((p) => ({
+    ...p,
+    signatures: p.signatures + (sessionCounts.get(p.id) ?? 0),
+  }));
+  const otherThreads = threadsForIsland.filter((t) => t.id !== excludeThreadId);
+  return { council, budgetLines, otherThreads, petitions };
+}
+
 interface CivicDataSidebarProps {
   island: Island;
-  excludeThreadId?: string;
+  data: CivicSidebarData;
 }
 
 function fmtMvr(n: number): string {
@@ -19,25 +62,15 @@ function fmtMvr(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-export async function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarProps) {
+export async function CivicDataSidebar({
+  island,
+  data,
+}: CivicDataSidebarProps) {
   const ts = await getTranslations("civic_sidebar");
-  const [council, budgetLines, threadsForIsland, petitionsRaw] = await Promise.all([
-    getCouncilMembers(island.id),
-    getBudgetLines(island.id),
-    getThreadsForIsland(island.id),
-    getPetitionsForIsland(island.id),
-  ]);
-  // Enrich petitions with live session signatures so the sidebar shows
-  // the same total the petition card / detail page does.
-  const sessionCounts = await getSignatureCounts(petitionsRaw.map((p) => p.id));
-  const petitions = petitionsRaw.map((p) => ({
-    ...p,
-    signatures: p.signatures + (sessionCounts.get(p.id) ?? 0),
-  }));
+  const { council, budgetLines, otherThreads, petitions } = data;
   const chair = council.find((c) => c.role_en === "Chair");
   const totalAllocated = budgetLines.reduce((s, l) => s + l.allocated_mvr, 0);
   const totalSpent = budgetLines.reduce((s, l) => s + l.spent_mvr, 0);
-  const otherThreads = threadsForIsland.filter((t) => t.id !== excludeThreadId);
 
   return (
     <aside className="bg-muted/40 border border-border p-5 lg:sticky lg:top-6 self-start">

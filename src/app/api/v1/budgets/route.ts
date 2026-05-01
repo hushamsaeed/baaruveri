@@ -1,12 +1,12 @@
 import { NextResponse } from "next/server";
 import { listBudgetLines } from "@/db/queries/budgets";
 import { listIslands } from "@/db/queries/islands";
-
-const CORS_HEADERS = {
-  "Access-Control-Allow-Origin": "*",
-  "Access-Control-Allow-Methods": "GET, OPTIONS",
-  "Access-Control-Allow-Headers": "Content-Type",
-};
+import {
+  CORS_HEADERS,
+  CACHE_HEADERS,
+  apiError,
+  buildMetadata,
+} from "@/lib/api-helpers";
 
 export async function OPTIONS() {
   return new NextResponse(null, { status: 204, headers: CORS_HEADERS });
@@ -26,10 +26,7 @@ export async function GET(request: Request) {
       (i) => i.slug === islandFilter || i.id === islandFilter
     );
     if (!matchingIsland) {
-      return NextResponse.json(
-        { error: `Unknown island: ${islandFilter}` },
-        { status: 400, headers: CORS_HEADERS }
-      );
+      return apiError(`Unknown island: ${islandFilter}`);
     }
     rows = rows.filter((r) => r.island_id === matchingIsland.id);
   }
@@ -52,24 +49,15 @@ export async function GET(request: Request) {
     };
   });
 
-  const body = {
-    metadata: {
-      dataset: "council_budgets",
-      version: "v0-prototype",
-      license: "Open Database License v1.0 (ODbL) (intended for v1)",
-      source: "Council quarterly returns (illustrative for the prototype)",
-      generated_at: new Date().toISOString(),
-      island_filter: islandFilter ?? null,
-      row_count: enriched.length,
-      total_islands: new Set(enriched.map((r) => r.island_id)).size,
+  return NextResponse.json(
+    {
+      metadata: buildMetadata({
+        dataset: "council_budgets",
+        rowCount: enriched.length,
+        filters: { island: islandFilter },
+      }),
+      data: enriched,
     },
-    data: enriched,
-  };
-
-  return NextResponse.json(body, {
-    headers: {
-      ...CORS_HEADERS,
-      "Cache-Control": "public, max-age=300, s-maxage=900",
-    },
-  });
+    { headers: { ...CORS_HEADERS, ...CACHE_HEADERS } }
+  );
 }

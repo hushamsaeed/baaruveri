@@ -13,10 +13,11 @@ import { PetitionListItem } from "@/components/petition-list-item";
 import { L } from "@/components/i18n-text";
 import type { Island, BudgetLine, CouncilMember, Thread, Petition } from "@/lib/types";
 
-// DB-backed: drop generateStaticParams so the build doesn't need DB access.
-// Pages render at request time; the islands list is small enough that this is
-// effectively free.
-export const dynamic = "force-dynamic";
+// Per-island profile changes when council/budget data refreshes — quarterly
+// for budgets, after elections for council, otherwise rarely. 60s revalidate
+// is generous; thread/petition counts are denormalised counters and the live
+// civic-data sidebar runs on its own component fetches.
+export const revalidate = 60;
 
 export async function generateMetadata({
   params,

@@ -16,7 +16,11 @@ import { pseudonymFor } from "@/lib/pseudonym";
 import { commentRequiresVerification } from "@/lib/comment-policy";
 import { ClaimTree } from "@/components/claim-tree";
 import type { ClaimAuthorAttribution } from "@/components/claim-add-form";
-import { CivicDataSidebar } from "@/components/civic-data-sidebar";
+import {
+  CivicDataSidebar,
+  loadCivicSidebar,
+  type CivicSidebarData,
+} from "@/components/civic-data-sidebar";
 import { CommentList } from "@/components/comment-list";
 import { CommentForm } from "@/components/comment-form";
 import { L } from "@/components/i18n-text";
@@ -49,13 +53,19 @@ export default async function ThreadDetailPage({
   const thread = await getThread(threadId);
   if (!thread) notFound();
 
-  const [island, claims, comments, user, anonId] = await Promise.all([
-    thread.island_id ? getIslandById(thread.island_id) : Promise.resolve(undefined),
-    getClaimsForThread(thread.id),
-    getCommentsForThread(thread.id),
-    getCurrentStubUser(),
-    getAnonId(),
-  ]);
+  const [island, claims, comments, user, anonId, sidebarData] =
+    await Promise.all([
+      thread.island_id
+        ? getIslandById(thread.island_id)
+        : Promise.resolve(undefined),
+      getClaimsForThread(thread.id),
+      getCommentsForThread(thread.id),
+      getCurrentStubUser(),
+      getAnonId(),
+      thread.island_id
+        ? loadCivicSidebar(thread.island_id, thread.id)
+        : Promise.resolve(null),
+    ]);
   const isHero = thread.id === HERO_THREAD_ID;
   const verificationRequired = commentRequiresVerification(thread.issue);
   // Pseudonym preview only meaningful when (a) user isn't verified AND (b)
@@ -98,6 +108,7 @@ export default async function ThreadDetailPage({
     <ThreadBody
       thread={thread}
       island={island}
+      sidebarData={sidebarData}
       claims={claims}
       comments={comments}
       isHero={isHero}
@@ -113,6 +124,7 @@ export default async function ThreadDetailPage({
 function ThreadBody({
   thread,
   island,
+  sidebarData,
   claims,
   comments,
   isHero,
@@ -124,6 +136,7 @@ function ThreadBody({
 }: {
   thread: Thread;
   island: Island | undefined;
+  sidebarData: CivicSidebarData | null;
   claims: Claim[];
   comments: Comment[];
   isHero: boolean;
@@ -318,8 +331,8 @@ function ThreadBody({
           </article>
 
           {/* Sidebar */}
-          {island && (
-            <CivicDataSidebar island={island} excludeThreadId={thread.id} />
+          {island && sidebarData && (
+            <CivicDataSidebar island={island} data={sidebarData} />
           )}
         </div>
       </div>

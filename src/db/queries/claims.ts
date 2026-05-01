@@ -1,4 +1,5 @@
 import { eq, sql } from "drizzle-orm";
+import { randomBytes } from "crypto";
 import { db } from "../index";
 import { claims as claimsTable, threads as threadsTable } from "../schema";
 import type { Claim } from "@/lib/types";
@@ -40,9 +41,11 @@ export interface RecordClaimInput {
 
 export async function recordClaim(input: RecordClaimInput): Promise<Claim> {
   // ID format mirrors the seed convention: cl-<thread-stem>-<random>. The
-  // thread stem keeps grep-ability; the random suffix avoids collisions.
+  // thread stem keeps grep-ability; the random suffix uses crypto bytes
+  // (matches comments.ts) so the entropy is real and we don't risk PK
+  // collisions from a session getting unlucky on Math.random.
   const threadStem = input.threadId.replace(/^thr-/, "");
-  const id = `cl-${threadStem}-${Math.random().toString(36).slice(2, 10)}`;
+  const id = `cl-${threadStem}-${randomBytes(4).toString("hex")}`;
 
   return await db.transaction(async (tx) => {
     const [inserted] = await tx

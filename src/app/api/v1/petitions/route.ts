@@ -7,7 +7,8 @@ import { listIslands } from "@/db/queries/islands";
 import { getSignatureCounts } from "@/db/queries/signatures";
 import {
   CORS_HEADERS,
-  CACHE_HEADERS,
+  COUNTER_CACHE_HEADERS,
+  apiError,
   buildMetadata,
 } from "@/lib/api-helpers";
 
@@ -27,10 +28,7 @@ export async function GET(request: Request) {
       (i) => i.slug === islandFilter || i.id === islandFilter
     );
     if (!match) {
-      return NextResponse.json(
-        { error: `Unknown island: ${islandFilter}` },
-        { status: 400, headers: CORS_HEADERS }
-      );
+      return apiError(`Unknown island: ${islandFilter}`);
     }
     petitions = await getPetitionsForIsland(match.id);
   } else {
@@ -59,6 +57,6 @@ export async function GET(request: Request) {
       }),
       data,
     },
-    { headers: { ...CORS_HEADERS, ...CACHE_HEADERS } }
+    { headers: { ...CORS_HEADERS, ...COUNTER_CACHE_HEADERS } }
   );
 }

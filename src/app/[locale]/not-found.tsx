@@ -1,6 +1,16 @@
+import type { Metadata } from "next";
 import { Link } from "@/i18n/navigation";
 import { getTranslations } from "next-intl/server";
 import { L } from "@/components/i18n-text";
+
+// Override the layout's `robots: { index: true }` default — 404 pages
+// must NOT be indexed even though Next.js streams them with HTTP 200
+// (per node_modules/next/dist/docs/.../loading.md "Status Codes").
+// Next auto-injects noindex on streamed 404s but our layout's robots
+// metadata wins on the wire if we don't explicitly disable it here.
+export const metadata: Metadata = {
+  robots: { index: false, follow: false },
+};
 
 // Locale-aware 404. Saafu-aligned: minimal, civic, offers the three
 // primary surfaces as the way back rather than a single home link.

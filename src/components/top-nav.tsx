@@ -3,6 +3,7 @@
 import { useTranslations } from "next-intl";
 import { Link, usePathname } from "@/i18n/navigation";
 import { LocaleSwitcher } from "./locale-switcher";
+import { SearchAffordance } from "./search-affordance";
 import { signOutStubUser } from "@/app/[locale]/auth/actions";
 import type { StubUser } from "@/lib/auth-stub";
 
@@ -62,6 +63,7 @@ export function TopNav({ user }: TopNavProps) {
           </ul>
 
           <div className="flex items-center gap-2 sm:gap-3.5 h-full md:ms-2 md:ps-3.5 md:border-s md:border-border">
+            <SearchAffordance />
             <LocaleSwitcher compact />
             {user ? (
               <form action={signOutStubUser} className="flex items-baseline gap-1.5 font-mono text-[11px]">

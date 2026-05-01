@@ -1,5 +1,6 @@
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { AtlasCard } from "@/components/atlas-card";
+import { AtollLadder } from "@/components/atoll-ladder";
 import { L } from "@/components/i18n-text";
 import { listIslands } from "@/db/queries/islands";
 
@@ -65,14 +66,25 @@ export default async function AtlasPage({
         </div>
       </header>
 
-      <section className="max-w-6xl mx-auto px-6 sm:px-10 py-10">
+      <section className="max-w-6xl mx-auto px-6 sm:px-10 py-10 space-y-10">
+        <AtollLadder
+          islands={islands}
+          labels={{
+            eyebrow: t("ladder_eyebrow"),
+            n_label: t("ladder_n_label"),
+            s_label: t("ladder_s_label"),
+            footnote: t("ladder_footnote"),
+            open: t("ladder_open"),
+          }}
+        />
+
         <div className="grid gap-5 sm:grid-cols-2 lg:grid-cols-3">
           {islands.map((island) => (
             <AtlasCard key={island.id} island={island} />
           ))}
         </div>
 
-        <p className="mt-12 pt-6 border-t border-border text-[11px] text-muted-foreground leading-relaxed max-w-2xl">
+        <p className="pt-6 border-t border-border text-[11px] text-muted-foreground leading-relaxed max-w-2xl">
           <L>{t("footnote")}</L>
         </p>
       </section>

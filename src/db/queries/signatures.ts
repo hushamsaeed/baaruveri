@@ -10,6 +10,17 @@ export async function getSignatureCount(petitionId: string): Promise<number> {
   return rows[0]?.count ?? 0;
 }
 
+// Total session signatures across all petitions — for the homepage live
+// counter ribbon. The displayed total on a petition card sums this plus
+// the seeded baseline; here we report only the session column so it
+// reflects "real activity since the platform shipped".
+export async function getTotalSessionSignatures(): Promise<number> {
+  const rows = await db
+    .select({ count: sql<number>`count(*)::int` })
+    .from(signaturesTable);
+  return rows[0]?.count ?? 0;
+}
+
 export async function hasSignedPetition(
   petitionId: string,
   stubUserId: string

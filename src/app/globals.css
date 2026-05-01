@@ -176,10 +176,15 @@
   line-height: 1.7;
 }
 
-/* Block-level Dhivehi: just the font + line-height; let parent direction control */
+/* Inline Dhivehi: Thaana glyphs need RTL direction to render in the
+   correct character order. unicode-bidi: isolate keeps embedded English
+   fragments (parenthetical names, numerals) flowing naturally inside
+   the RTL run instead of poisoning the surrounding paragraph's bidi. */
 .dv-text {
   font-family: var(--font-dv);
   line-height: 1.7;
+  direction: rtl;
+  unicode-bidi: isolate;
 }
 
 /* Live-dot pulse — used on petition counters per project_design_direction.md */

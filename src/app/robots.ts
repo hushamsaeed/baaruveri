@@ -8,10 +8,14 @@ export default function robots(): MetadataRoute.Robots {
       {
         userAgent: "*",
         allow: "/",
-        // eFaas stub is auth chrome, not content; the /api budgets is fine to
-        // crawl since it's open data, but the /datasets/budgets.csv route is
-        // a download — block it from index pollution.
-        disallow: ["/auth/", "/datasets/budgets.csv"],
+        // /auth/ is auth chrome, not content. /datasets/*.csv routes
+        // are downloads — fine to advertise but no value indexing the
+        // binary URL itself; the dataset listings on /datasets and
+        // /api/v1 are the right entry points for crawlers. /api/ JSON
+        // endpoints are crawlable (open data) but blocked here from
+        // spamming search results — humans should land on the page,
+        // not the JSON.
+        disallow: ["/auth/", "/datasets/", "/api/"],
       },
     ],
     sitemap: `${SITE}/sitemap.xml`,

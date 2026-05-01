@@ -81,34 +81,84 @@ async function fetchFeatured(): Promise<ArcGisGeoJSON> {
   return { type: "FeatureCollection", features };
 }
 
+// OneMap stores longitude/latitude as DMS strings, e.g.
+// "73° 28' 17.499\" E" rather than decimal degrees. parseFloat truncates
+// at the first non-digit so the obvious approach silently produced
+// integer-clustered (lon, lat) points. This parser converts to decimal.
+function parseDMS(s: string): number | null {
+  const m = /^\s*(\d+)°\s*(\d+)'\s*([\d.]+)"\s*([NSEW])\s*$/.exec(s);
+  if (!m) return null;
+  const [, deg, min, sec, hemi] = m;
+  const decimal =
+    parseInt(deg!, 10) +
+    parseInt(min!, 10) / 60 +
+    parseFloat(sec!) / 3600;
+  return hemi === "S" || hemi === "W" ? -decimal : decimal;
+}
+
 async function fetchInhabited(): Promise<ArcGisGeoJSON> {
+  // returnGeometry=true so we can derive an exact centroid from the
+  // polygon (more reliable than parsing OneMap's DMS display strings).
+  // The DMS strings stay as a fallback. Spatial reference 4326 (lon/lat)
+  // — the FeatureServer's source is 3857 but the query supports outSR.
   const url = new URL(ARCGIS_BASE);
   url.searchParams.set("where", "category='Residential Island'");
-  url.searchParams.set("outFields", "islandName,atoll,capital,longitude,latitude");
-  url.searchParams.set("returnGeometry", "false");
+  url.searchParams.set(
+    "outFields",
+    "islandName,atoll,capital,longitude,latitude"
+  );
+  url.searchParams.set("returnGeometry", "true");
+  url.searchParams.set("outSR", "4326");
   url.searchParams.set("resultRecordCount", "300");
-  url.searchParams.set("f", "json");
+  url.searchParams.set("geometryPrecision", "4");
+  url.searchParams.set("f", "geojson");
   const res = await fetch(url);
   if (!res.ok) {
     throw new Error(`inhabited: ${res.status} ${await res.text()}`);
   }
-  const data = (await res.json()) as {
-    features: Array<{ attributes: Record<string, unknown> }>;
-  };
-  // Convert to point GeoJSON. The longitude/latitude fields are strings
-  // in the source; coerce to numbers and drop any rows missing coords.
+  const data = (await res.json()) as ArcGisGeoJSON;
+  // Convert each polygon to its centroid (mean of the outer ring's
+  // vertices). For tiny island polygons this is indistinguishable
+  // from a true area-weighted centroid and avoids a turf dependency.
   const features: ArcGisGeoJSON["features"] = [];
   for (const f of data.features) {
-    const lon = parseFloat(String(f.attributes.longitude ?? ""));
-    const lat = parseFloat(String(f.attributes.latitude ?? ""));
-    if (!Number.isFinite(lon) || !Number.isFinite(lat)) continue;
+    let lon: number | null = null;
+    let lat: number | null = null;
+    const geom = f.geometry as
+      | { type: "Polygon"; coordinates: number[][][] }
+      | { type: "MultiPolygon"; coordinates: number[][][][] }
+      | undefined;
+    const ring =
+      geom?.type === "Polygon"
+        ? geom.coordinates[0]
+        : geom?.type === "MultiPolygon"
+          ? geom.coordinates[0]?.[0]
+          : undefined;
+    if (ring && ring.length > 0) {
+      let sumLon = 0;
+      let sumLat = 0;
+      for (const [x, y] of ring) {
+        sumLon += x!;
+        sumLat += y!;
+      }
+      lon = sumLon / ring.length;
+      lat = sumLat / ring.length;
+    } else {
+      // Fall back to the DMS strings if no geometry came back.
+      lon = parseDMS(String(f.properties.longitude ?? "")) ?? null;
+      lat = parseDMS(String(f.properties.latitude ?? "")) ?? null;
+    }
+    if (lon === null || lat === null) continue;
     features.push({
       type: "Feature",
-      geometry: { type: "Point", coordinates: [lon, lat] },
+      geometry: {
+        type: "Point",
+        coordinates: [Math.round(lon * 1e4) / 1e4, Math.round(lat * 1e4) / 1e4],
+      },
       properties: {
-        islandName: f.attributes.islandName,
-        atoll: f.attributes.atoll,
-        capital: f.attributes.capital,
+        islandName: f.properties.islandName,
+        atoll: f.properties.atoll,
+        capital: f.properties.capital,
       },
     });
   }

@@ -30,7 +30,14 @@ RUN addgroup --system --gid 1001 nodejs \
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
 COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+# Migration runner + drizzle/ migrations folder. Drizzle's postgres-js
+# migrator is ~50KB on top of drizzle-orm (already a runtime dep), so the
+# image impact is negligible.
+COPY --from=builder --chown=nextjs:nodejs /app/scripts/migrate-prod.mjs ./scripts/migrate-prod.mjs
+COPY --from=builder --chown=nextjs:nodejs /app/drizzle ./drizzle
 
 USER nextjs
 EXPOSE 3000
-CMD ["node", "server.js"]
+# Apply pending migrations, then start the server. Migration is idempotent
+# and skipped if already applied.
+CMD ["sh", "-c", "node scripts/migrate-prod.mjs && node server.js"]

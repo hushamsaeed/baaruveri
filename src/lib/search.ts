@@ -1,6 +1,7 @@
-// Search query parser. Postgres ILIKE doesn't tokenize, so we do the
-// minimum here: trim, collapse whitespace, return both the original and
-// the LIKE-escaped pattern. pg_trgm + ranking is a v3.2 follow-up.
+// Search query parser. Trims, collapses whitespace, and returns both
+// the original (used as the bound argument to similarity() for pg_trgm
+// ranking) and a LIKE-escaped pattern (used as the WHERE filter via
+// ILIKE). The actual SQL is in db/queries/search.ts.
 
 export interface ParsedSearchQuery {
   raw: string;

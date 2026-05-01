@@ -1,5 +1,5 @@
 import { Link } from "@/i18n/navigation";
-import { setRequestLocale, getTranslations } from "next-intl/server";
+import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
 import { listStubUsers } from "@/db/queries/stub-users";
 import { L } from "@/components/i18n-text";

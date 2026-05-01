@@ -9,6 +9,9 @@ export const metadata = {
     "Per-island civic profiles: council, budget, housing, climate, procurement, threads, petitions.",
 };
 
+// DB-backed: avoid build-time SSG so the build doesn't need a reachable DB.
+export const dynamic = "force-dynamic";
+
 export default async function AtlasPage({
   params,
 }: {

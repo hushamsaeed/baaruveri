@@ -1,7 +1,6 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { islands } from "@/data/islands"; // build-time generateStaticParams only
 import { getIsland } from "@/db/queries/islands";
 import { getBudgetLines } from "@/db/queries/budgets";
 import { getCouncilMembers } from "@/db/queries/council";
@@ -12,14 +11,12 @@ import { BudgetTable } from "@/components/budget-table";
 import { ThreadListItem } from "@/components/thread-list-item";
 import { PetitionListItem } from "@/components/petition-list-item";
 import { L } from "@/components/i18n-text";
-import { routing } from "@/i18n/routing";
 import type { Island, BudgetLine, CouncilMember, Thread, Petition } from "@/lib/types";
 
-export async function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
-    islands.map((i) => ({ locale, slug: i.slug }))
-  );
-}
+// DB-backed: drop generateStaticParams so the build doesn't need DB access.
+// Pages render at request time; the islands list is small enough that this is
+// effectively free.
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

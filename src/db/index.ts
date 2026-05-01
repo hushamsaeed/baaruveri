@@ -8,11 +8,20 @@ import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";
 
-const databaseUrl = process.env.DATABASE_URL;
-if (!databaseUrl) {
-  throw new Error(
-    "DATABASE_URL is not set. Copy .env.local.example to .env.local " +
-      "and start the dev Postgres via `docker compose up -d postgres`."
+// Placeholder URL is parsed but never connected to — postgres-js is lazy,
+// it opens sockets only on the first query. This lets `next build` evaluate
+// modules in environments where the DB isn't reachable (Docker build
+// sandbox). At runtime, missing DATABASE_URL fails loudly when the first
+// query runs, which the auto-migration step on container start will catch.
+const databaseUrl =
+  process.env.DATABASE_URL ?? "postgres://placeholder@localhost:5432/placeholder";
+
+if (!process.env.DATABASE_URL) {
+  // Don't throw — module load happens during `next build`. Just warn so the
+  // signal is visible if it leaks into a real environment.
+  console.warn(
+    "[db] DATABASE_URL not set at module load; using placeholder. " +
+      "Queries will fail until DATABASE_URL is provided."
   );
 }
 

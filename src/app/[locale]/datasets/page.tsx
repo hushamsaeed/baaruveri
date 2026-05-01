@@ -10,6 +10,8 @@ export const metadata = {
     "Every aggregate Baaruveri publishes is downloadable as CSV + JSON. v0 dataset: council budgets.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function DatasetsIndexPage({
   params,
 }: {

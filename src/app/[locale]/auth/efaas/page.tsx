@@ -11,6 +11,8 @@ export const metadata = {
     "Mock identity provider for the Baaruveri prototype. Real eFaas integration is post-v0.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function EfaasStubPage({
   params,
   searchParams,

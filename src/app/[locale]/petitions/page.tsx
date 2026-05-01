@@ -8,6 +8,8 @@ export const metadata = {
     "Threshold-triggered petitions to councils and parliament. Sign with eFaas.",
 };
 
+export const dynamic = "force-dynamic";
+
 export default async function PetitionsIndexPage({
   params,
 }: {

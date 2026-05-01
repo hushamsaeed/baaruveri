@@ -2,7 +2,6 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { threads } from "@/data/threads"; // build-time generateStaticParams only
 import { getThread } from "@/db/queries/threads";
 import { getClaimsForThread, HERO_THREAD_ID } from "@/db/queries/claims";
 import { getIslandById } from "@/db/queries/islands";
@@ -10,14 +9,9 @@ import { ClaimCard } from "@/components/claim-card";
 import { CivicDataSidebar } from "@/components/civic-data-sidebar";
 import { L } from "@/components/i18n-text";
 import { relativeDate } from "@/lib/date";
-import { routing } from "@/i18n/routing";
 import type { Thread, Claim, Island } from "@/lib/types";
 
-export async function generateStaticParams() {
-  return routing.locales.flatMap((locale) =>
-    threads.map((t) => ({ locale, threadId: t.id }))
-  );
-}
+export const dynamic = "force-dynamic";
 
 export async function generateMetadata({
   params,

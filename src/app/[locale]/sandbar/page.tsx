@@ -10,6 +10,8 @@ export const metadata = {
     "Threaded civic debate by issue and island. Verified and anonymous tiers.",
 };
 
+export const dynamic = "force-dynamic";
+
 const ISSUE_TAGS: IssueTag[] = [
   "housing",
   "climate",

@@ -10,7 +10,9 @@ export const metadata = {
     "Every aggregate Baaruveri publishes is downloadable as CSV + JSON. v0 dataset: council budgets.",
 };
 
-export const dynamic = "force-dynamic";
+// Dataset list rarely changes — new datasets ship as deploys, not data
+// inserts. 60s revalidate is more than enough.
+export const revalidate = 60;
 
 export default async function DatasetsIndexPage({
   params,

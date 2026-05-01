@@ -3,7 +3,7 @@ import { db, schema } from "@/db";
 import { getClaimsForThread } from "@/db/queries/claims";
 import {
   CORS_HEADERS,
-  CACHE_HEADERS,
+  COUNTER_CACHE_HEADERS,
   buildMetadata,
 } from "@/lib/api-helpers";
 
@@ -43,6 +43,6 @@ export async function GET(request: Request) {
       }),
       data: claims,
     },
-    { headers: { ...CORS_HEADERS, ...CACHE_HEADERS } }
+    { headers: { ...CORS_HEADERS, ...COUNTER_CACHE_HEADERS } }
   );
 }

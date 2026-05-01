@@ -10,7 +10,11 @@ export const metadata = {
     "Threaded civic debate by issue and island. Verified and anonymous tiers.",
 };
 
-export const dynamic = "force-dynamic";
+// Thread list updates when a new thread is started — infrequent. 60s
+// revalidate is a fair compromise between freshness and DB load. The
+// per-thread vote/reply counters are denormalised so the list view shows
+// up-to-the-minute activity from the moment of revalidation.
+export const revalidate = 60;
 
 const ISSUE_TAGS: IssueTag[] = [
   "housing",

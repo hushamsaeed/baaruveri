@@ -154,6 +154,12 @@ export const claims = pgTable("claims", {
   // session votes accumulate on top via the claim_votes ledger.
   voteCount: integer("vote_count").notNull().default(0),
   impact: real("impact").notNull(),
+  // Soft-delete (migration 0007). Both null in normal life. When a
+  // claim is taken down, removedAt is set + removedTakedownId points
+  // at the takedowns row that drove the removal. getClaimsForThread
+  // filters removed_at IS NULL via the partial index added in 0007.
+  removedAt: timestamp("removed_at", { withTimezone: true }),
+  removedTakedownId: text("removed_takedown_id"),
 });
 
 // One vote per (claim, voter). voter_key is "verified:<stub_user_id>" for

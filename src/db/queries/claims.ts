@@ -1,4 +1,4 @@
-import { eq, sql } from "drizzle-orm";
+import { and, eq, isNull, sql } from "drizzle-orm";
 import { randomBytes } from "crypto";
 import { db } from "../index";
 import { claims as claimsTable, threads as threadsTable } from "../schema";
@@ -22,11 +22,34 @@ function rowToClaim(r: Row): Claim {
 }
 
 export async function getClaimsForThread(threadId: string): Promise<Claim[]> {
+  // Filters soft-deleted (migration 0007). The partial index
+  // claims_thread_active_idx covers this exact predicate so the lookup
+  // stays cheap as the table grows.
   const rows = await db
     .select()
     .from(claimsTable)
-    .where(eq(claimsTable.threadId, threadId));
+    .where(
+      and(
+        eq(claimsTable.threadId, threadId),
+        isNull(claimsTable.removedAt)
+      )
+    );
   return rows.map(rowToClaim);
+}
+
+/** Soft-delete a claim. Sets removed_at + removed_takedown_id. The
+ *  takedown row referenced should be created by the caller in the
+ *  same transaction; this function does the claim-side update only.
+ *  No matching server action yet — admin UI is post-v0; for now this
+ *  is invoked via DB tooling or a future moderation endpoint. */
+export async function softDeleteClaim(
+  claimId: string,
+  takedownId: string
+): Promise<void> {
+  await db
+    .update(claimsTable)
+    .set({ removedAt: new Date(), removedTakedownId: takedownId })
+    .where(eq(claimsTable.id, claimId));
 }
 
 export interface RecordClaimInput {

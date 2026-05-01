@@ -8,6 +8,13 @@
       "when": 1777615625219,
       "tag": "0000_mushy_winter_soldier",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "7",
+      "when": 1777622401005,
+      "tag": "0001_slim_jack_murdock",
+      "breakpoints": true
     }
   ]
 }

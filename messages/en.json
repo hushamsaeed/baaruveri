@@ -185,6 +185,36 @@
   "thread_detail": {
     "v0_voting_note": "Inline voting and add-claim affordances are visual-only in v0; they wire up with the eFaas stub in the next milestone. Vote counts and impact ratings shown are seed values."
   },
+  "comment": {
+    "section_title": "Comments",
+    "section_meta": "{count} replies",
+    "empty": "No comments yet. Be the first to add one — anonymous posting is fine on this thread.",
+    "form_placeholder": "Add a comment…",
+    "form_submit": "Post comment",
+    "form_submitting": "Posting…",
+    "posting_as_verified": "Posting as {name_dv} ({name_en}). Your name will be public.",
+    "posting_as_anon": "Posting anonymously as {pseudonym}. Anyone in this thread sees the same handle for your subsequent comments; readers in other threads don't.",
+    "verification_required_title": "eFaas verification required",
+    "verification_required_body": "This thread is tagged {issue}, which is currently a flagged-issue requiring verified posting (per the moderation policy). Reading and voting stay anonymous.",
+    "sign_in_with_efaas": "Sign in with eFaas →",
+    "anon_label": "anon",
+    "verified_label": "eFaas",
+    "reply": "Reply",
+    "removed_marker": "[removed by moderator — see /about/takedowns]"
+  },
+  "takedowns": {
+    "page_title": "Takedown log",
+    "page_subtitle": "Public moderation record",
+    "page_lede": "Every removal happens via the protocol in the <a href=\"/about/moderation\">moderation policy</a>. Each row below is a removed post: what was taken down, why, and how the appeal went. Public so we can be held to it.",
+    "empty": "No takedowns yet. When the first one happens, the protocol — report, 24h human review, written rationale, public log entry — runs end to end and the row lands here.",
+    "col_when": "When",
+    "col_kind": "Kind",
+    "col_reason": "Reason",
+    "col_rationale": "Rationale",
+    "col_author": "Original author",
+    "col_appeal": "Appeal",
+    "footnote": "Removable categories are the narrow list in moderation policy §04. Anything that fell outside that list and was still removed should be in the appeals queue."
+  },
   "locale_switcher": {
     "label": "Language",
     "dv": "ދިވެހި",

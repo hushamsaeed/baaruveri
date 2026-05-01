@@ -31,6 +31,28 @@ export const councilRoleEnum = pgEnum("council_role", [
   "Member",
 ]);
 
+// Per moderation policy §04 — narrow list of removable categories.
+export const takedownReasonEnum = pgEnum("takedown_reason", [
+  "threat",
+  "doxx",
+  "csam",
+  "coordinated_inauthentic",
+  "signature_fraud",
+]);
+
+export const takedownTargetKindEnum = pgEnum("takedown_target_kind", [
+  "comment",
+  "claim",
+  "thread",
+]);
+
+export const takedownAppealStatusEnum = pgEnum("takedown_appeal_status", [
+  "none",
+  "pending",
+  "upheld",
+  "overturned",
+]);
+
 // ===== Tables =====
 
 export const islands = pgTable("islands", {
@@ -149,6 +171,53 @@ export const stubUsers = pgTable("stub_users", {
   verifiedAt: text("verified_at").notNull(),
 });
 
+// Free-form comments on threads. Author is either an eFaas-verified stub
+// user (author_stub_user_id set) OR an anon-tier poster (author_stub_user_id
+// null + anon_pseudonym set, derived per (anon-cookie × thread) pair).
+// Soft-delete via removed_at + foreign key into takedowns.
+export const comments = pgTable("comments", {
+  id: text("id").primaryKey(),
+  threadId: text("thread_id")
+    .notNull()
+    .references(() => threads.id, { onDelete: "cascade" }),
+  parentCommentId: text("parent_comment_id"),
+  bodyEn: text("body_en").notNull(),
+  bodyDv: text("body_dv"),
+  authorStubUserId: text("author_stub_user_id").references(() => stubUsers.id, {
+    onDelete: "set null",
+  }),
+  // Set when authorStubUserId is null (anon-tier). Stored at insert time so
+  // the displayed handle is stable even if the pseudonym vocab changes later.
+  anonPseudonym: text("anon_pseudonym"),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  removedAt: timestamp("removed_at", { withTimezone: true }),
+  removedTakedownId: text("removed_takedown_id"),
+});
+
+// Public takedown log (moderation policy §05). Every removal lands here;
+// anyone can read, drives the /about/takedowns page.
+export const takedowns = pgTable("takedowns", {
+  id: text("id").primaryKey(),
+  targetKind: takedownTargetKindEnum("target_kind").notNull(),
+  targetId: text("target_id").notNull(),
+  reasonCategory: takedownReasonEnum("reason_category").notNull(),
+  moderatorRationale: text("moderator_rationale").notNull(),
+  // Snapshot of how the author was attributed at the time of the takedown
+  // (e.g. "anon: yellowfin-grouper-12" or "verified: ޚަދީޖާ ނަދީމާ").
+  // Stored so the log remains meaningful even if the original record is
+  // hard-deleted later.
+  originalAuthorDisplay: text("original_author_display").notNull(),
+  createdAt: timestamp("created_at", { withTimezone: true })
+    .notNull()
+    .defaultNow(),
+  appealStatus: takedownAppealStatusEnum("appeal_status")
+    .notNull()
+    .default("none"),
+  appealResolvedAt: timestamp("appeal_resolved_at", { withTimezone: true }),
+});
+
 // Replaces signature-store.ts. Composite PK doubles as the dedup constraint.
 export const signaturesTable = pgTable(
   "signatures",
@@ -197,6 +266,24 @@ export const threadsRelations = relations(threads, ({ one, many }) => ({
     references: [islands.id],
   }),
   claims: many(claims),
+  comments: many(comments),
+}));
+
+export const commentsRelations = relations(comments, ({ one, many }) => ({
+  thread: one(threads, {
+    fields: [comments.threadId],
+    references: [threads.id],
+  }),
+  parent: one(comments, {
+    fields: [comments.parentCommentId],
+    references: [comments.id],
+    relationName: "comment_replies",
+  }),
+  replies: many(comments, { relationName: "comment_replies" }),
+  author: one(stubUsers, {
+    fields: [comments.authorStubUserId],
+    references: [stubUsers.id],
+  }),
 }));
 
 export const claimsRelations = relations(claims, ({ one }) => ({

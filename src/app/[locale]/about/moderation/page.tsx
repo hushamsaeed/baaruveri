@@ -133,11 +133,17 @@ export default async function ModerationPage({
             and the original author&rsquo;s username (anon or verified).
           </p>
           <p className="mt-3 text-[13.5px] text-muted-foreground">
-            Takedown log lives at <code>/about/takedowns</code> (post-v0). A
-            CSV export is available for journalists and researchers. The log
-            is the accountability mechanism on the moderation side — if you
-            think we&rsquo;re removing the wrong things, the log is your
-            evidence.
+            Takedown log lives at{" "}
+            <a
+              href="/about/takedowns"
+              className="text-primary underline underline-offset-2"
+            >
+              /about/takedowns
+            </a>{" "}
+            — empty until the first takedown happens, then every row from
+            then on. The log is the accountability mechanism on the
+            moderation side: if you think we&rsquo;re removing the wrong
+            things, the log is your evidence.
           </p>
         </Section>
 

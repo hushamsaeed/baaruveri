@@ -11,7 +11,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const entries: MetadataRoute.Sitemap = [];
 
   // Top-level surfaces
-  const topRoutes = ["", "/atlas", "/sandbar", "/petitions", "/datasets", "/about/moderation"];
+  const topRoutes = ["", "/atlas", "/sandbar", "/petitions", "/datasets", "/about/moderation", "/about/takedowns"];
   for (const locale of LOCALES) {
     for (const route of topRoutes) {
       entries.push({

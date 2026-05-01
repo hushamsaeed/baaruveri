@@ -4,7 +4,7 @@
 
 Per-island civic data made legible. Threaded debate by issue × island. eFaas-verified petitions with threshold-triggered government response.
 
-**Status:** v0 + v1 polish + v2.0 (Postgres) shipped. Concept prototype, not an official Government of Maldives product.
+**Status:** v0 + v1 polish + v2.0 (Postgres) + v2.1 (JSON API) + v2.2 (Comments + Takedowns) + v2.3 (open-data parity, health endpoint, vitest) shipped. Concept prototype, not an official Government of Maldives product.
 
 **Live:** https://baaruveri.thecrayfish.tech
 
@@ -13,7 +13,9 @@ Per-island civic data made legible. Threaded debate by issue × island. eFaas-ve
 - **Atlas** (`/atlas`) — civic profiles for 6 representative islands: Malé, Hulhumalé, Addu City, Kulhudhuffushi, Fuvahmulah, Maafaru. Each profile carries population, voter register, council seats, FY26 budget table (footnoted), council members, recent threads, open petitions.
 - **Sandbar** (`/sandbar`) — threaded debate by issue × island. Hero thread (Maafaru airport public-benefit accounting) is fully wired with Pros/Cons claim columns and a civic-data sidebar that pulls the relevant island's facts. Other threads route to a polite v0 stub.
 - **Petitions** (`/petitions`, `/petitions/[id]`) — threshold cascade (per-island council response at 5% of registered voters, parliament agenda at 5,000 national signatures). eFaas-stubbed sign flow with optimistic counter update and the Cheong Wa Dae-style live-dot pulse.
-- **Open data** (`/datasets`) — every aggregate downloadable as CSV + queryable as JSON, no signup. Per-island filter via `?island=<slug>`.
+- **Open data** (`/datasets`) — every aggregate downloadable as CSV (`/datasets/{islands,threads,petitions,council,claims,budgets}.csv`) + queryable as JSON (`/api/v1/{islands,threads,petitions,council,claims,signatures,budgets}`), no signup. Per-island filter via `?island=<slug>`.
+- **Comments** — anonymous tier with deterministic per-thread pseudonyms (e.g. `yellow-grouper-12`); eFaas verification required for issues flagged in the moderation policy (currently judiciary).
+- **Health** — `/api/v1/health` pings Postgres and returns latency; suitable for Dokploy/Traefik healthchecks.
 - **Moderation policy** (`/about/moderation`) — eight sections covering identity tiers, takedown protocol, threat model for the CIVICUS-rated "obstructed" civic space.
 - **Bilingual** — `/dv` (Dhivehi RTL primary) and `/en` (English), full chrome translation via `next-intl`. Locale switcher in the top nav.
 
@@ -36,9 +38,13 @@ pnpm dev
 
 Open [http://localhost:3000](http://localhost:3000) — the `proxy.ts` middleware redirects to `/dv` (default locale). Drizzle Studio is available via `pnpm db:studio`.
 
+Tests: `pnpm test` (vitest, unit-level — runs without a DB).
+
 ## Deploy
 
 The production deploy lives on a self-hosted Dokploy + Traefik + Letsencrypt stack. Manual redeploy command is documented in the project memory under `reference_deploy.md`. The repo ships a multi-stage `Dockerfile` (Node 22 alpine, pnpm, Next.js standalone output).
+
+Postgres is backed up daily by `scripts/backup-prod.sh` (gzipped `pg_dump`, 14-day retention) — install once into the server's `/opt/baaruveri/` and schedule via cron.
 
 ## Project memory
 

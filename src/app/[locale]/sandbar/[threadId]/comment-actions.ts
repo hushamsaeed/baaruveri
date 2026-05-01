@@ -62,7 +62,7 @@ export async function submitCommentAction(
     rateKey = `comment:anon:${anonId}`;
   }
 
-  if (!rateLimit(rateKey, COMMENT_LIMIT_PER_MIN, COMMENT_WINDOW_MS).ok) {
+  if (!(await rateLimit(rateKey, COMMENT_LIMIT_PER_MIN, COMMENT_WINDOW_MS)).ok) {
     return {
       ok: false,
       reason: "Too many comments in a short window. Try again in a minute.",

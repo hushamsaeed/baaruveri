@@ -88,7 +88,7 @@ export async function submitClaimAction(
     rateKey = `claim:anon:${anonId}`;
   }
 
-  if (!rateLimit(rateKey, CLAIM_LIMIT_PER_MIN, RATE_WINDOW_MS).ok) {
+  if (!(await rateLimit(rateKey, CLAIM_LIMIT_PER_MIN, RATE_WINDOW_MS)).ok) {
     return { ok: false, reason: RATE_LIMIT_REASON };
   }
 
@@ -136,7 +136,10 @@ export async function submitClaimVoteAction(
     ? makeVoterKey({ stubUserId: user.id })
     : makeVoterKey({ anonId: await ensureAnonId() });
 
-  if (!rateLimit(`vote:${voterKey}`, VOTE_LIMIT_PER_MIN, RATE_WINDOW_MS).ok) {
+  if (
+    !(await rateLimit(`vote:${voterKey}`, VOTE_LIMIT_PER_MIN, RATE_WINDOW_MS))
+      .ok
+  ) {
     return { ok: false, reason: RATE_LIMIT_REASON };
   }
 

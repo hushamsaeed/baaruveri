@@ -122,10 +122,6 @@ export const islands: Island[] = [
   },
 ];
 
-export function getIsland(slug: string): Island | undefined {
-  return islands.find((i) => i.slug === slug);
-}
-
-export function getIslandById(id: string): Island | undefined {
-  return islands.find((i) => i.id === id);
-}
+// Helper functions moved to src/db/queries/islands.ts when v2.0 swapped
+// the runtime to Postgres. This file is now seed-only (used by
+// scripts/seed.ts and by build-time generateStaticParams / sitemap.ts).

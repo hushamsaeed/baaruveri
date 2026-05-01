@@ -154,6 +154,12 @@ export const petitions = pgTable("petitions", {
     onDelete: "set null",
   }),
   threshold: integer("threshold").notNull(),
+  // SYNTHETIC BASELINE only — represents prior signatures from outside this
+  // session (e.g. the seeded "3247 already signed" demo number on the HDC
+  // arrears petition). Live session signatures accumulate in the `signatures`
+  // table on top of this. The displayed number is `signatures + count(*)
+  // from signatures`. Renaming to `signatures_baseline` is on the v2.x list
+  // but not worth a migration for clarity-only.
   signatures: integer("signatures").notNull().default(0),
   closesAt: text("closes_at").notNull(),
   startedByDv: text("started_by_dv").notNull(),

@@ -36,6 +36,4 @@ export const councilMembers: CouncilMember[] = [
   { id: "N-maafaru-3", island_id: "N-maafaru", name_dv: "ޙަސަން މަނިކު", name_en: "Hassan Manik", role_en: "Member", role_dv: "މެމްބަރު", party: "MDP", elected_at: "2026-04-04" },
 ];
 
-export function getCouncilMembers(islandId: string): CouncilMember[] {
-  return councilMembers.filter((c) => c.island_id === islandId);
-}
+// getCouncilMembers moved to src/db/queries/council.ts. Seed-only file.

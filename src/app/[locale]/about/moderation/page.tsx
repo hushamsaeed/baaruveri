@@ -1,3 +1,4 @@
+import Link from "next/link";
 import { setRequestLocale } from "next-intl/server";
 
 // v0 ships this as a TSX page. Will move to MDX once we wire the editor
@@ -134,12 +135,12 @@ export default async function ModerationPage({
           </p>
           <p className="mt-3 text-[13.5px] text-muted-foreground">
             Takedown log lives at{" "}
-            <a
+            <Link
               href="/about/takedowns"
               className="text-primary underline underline-offset-2"
             >
               /about/takedowns
-            </a>{" "}
+            </Link>{" "}
             — empty until the first takedown happens, then every row from
             then on. The log is the accountability mechanism on the
             moderation side: if you think we&rsquo;re removing the wrong

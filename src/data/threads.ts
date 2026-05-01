@@ -97,6 +97,4 @@ export const threads: Thread[] = [
   },
 ];
 
-export function getThreadsForIsland(islandId: string): Thread[] {
-  return threads.filter((t) => t.island_id === islandId);
-}
+// getThreadsForIsland moved to src/db/queries/threads.ts. Seed-only file.

@@ -90,8 +90,5 @@ export const claims: Claim[] = [
   },
 ];
 
-export function getClaimsForThread(threadId: string): Claim[] {
-  return claims.filter((c) => c.thread_id === threadId);
-}
-
-export const HERO_THREAD_ID = "thr-maafaru-01";
+// getClaimsForThread + HERO_THREAD_ID moved to src/db/queries/claims.ts.
+// Seed-only file.

@@ -19,6 +19,16 @@
     "back_to_atlas": "← Atlas",
     "back_to_sandbar": "← Sandbar"
   },
+  "search": {
+    "open": "Search Baaruveri",
+    "placeholder": "Search islands, threads, petitions",
+    "loading": "Searching…",
+    "no_results": "No matches for \"{q}\"",
+    "error": "Search failed. Try again.",
+    "group_islands": "Islands",
+    "group_threads": "Threads",
+    "group_petitions": "Petitions"
+  },
   "home": {
     "tagline": "Per-island civic data, made browsable.",
     "lede": "Atlas of council, budget, housing, climate and procurement for every inhabited island. Sandbar for issue × island debate. Threshold-triggered petitions, signed with eFaas."

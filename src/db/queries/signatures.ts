@@ -1,4 +1,4 @@
-import { and, eq, sql } from "drizzle-orm";
+import { and, eq, inArray, sql } from "drizzle-orm";
 import { db } from "../index";
 import { signaturesTable } from "../schema";
 
@@ -8,6 +8,28 @@ export async function getSignatureCount(petitionId: string): Promise<number> {
     .from(signaturesTable)
     .where(eq(signaturesTable.petitionId, petitionId));
   return rows[0]?.count ?? 0;
+}
+
+/**
+ * Batch counterpart to getSignatureCount — single GROUP BY query for
+ * a list of petition ids, returning a Map<petitionId, count>. Petitions
+ * with zero signatures are absent from the map. Replaces the
+ * Promise.all(N × COUNT(*)) pattern in /api/v1/petitions and the
+ * datasets CSV route.
+ */
+export async function getSignatureCounts(
+  petitionIds: readonly string[]
+): Promise<Map<string, number>> {
+  if (petitionIds.length === 0) return new Map();
+  const rows = await db
+    .select({
+      petitionId: signaturesTable.petitionId,
+      count: sql<number>`count(*)::int`,
+    })
+    .from(signaturesTable)
+    .where(inArray(signaturesTable.petitionId, petitionIds as string[]))
+    .groupBy(signaturesTable.petitionId);
+  return new Map(rows.map((r) => [r.petitionId, r.count]));
 }
 
 // Total session signatures across all petitions — for the homepage live

@@ -3,7 +3,10 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { listIslands } from "@/db/queries/islands";
 import { listThreads } from "@/db/queries/threads";
 import { listPetitions } from "@/db/queries/petitions";
-import { getTotalSessionSignatures } from "@/db/queries/signatures";
+import {
+  getSignatureCounts,
+  getTotalSessionSignatures,
+} from "@/db/queries/signatures";
 import { HERO_THREAD_ID } from "@/db/queries/claims";
 import { L } from "@/components/i18n-text";
 import type { Island } from "@/lib/types";
@@ -42,8 +45,15 @@ export default async function Home({
   const featuredThread =
     threads.find((th) => th.id === HERO_THREAD_ID) ?? threads[0];
 
-  // Featured petition: highest seeded baseline (the most-active one).
-  const featuredPetition = [...petitions].sort(
+  // Featured petition: highest live total (baseline + session signatures)
+  // so the homepage feature reflects current activity rather than the
+  // seed snapshot.
+  const sessionCounts = await getSignatureCounts(petitions.map((p) => p.id));
+  const petitionsLive = petitions.map((p) => ({
+    ...p,
+    signatures: p.signatures + (sessionCounts.get(p.id) ?? 0),
+  }));
+  const featuredPetition = [...petitionsLive].sort(
     (a, b) => b.signatures - a.signatures
   )[0];
 

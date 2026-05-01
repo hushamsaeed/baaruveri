@@ -218,7 +218,14 @@ export const comments = pgTable("comments", {
   threadId: text("thread_id")
     .notNull()
     .references(() => threads.id, { onDelete: "cascade" }),
-  parentCommentId: text("parent_comment_id"),
+  // Self-FK with cascade, mirroring claims.parentClaimId. AnyPgColumn
+  // breaks the typed self-cycle. Migration 0004 adds the constraint to
+  // existing rows; the application layer additionally enforces
+  // same-thread parent in submitCommentAction.
+  parentCommentId: text("parent_comment_id").references(
+    (): AnyPgColumn => comments.id,
+    { onDelete: "cascade" }
+  ),
   bodyEn: text("body_en").notNull(),
   bodyDv: text("body_dv"),
   authorStubUserId: text("author_stub_user_id").references(() => stubUsers.id, {

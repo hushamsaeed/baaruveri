@@ -6,6 +6,7 @@ import { getCouncilMembers } from "@/db/queries/council";
 import { getBudgetLines } from "@/db/queries/budgets";
 import { getThreadsForIsland } from "@/db/queries/threads";
 import { getPetitionsForIsland } from "@/db/queries/petitions";
+import { getSignatureCounts } from "@/db/queries/signatures";
 
 interface CivicDataSidebarProps {
   island: Island;
@@ -20,12 +21,19 @@ function fmtMvr(n: number): string {
 
 export async function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarProps) {
   const ts = await getTranslations("civic_sidebar");
-  const [council, budgetLines, threadsForIsland, petitions] = await Promise.all([
+  const [council, budgetLines, threadsForIsland, petitionsRaw] = await Promise.all([
     getCouncilMembers(island.id),
     getBudgetLines(island.id),
     getThreadsForIsland(island.id),
     getPetitionsForIsland(island.id),
   ]);
+  // Enrich petitions with live session signatures so the sidebar shows
+  // the same total the petition card / detail page does.
+  const sessionCounts = await getSignatureCounts(petitionsRaw.map((p) => p.id));
+  const petitions = petitionsRaw.map((p) => ({
+    ...p,
+    signatures: p.signatures + (sessionCounts.get(p.id) ?? 0),
+  }));
   const chair = council.find((c) => c.role_en === "Chair");
   const totalAllocated = budgetLines.reduce((s, l) => s + l.allocated_mvr, 0);
   const totalSpent = budgetLines.reduce((s, l) => s + l.spent_mvr, 0);

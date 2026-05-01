@@ -1,0 +1,90 @@
+# Auto-deploy to baaruveri.thecrayfish.tech.
+#
+# Triggers on push:main + manual workflow_dispatch. Replaces the manual
+# `ssh root@... && git pull && docker run ... && docker build ...`
+# documented in reference_deploy.md.
+#
+# Required GitHub repository secrets (Settings → Secrets and variables →
+# Actions):
+#   SSH_HOST         hostname or IP of the server (e.g. 89.167.93.86)
+#   SSH_USER         user to SSH as (default: root)
+#   SSH_PRIVATE_KEY  full private key with newlines (paste the file contents)
+#
+# Until those secrets are configured the workflow will fail visibly on
+# the first run after merge — that's the cue to set them up.
+#
+# The deploy script is intentionally identical to the manual command in
+# reference_deploy.md so an operator can fall back to running it by hand
+# if the action ever breaks.
+
+name: Deploy
+
+on:
+  workflow_dispatch:
+  push:
+    branches: [main]
+
+# Serialise deploys: never cancel an in-flight one (a half-applied
+# migration is worse than waiting), but only one queued at a time.
+concurrency:
+  group: deploy-prod
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to baaruveri.thecrayfish.tech
+    runs-on: ubuntu-latest
+    # Only run on the canonical repo (not on forks).
+    if: github.repository == 'hushamsaeed/baaruveri'
+    steps:
+      - name: SSH + redeploy
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.SSH_HOST }}
+          username: ${{ secrets.SSH_USER }}
+          key: ${{ secrets.SSH_PRIVATE_KEY }}
+          # 15 min should be enough for the migration container + docker
+          # build + restart even on the small VPS.
+          command_timeout: 15m
+          script: |
+            set -euo pipefail
+            cd /opt/baaruveri/repo
+            git fetch --all
+            git reset --hard origin/main
+
+            echo "::group::Migration"
+            docker run --rm \
+              --network dokploy-network \
+              -v /opt/baaruveri/repo:/app \
+              -w /app \
+              --env-file /opt/baaruveri/.env \
+              node:22-alpine \
+              sh -c "corepack enable && corepack prepare pnpm@10.29.3 --activate && pnpm install --frozen-lockfile && pnpm db:migrate"
+            echo "::endgroup::"
+
+            echo "::group::Build image"
+            DOCKER_BUILDKIT=1 docker build -t baaruveri-web:latest .
+            echo "::endgroup::"
+
+            echo "::group::Restart container"
+            docker rm -f baaruveri-web 2>/dev/null || true
+            docker run -d --name baaruveri-web --restart=unless-stopped \
+              --network dokploy-network \
+              --env-file /opt/baaruveri/.env \
+              -e NODE_ENV=production -e NEXT_TELEMETRY_DISABLED=1 \
+              baaruveri-web:latest
+            echo "::endgroup::"
+
+            # Smoke check: wait up to 30s for the container to answer the
+            # health endpoint, then surface the response.
+            echo "::group::Health check"
+            for i in $(seq 1 15); do
+              if docker exec baaruveri-web wget --quiet --spider http://127.0.0.1:3000/api/v1/health 2>/dev/null; then
+                echo "Healthy after ${i}x2s"
+                exit 0
+              fi
+              sleep 2
+            done
+            echo "Container did not become healthy within 30s — investigate" >&2
+            docker logs --tail 60 baaruveri-web >&2 || true
+            exit 1

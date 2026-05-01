@@ -8,6 +8,24 @@
     "open_data": "Open data",
     "source": "Source"
   },
+  "not_found": {
+    "eyebrow": "404 · page not found",
+    "title": "That page isn't on Baaruveri",
+    "body": "The URL you followed doesn't resolve. It may have moved, or you may have arrived from a stale link. Try one of the surfaces below.",
+    "go_home": "Home",
+    "go_atlas": "Atlas — per-island civic profiles",
+    "go_sandbar": "Sandbar — threaded civic debate",
+    "go_petitions": "Petitions",
+    "go_search": "Search Baaruveri"
+  },
+  "error_page": {
+    "eyebrow": "Something broke",
+    "title": "We hit an error rendering this page",
+    "body": "The platform recovered, but the page didn't render. Try again, or use the link below to get back to a working surface. If this keeps happening, the digest below identifies the failure in our server logs.",
+    "digest_label": "Error digest:",
+    "retry": "Try again",
+    "go_home": "Go home"
+  },
   "nav": {
     "home": "Home",
     "atlas": "Atlas",

@@ -85,6 +85,4 @@ export const budgetLines: BudgetLine[] = seeds.flatMap((s) =>
   })
 );
 
-export function getBudgetLines(islandId: string): BudgetLine[] {
-  return budgetLines.filter((b) => b.island_id === islandId);
-}
+// getBudgetLines moved to src/db/queries/budgets.ts. Seed-only file.

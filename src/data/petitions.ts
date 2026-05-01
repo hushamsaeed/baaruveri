@@ -126,12 +126,5 @@ export const petitions: Petition[] = [
   },
 ];
 
-export function getPetitionsForIsland(islandId: string): Petition[] {
-  return petitions.filter(
-    (p) => p.island_id === islandId || (p.scope === "national")
-  );
-}
-
-export function getPetition(id: string): Petition | undefined {
-  return petitions.find((p) => p.id === id);
-}
+// getPetition / getPetitionsForIsland moved to src/db/queries/petitions.ts.
+// Seed-only file.

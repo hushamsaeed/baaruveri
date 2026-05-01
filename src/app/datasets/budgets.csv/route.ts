@@ -1,5 +1,5 @@
-import { budgetLines } from "@/data/budget-lines";
-import { islands } from "@/data/islands";
+import { listBudgetLines } from "@/db/queries/budgets";
+import { listIslands } from "@/db/queries/islands";
 
 const CORS_HEADERS = {
   "Access-Control-Allow-Origin": "*",
@@ -39,7 +39,11 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url);
   const islandFilter = searchParams.get("island");
 
-  let rows = budgetLines;
+  const [allBudgetLines, islands] = await Promise.all([
+    listBudgetLines(),
+    listIslands(),
+  ]);
+  let rows = allBudgetLines;
   let filename = "baaruveri-budgets-fy26q1.csv";
   if (islandFilter) {
     const matchingIsland = islands.find(

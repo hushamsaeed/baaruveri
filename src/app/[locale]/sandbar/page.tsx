@@ -1,8 +1,7 @@
-import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { ThreadListItem } from "@/components/thread-list-item";
 import { L } from "@/components/i18n-text";
-import { threads } from "@/data/threads";
+import { listThreads } from "@/db/queries/threads";
 import type { IssueTag } from "@/lib/types";
 
 export const metadata = {
@@ -28,13 +27,11 @@ export default async function SandbarHomePage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <SandbarContent />;
-}
-
-function SandbarContent() {
-  const t = useTranslations("sandbar");
-  const ti = useTranslations("issue");
-
+  const [t, ti, threads] = await Promise.all([
+    getTranslations("sandbar"),
+    getTranslations("issue"),
+    listThreads(),
+  ]);
   const totalReplies = threads.reduce((s, x) => s + x.reply_count, 0);
   const totalClaims = threads.reduce((s, x) => s + x.claim_count, 0);
   const sorted = [...threads].sort(
@@ -114,3 +111,5 @@ function SandbarContent() {
     </main>
   );
 }
+
+// Defensive: marker so the rest of the file is the page above (no inner helper anymore).

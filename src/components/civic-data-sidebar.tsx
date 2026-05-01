@@ -1,11 +1,11 @@
 import { Link } from "@/i18n/navigation";
-import { useTranslations } from "next-intl";
+import { getTranslations } from "next-intl/server";
 import { L } from "./i18n-text";
 import type { Island } from "@/lib/types";
-import { getCouncilMembers } from "@/data/council-members";
-import { getBudgetLines } from "@/data/budget-lines";
-import { getThreadsForIsland } from "@/data/threads";
-import { getPetitionsForIsland } from "@/data/petitions";
+import { getCouncilMembers } from "@/db/queries/council";
+import { getBudgetLines } from "@/db/queries/budgets";
+import { getThreadsForIsland } from "@/db/queries/threads";
+import { getPetitionsForIsland } from "@/db/queries/petitions";
 
 interface CivicDataSidebarProps {
   island: Island;
@@ -18,17 +18,18 @@ function fmtMvr(n: number): string {
   return n.toLocaleString("en-US");
 }
 
-export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarProps) {
-  const ts = useTranslations("civic_sidebar");
-  const council = getCouncilMembers(island.id);
+export async function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarProps) {
+  const ts = await getTranslations("civic_sidebar");
+  const [council, budgetLines, threadsForIsland, petitions] = await Promise.all([
+    getCouncilMembers(island.id),
+    getBudgetLines(island.id),
+    getThreadsForIsland(island.id),
+    getPetitionsForIsland(island.id),
+  ]);
   const chair = council.find((c) => c.role_en === "Chair");
-  const budgetLines = getBudgetLines(island.id);
   const totalAllocated = budgetLines.reduce((s, l) => s + l.allocated_mvr, 0);
   const totalSpent = budgetLines.reduce((s, l) => s + l.spent_mvr, 0);
-  const otherThreads = getThreadsForIsland(island.id).filter(
-    (t) => t.id !== excludeThreadId
-  );
-  const petitions = getPetitionsForIsland(island.id);
+  const otherThreads = threadsForIsland.filter((t) => t.id !== excludeThreadId);
 
   return (
     <aside className="bg-muted/40 border border-border p-5 lg:sticky lg:top-6 self-start">

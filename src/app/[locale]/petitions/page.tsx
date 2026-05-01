@@ -1,5 +1,5 @@
 import { setRequestLocale } from "next-intl/server";
-import { petitions } from "@/data/petitions";
+import { listPetitions } from "@/db/queries/petitions";
 import { PetitionListItem } from "@/components/petition-list-item";
 
 export const metadata = {
@@ -16,6 +16,7 @@ export default async function PetitionsIndexPage({
   const { locale } = await params;
   setRequestLocale(locale);
 
+  const petitions = await listPetitions();
   const totalSigs = petitions.reduce((s, p) => s + p.signatures, 0);
   const sorted = [...petitions].sort((a, b) => {
     // National first, then by signature count descending

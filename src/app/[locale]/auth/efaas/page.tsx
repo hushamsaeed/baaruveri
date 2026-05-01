@@ -1,7 +1,7 @@
 import { Link } from "@/i18n/navigation";
-import { setRequestLocale } from "next-intl/server";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { STUB_USERS } from "@/lib/auth-stub";
+import { listStubUsers } from "@/db/queries/stub-users";
 import { L } from "@/components/i18n-text";
 import { chooseStubUser } from "../actions";
 
@@ -22,10 +22,17 @@ export default async function EfaasStubPage({
   setRequestLocale(locale);
   const sp = await searchParams;
   const returnTo = sp.return_to ?? "/";
-  return <EfaasBody returnTo={returnTo} />;
+  const stubUsers = await listStubUsers();
+  return <EfaasBody returnTo={returnTo} stubUsers={stubUsers} />;
 }
 
-function EfaasBody({ returnTo }: { returnTo: string }) {
+function EfaasBody({
+  returnTo,
+  stubUsers,
+}: {
+  returnTo: string;
+  stubUsers: Awaited<ReturnType<typeof listStubUsers>>;
+}) {
   const ta = useTranslations("auth");
   const tc = useTranslations("common");
   return (
@@ -47,7 +54,7 @@ function EfaasBody({ returnTo }: { returnTo: string }) {
           </div>
 
           <ul className="grid gap-2.5">
-            {STUB_USERS.map((u) => (
+            {stubUsers.map((u) => (
               <li key={u.id}>
                 <form action={chooseStubUser}>
                   <input type="hidden" name="user_id" value={u.id} />

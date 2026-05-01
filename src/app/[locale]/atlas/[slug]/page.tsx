@@ -1,11 +1,12 @@
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { islands, getIsland } from "@/data/islands";
-import { getBudgetLines } from "@/data/budget-lines";
-import { getCouncilMembers } from "@/data/council-members";
-import { getThreadsForIsland } from "@/data/threads";
-import { getPetitionsForIsland } from "@/data/petitions";
+import { islands } from "@/data/islands"; // build-time generateStaticParams only
+import { getIsland } from "@/db/queries/islands";
+import { getBudgetLines } from "@/db/queries/budgets";
+import { getCouncilMembers } from "@/db/queries/council";
+import { getThreadsForIsland } from "@/db/queries/threads";
+import { getPetitionsForIsland } from "@/db/queries/petitions";
 import { IslandProfileHeader } from "@/components/island-profile-header";
 import { BudgetTable } from "@/components/budget-table";
 import { ThreadListItem } from "@/components/thread-list-item";
@@ -26,7 +27,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; slug: string }>;
 }) {
   const { slug } = await params;
-  const island = getIsland(slug);
+  const island = await getIsland(slug);
   if (!island) return { title: "Not found — Baaruveri" };
   return {
     title: `${island.name_en} — Atlas — Baaruveri`,
@@ -65,13 +66,15 @@ export default async function IslandProfilePage({
 }) {
   const { locale, slug } = await params;
   setRequestLocale(locale);
-  const island = getIsland(slug);
+  const island = await getIsland(slug);
   if (!island) notFound();
 
-  const budgetLines = getBudgetLines(island.id);
-  const council = getCouncilMembers(island.id);
-  const threads = getThreadsForIsland(island.id);
-  const petitions = getPetitionsForIsland(island.id);
+  const [budgetLines, council, threads, petitions] = await Promise.all([
+    getBudgetLines(island.id),
+    getCouncilMembers(island.id),
+    getThreadsForIsland(island.id),
+    getPetitionsForIsland(island.id),
+  ]);
 
   return (
     <ProfileBody

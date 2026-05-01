@@ -2,9 +2,10 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { setRequestLocale } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { threads } from "@/data/threads";
-import { getClaimsForThread, HERO_THREAD_ID } from "@/data/claims";
-import { getIslandById } from "@/data/islands";
+import { threads } from "@/data/threads"; // build-time generateStaticParams only
+import { getThread } from "@/db/queries/threads";
+import { getClaimsForThread, HERO_THREAD_ID } from "@/db/queries/claims";
+import { getIslandById } from "@/db/queries/islands";
 import { ClaimCard } from "@/components/claim-card";
 import { CivicDataSidebar } from "@/components/civic-data-sidebar";
 import { L } from "@/components/i18n-text";
@@ -24,7 +25,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; threadId: string }>;
 }) {
   const { threadId } = await params;
-  const thread = threads.find((t) => t.id === threadId);
+  const thread = await getThread(threadId);
   if (!thread) return { title: "Not found — Baaruveri" };
   return {
     title: `${thread.title_en} — Sandbar — Baaruveri`,
@@ -39,11 +40,13 @@ export default async function ThreadDetailPage({
 }) {
   const { locale, threadId } = await params;
   setRequestLocale(locale);
-  const thread = threads.find((t) => t.id === threadId);
+  const thread = await getThread(threadId);
   if (!thread) notFound();
 
-  const island = thread.island_id ? getIslandById(thread.island_id) : undefined;
-  const claims = getClaimsForThread(thread.id);
+  const [island, claims] = await Promise.all([
+    thread.island_id ? getIslandById(thread.island_id) : Promise.resolve(undefined),
+    getClaimsForThread(thread.id),
+  ]);
   const isHero = thread.id === HERO_THREAD_ID;
 
   return (

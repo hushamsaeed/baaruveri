@@ -1,9 +1,8 @@
 import { Link } from "@/i18n/navigation";
-import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { L } from "@/components/i18n-text";
-import { budgetLines } from "@/data/budget-lines";
-import { islands } from "@/data/islands";
+import { listBudgetLines } from "@/db/queries/budgets";
+import { listIslands } from "@/db/queries/islands";
 
 export const metadata = {
   title: "Open data — Baaruveri",
@@ -18,11 +17,11 @@ export default async function DatasetsIndexPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <DatasetsContent />;
-}
-
-function DatasetsContent() {
-  const t = useTranslations("datasets");
+  const [t, budgetLines, islands] = await Promise.all([
+    getTranslations("datasets"),
+    listBudgetLines(),
+    listIslands(),
+  ]);
   const totalIslands = new Set(budgetLines.map((b) => b.island_id)).size;
   const totalAllocated = budgetLines.reduce((s, l) => s + l.allocated_mvr, 0);
 

@@ -18,7 +18,7 @@ import { budgetLines as budgetFixture } from "../src/data/budget-lines";
 import { threads as threadsFixture } from "../src/data/threads";
 import { petitions as petitionsFixture } from "../src/data/petitions";
 import { claims as claimsFixture } from "../src/data/claims";
-import { STUB_USERS } from "../src/lib/auth-stub";
+import { STUB_USERS } from "../src/data/stub-users";
 
 async function seed() {
   console.log("Seeding Baaruveri database…\n");

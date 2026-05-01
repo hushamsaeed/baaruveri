@@ -2,13 +2,13 @@ import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { setRequestLocale, getTranslations } from "next-intl/server";
 import { useTranslations } from "next-intl";
-import { getPetition } from "@/data/petitions";
-import { getIslandById } from "@/data/islands";
+import { getPetition } from "@/db/queries/petitions";
+import { getIslandById } from "@/db/queries/islands";
 import { getCurrentStubUser, type StubUser } from "@/lib/auth-stub";
 import {
-  getStubSignatureCount,
+  getSignatureCount as getStubSignatureCount,
   hasSignedPetition,
-} from "@/lib/signature-store";
+} from "@/db/queries/signatures";
 import { signOutStubUser } from "@/app/[locale]/auth/actions";
 import { PetitionSignBlock } from "@/components/petition-sign-block";
 import { CivicDataSidebar } from "@/components/civic-data-sidebar";
@@ -25,7 +25,7 @@ export async function generateMetadata({
   params: Promise<{ locale: string; id: string }>;
 }) {
   const { id } = await params;
-  const p = getPetition(id);
+  const p = await getPetition(id);
   if (!p) return { title: "Not found — Baaruveri" };
   return {
     title: `${p.title_en} — Petitions — Baaruveri`,
@@ -40,16 +40,16 @@ export default async function PetitionDetailPage({
 }) {
   const { locale, id } = await params;
   setRequestLocale(locale);
-  const petition = getPetition(id);
+  const petition = await getPetition(id);
   if (!petition) notFound();
 
-  const island = petition.island_id ? getIslandById(petition.island_id) : null;
   const user = await getCurrentStubUser();
-  const sessionSigs = getStubSignatureCount(petition.id);
+  const [island, sessionSigs, alreadySigned] = await Promise.all([
+    petition.island_id ? getIslandById(petition.island_id) : Promise.resolve(null),
+    getStubSignatureCount(petition.id),
+    user ? hasSignedPetition(petition.id, user.id) : Promise.resolve(false),
+  ]);
   const totalSignatures = petition.signatures + sessionSigs;
-  const alreadySigned = user
-    ? hasSignedPetition(petition.id, user.id)
-    : false;
   const days = daysUntil(petition.closes_at);
 
   // Pre-resolve the scope label since useTranslations can't be called in async

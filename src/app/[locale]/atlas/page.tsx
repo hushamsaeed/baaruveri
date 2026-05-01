@@ -1,8 +1,7 @@
-import { setRequestLocale } from "next-intl/server";
-import { useTranslations } from "next-intl";
+import { setRequestLocale, getTranslations } from "next-intl/server";
 import { AtlasCard } from "@/components/atlas-card";
 import { L } from "@/components/i18n-text";
-import { islands } from "@/data/islands";
+import { listIslands } from "@/db/queries/islands";
 
 export const metadata = {
   title: "Atlas — Baaruveri",
@@ -17,11 +16,10 @@ export default async function AtlasPage({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  return <AtlasContent />;
-}
-
-function AtlasContent() {
-  const t = useTranslations("atlas");
+  const [t, islands] = await Promise.all([
+    getTranslations("atlas"),
+    listIslands(),
+  ]);
   const totalPop = islands.reduce((sum, i) => sum + i.population, 0);
   const totalThreads = islands.reduce((sum, i) => sum + i.active_threads, 0);
   const totalPetitions = islands.reduce((sum, i) => sum + i.active_petitions, 0);

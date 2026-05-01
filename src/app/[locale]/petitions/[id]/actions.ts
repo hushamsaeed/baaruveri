@@ -26,7 +26,8 @@ export async function signPetitionAction(
     return { ok: true, alreadySigned: true };
   }
   if (
-    !rateLimit(`sign:${user.id}`, SIGN_LIMIT_PER_MIN, SIGN_WINDOW_MS).ok
+    !(await rateLimit(`sign:${user.id}`, SIGN_LIMIT_PER_MIN, SIGN_WINDOW_MS))
+      .ok
   ) {
     return {
       ok: false,

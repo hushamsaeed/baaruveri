@@ -7,6 +7,7 @@ import {
   smallint,
   timestamp,
   primaryKey,
+  index,
   type AnyPgColumn,
 } from "drizzle-orm/pg-core";
 import { relations } from "drizzle-orm";
@@ -262,6 +263,21 @@ export const takedowns = pgTable("takedowns", {
     .default("none"),
   appealResolvedAt: timestamp("appeal_resolved_at", { withTimezone: true }),
 });
+
+// Postgres-backed rate-limit buckets. Replaces the in-memory Map<>
+// limiter from v3.9 so caps survive container restarts and span
+// horizontally-scaled instances. Migration 0005.
+export const rateLimitBuckets = pgTable(
+  "rate_limit_buckets",
+  {
+    key: text("key").primaryKey(),
+    count: integer("count").notNull(),
+    resetAt: timestamp("reset_at", { withTimezone: true }).notNull(),
+  },
+  (t) => ({
+    resetAtIdx: index("rate_limit_buckets_reset_at_idx").on(t.resetAt),
+  })
+);
 
 // Replaces signature-store.ts. Composite PK doubles as the dedup constraint.
 export const signaturesTable = pgTable(

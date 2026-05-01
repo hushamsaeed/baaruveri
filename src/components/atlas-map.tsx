@@ -16,11 +16,25 @@ import { useRouter } from "@/i18n/navigation";
 // maplibre-gl is dynamically imported inside useEffect so SSR doesn't
 // touch window/canvas.
 
-interface AtlasMapProps {
-  height?: string;
+// Maldives extent (lon/lat). Used for the default fitBounds and as the
+// outer-pan limit so users can't drag the camera off into the Indian
+// Ocean. Slight padding around the actual extent so coastal islands
+// aren't pinned to the canvas edge.
+const MALDIVES_BOUNDS: [[number, number], [number, number]] = [
+  [72.4, -1.0],
+  [74.0, 7.4],
+];
+
+export interface AtlasMapApi {
+  flyTo: (lon: number, lat: number, zoom?: number) => void;
 }
 
-export function AtlasMap({ height = "520px" }: AtlasMapProps) {
+interface AtlasMapProps {
+  height?: string;
+  onReady?: (api: AtlasMapApi) => void;
+}
+
+export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
 
@@ -56,8 +70,7 @@ export function AtlasMap({ height = "520px" }: AtlasMapProps) {
       }
 
       // Minimal-style map — pure background fill, no basemap, no
-      // external tile-server dependency. The previous version set
-      // `glyphs: undefined` which some MapLibre validators flag.
+      // external tile-server dependency.
       let map: InstanceType<typeof maplibregl.Map>;
       try {
         map = new maplibregl.Map({
@@ -73,11 +86,15 @@ export function AtlasMap({ height = "520px" }: AtlasMapProps) {
               },
             ],
           },
-          // Maldives spans roughly 72.5–73.8°E, -0.7–7.1°N.
-          center: [73.2, 3.4],
-          zoom: 6,
-          minZoom: 5.5,
-          maxZoom: 11,
+          // fitBounds on the Maldives extent. The atoll chain is tall
+          // and narrow so a fixed center+zoom always cropped one end.
+          // bounds + a 24px padding keeps every island in the frame
+          // regardless of the canvas aspect ratio.
+          bounds: MALDIVES_BOUNDS,
+          fitBoundsOptions: { padding: 24 },
+          maxBounds: MALDIVES_BOUNDS,
+          minZoom: 5,
+          maxZoom: 12,
           attributionControl: {
             compact: true,
             customAttribution:
@@ -100,6 +117,15 @@ export function AtlasMap({ height = "520px" }: AtlasMapProps) {
       });
 
       map.on("load", () => {
+        // Expose a small imperative API to the parent so the side
+        // panel can fly the map to a clicked island. Kept narrow on
+        // purpose — anything else parents need should be added here
+        // explicitly so the surface stays auditable.
+        onReady?.({
+          flyTo: (lon, lat, zoom = 11) =>
+            map.flyTo({ center: [lon, lat], zoom, essential: true }),
+        });
+
         if (inhabited) {
           map.addSource("inhabited", { type: "geojson", data: inhabited });
           map.addLayer({
@@ -158,6 +184,10 @@ export function AtlasMap({ height = "520px" }: AtlasMapProps) {
       cancelled = true;
       mapRef?.remove();
     };
+    // onReady is intentionally not in the dep array — it's a stable
+    // ref-style callback and re-running the whole map init on each
+    // render would tear down and rebuild the canvas.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
 
   return (

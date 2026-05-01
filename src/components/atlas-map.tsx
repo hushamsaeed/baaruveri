@@ -25,6 +25,15 @@ const MALDIVES_BOUNDS: [[number, number], [number, number]] = [
   [74.0, 7.4],
 ];
 
+export interface AtlasSelection {
+  islandName: string;
+  atoll: string;
+  coordinates: [number, number];
+  isFeatured: boolean;
+  slug?: string;
+  capital?: string;
+}
+
 export interface AtlasMapApi {
   flyTo: (lon: number, lat: number, zoom?: number) => void;
 }
@@ -32,15 +41,42 @@ export interface AtlasMapApi {
 interface AtlasMapProps {
   height?: string;
   onReady?: (api: AtlasMapApi) => void;
+  /** Render the survey-instrument crosshair + emphasis marker on this
+   *  island. Updates without re-initialising the map. */
+  selection?: AtlasSelection | null;
+  /** Fired when the user clicks a non-featured inhabited dot. The
+   *  parent decides what to do (typically: setSelection + flyTo). */
+  onDotClick?: (s: AtlasSelection) => void;
 }
 
-export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
+export function AtlasMap({
+  height = "520px",
+  onReady,
+  selection,
+  onDotClick,
+}: AtlasMapProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const router = useRouter();
+  // Imperative handle to the live MapLibre instance, populated once
+  // 'load' fires. The selection-effect below reads it without
+  // re-running the init effect.
+  const mapInstance = useRef<InstanceType<
+    typeof import("maplibre-gl").Map
+  > | null>(null);
+  const isLoaded = useRef(false);
+  // Re-render-stable refs for the prop callbacks — the init effect
+  // shouldn't restart when these identities change. Updated inside an
+  // effect (writing to ref.current during render is a lint error
+  // because it can desync with the next render's children).
+  const onReadyRef = useRef(onReady);
+  const onDotClickRef = useRef(onDotClick);
+  useEffect(() => {
+    onReadyRef.current = onReady;
+    onDotClickRef.current = onDotClick;
+  });
 
   useEffect(() => {
     if (!containerRef.current) return;
-    let mapRef: { remove: () => void } | null = null;
     let cancelled = false;
 
     (async () => {
@@ -53,10 +89,6 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
       }
       if (cancelled || !containerRef.current) return;
 
-      // Eager-fetch both static GeoJSON files in parallel — earlier
-      // versions did this inside the 'load' handler which sometimes
-      // raced and silently produced an empty map. Loading first means
-      // we surface a fetch failure visibly instead of a blank canvas.
       const [featuredRes, inhabitedRes] = await Promise.all([
         fetch("/atlas/featured-islands.geojson").catch(() => null),
         fetch("/atlas/inhabited-islands.geojson").catch(() => null),
@@ -69,8 +101,6 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
         console.error("[atlas-map] featured-islands.geojson failed to load");
       }
 
-      // Minimal-style map — pure background fill, no basemap, no
-      // external tile-server dependency.
       let map: InstanceType<typeof maplibregl.Map>;
       try {
         map = new maplibregl.Map({
@@ -86,10 +116,6 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
               },
             ],
           },
-          // fitBounds on the Maldives extent. The atoll chain is tall
-          // and narrow so a fixed center+zoom always cropped one end.
-          // bounds + a 24px padding keeps every island in the frame
-          // regardless of the canvas aspect ratio.
           bounds: MALDIVES_BOUNDS,
           fitBoundsOptions: { padding: 24 },
           maxBounds: MALDIVES_BOUNDS,
@@ -105,7 +131,7 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
         console.error("[atlas-map] failed to construct map:", err);
         return;
       }
-      mapRef = map;
+      mapInstance.current = map;
 
       map.addControl(
         new maplibregl.NavigationControl({ showCompass: false }),
@@ -117,13 +143,22 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
       });
 
       map.on("load", () => {
-        // Expose a small imperative API to the parent so the side
-        // panel can fly the map to a clicked island. Kept narrow on
-        // purpose — anything else parents need should be added here
-        // explicitly so the surface stays auditable.
-        onReady?.({
+        isLoaded.current = true;
+        onReadyRef.current?.({
           flyTo: (lon, lat, zoom = 11) =>
             map.flyTo({ center: [lon, lat], zoom, essential: true }),
+        });
+
+        // Empty selection sources — the selection effect below fills
+        // them. Pre-creating means we don't need a "first time?" check
+        // every selection update.
+        map.addSource("selected-crosshair", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
+        });
+        map.addSource("selected-marker", {
+          type: "geojson",
+          data: { type: "FeatureCollection", features: [] },
         });
 
         if (inhabited) {
@@ -146,6 +181,25 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
               "circle-opacity": 0.65,
               "circle-stroke-width": 0,
             },
+          });
+          map.on("click", "inhabited-dots", (e) => {
+            const f = e.features?.[0];
+            if (!f || f.geometry.type !== "Point") return;
+            const props = f.properties as Record<string, string>;
+            const coords = f.geometry.coordinates as [number, number];
+            onDotClickRef.current?.({
+              islandName: props.islandName ?? "",
+              atoll: props.atoll ?? "",
+              coordinates: coords,
+              isFeatured: false,
+              capital: props.capital,
+            });
+          });
+          map.on("mouseenter", "inhabited-dots", () => {
+            map.getCanvas().style.cursor = "pointer";
+          });
+          map.on("mouseleave", "inhabited-dots", () => {
+            map.getCanvas().style.cursor = "";
           });
         }
 
@@ -177,18 +231,138 @@ export function AtlasMap({ height = "520px", onReady }: AtlasMapProps) {
             map.getCanvas().style.cursor = "";
           });
         }
+
+        // Selection layers go ON TOP of everything else. The crosshair
+        // is a thin dashed line that runs the full extent of the
+        // map (horizontal parallel + vertical meridian through the
+        // selected point); the marker is a hollow ring + filled dot
+        // sized larger than the regular inhabited dots so it stands
+        // out without animation.
+        map.addLayer({
+          id: "selected-crosshair-line",
+          type: "line",
+          source: "selected-crosshair",
+          paint: {
+            "line-color": "#3d6470",
+            "line-width": 1,
+            "line-opacity": 0.55,
+            "line-dasharray": [3, 3],
+          },
+        });
+        map.addLayer({
+          id: "selected-marker-halo",
+          type: "circle",
+          source: "selected-marker",
+          paint: {
+            "circle-radius": 14,
+            "circle-color": "#3d6470",
+            "circle-opacity": 0.12,
+            "circle-stroke-width": 0,
+          },
+        });
+        map.addLayer({
+          id: "selected-marker-ring",
+          type: "circle",
+          source: "selected-marker",
+          paint: {
+            "circle-radius": 8,
+            "circle-color": "rgba(0,0,0,0)",
+            "circle-stroke-width": 1.5,
+            "circle-stroke-color": "#3d6470",
+          },
+        });
+        map.addLayer({
+          id: "selected-marker-dot",
+          type: "circle",
+          source: "selected-marker",
+          paint: {
+            "circle-radius": 4,
+            "circle-color": "#3d6470",
+            "circle-stroke-width": 1,
+            "circle-stroke-color": "#fbf8f3",
+          },
+        });
       });
     })();
 
     return () => {
       cancelled = true;
-      mapRef?.remove();
+      mapInstance.current?.remove();
+      mapInstance.current = null;
+      isLoaded.current = false;
     };
-    // onReady is intentionally not in the dep array — it's a stable
-    // ref-style callback and re-running the whole map init on each
-    // render would tear down and rebuild the canvas.
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [router]);
+
+  // Selection effect — runs every time `selection` changes WITHOUT
+  // touching the map init. Updates two GeoJSON sources; the layers
+  // above pick the new data up automatically.
+  useEffect(() => {
+    const map = mapInstance.current;
+    if (!map) return;
+    const apply = () => {
+      const crosshairSource = map.getSource(
+        "selected-crosshair"
+      ) as ReturnType<typeof map.getSource> & {
+        setData: (d: GeoJSON.GeoJSON) => void;
+      };
+      const markerSource = map.getSource("selected-marker") as ReturnType<
+        typeof map.getSource
+      > & { setData: (d: GeoJSON.GeoJSON) => void };
+      if (!crosshairSource || !markerSource) return;
+      if (!selection) {
+        crosshairSource.setData({ type: "FeatureCollection", features: [] });
+        markerSource.setData({ type: "FeatureCollection", features: [] });
+        return;
+      }
+      const [lon, lat] = selection.coordinates;
+      // Crosshair: horizontal parallel + vertical meridian, drawn
+      // across the full max-bounds extent so it always reaches the
+      // edges of the canvas regardless of the current viewport.
+      crosshairSource.setData({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [MALDIVES_BOUNDS[0][0], lat],
+                [MALDIVES_BOUNDS[1][0], lat],
+              ],
+            },
+          },
+          {
+            type: "Feature",
+            properties: {},
+            geometry: {
+              type: "LineString",
+              coordinates: [
+                [lon, MALDIVES_BOUNDS[0][1]],
+                [lon, MALDIVES_BOUNDS[1][1]],
+              ],
+            },
+          },
+        ],
+      });
+      markerSource.setData({
+        type: "FeatureCollection",
+        features: [
+          {
+            type: "Feature",
+            properties: {},
+            geometry: { type: "Point", coordinates: [lon, lat] },
+          },
+        ],
+      });
+    };
+    if (isLoaded.current) {
+      apply();
+    } else {
+      // Map still booting; defer until 'load' fires.
+      map.once("load", apply);
+    }
+  }, [selection]);
 
   return (
     <div

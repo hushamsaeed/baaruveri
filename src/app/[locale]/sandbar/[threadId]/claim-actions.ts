@@ -4,7 +4,7 @@ import { revalidatePath } from "next/cache";
 import { getCurrentStubUser } from "@/lib/auth-stub";
 import { ensureAnonId } from "@/lib/anon-cookie";
 import { pseudonymFor } from "@/lib/pseudonym";
-import { commentRequiresVerification } from "@/lib/comment-policy";
+import { claimRequiresVerification } from "@/lib/claim-policy";
 import { rateLimit } from "@/lib/rate-limit";
 import { getThread } from "@/db/queries/threads";
 import { getClaimsForThread, recordClaim } from "@/db/queries/claims";
@@ -65,7 +65,7 @@ export async function submitClaimAction(
   }
 
   const user = await getCurrentStubUser();
-  if (!user && commentRequiresVerification(thread.issue)) {
+  if (!user && claimRequiresVerification(thread.issue)) {
     return { ok: false, reason: TIER_REQUIRED_REASON };
   }
 
@@ -121,14 +121,14 @@ export async function submitClaimVoteAction(
 
   // Verify the claim is actually in the thread we authorised against.
   // Without this, an anon caller can post a restricted-tier claimId with
-  // a non-restricted threadId and bypass commentRequiresVerification.
+  // a non-restricted threadId and bypass claimRequiresVerification.
   const claimsInThread = await getClaimsForThread(threadId);
   if (!claimsInThread.some((c) => c.id === claimId)) {
     return { ok: false, reason: "Claim not found in this thread." };
   }
 
   const user = await getCurrentStubUser();
-  if (!user && commentRequiresVerification(thread.issue)) {
+  if (!user && claimRequiresVerification(thread.issue)) {
     return { ok: false, reason: TIER_REQUIRED_REASON };
   }
 

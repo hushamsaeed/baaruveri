@@ -43,6 +43,13 @@
       "when": 1777644674870,
       "tag": "0005_rate_limit_buckets",
       "breakpoints": true
+    },
+    {
+      "idx": 6,
+      "version": "7",
+      "when": 1777647738007,
+      "tag": "0006_drop_comments",
+      "breakpoints": true
     }
   ]
 }

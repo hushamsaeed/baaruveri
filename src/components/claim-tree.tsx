@@ -1,7 +1,11 @@
 import { getTranslations } from "next-intl/server";
 import { L } from "./i18n-text";
 import { ClaimVoteButton } from "./claim-vote-button";
-import { ClaimAddAffordance, type ClaimAuthorAttribution } from "./claim-add-form";
+import {
+  ClaimAddAffordance,
+  RootClaimAddAffordance,
+  type ClaimAuthorAttribution,
+} from "./claim-add-form";
 import { buildClaimTree, type ClaimsByParent } from "@/lib/claim-tree";
 import type { Claim } from "@/lib/types";
 
@@ -32,29 +36,42 @@ export async function ClaimTree({
   const roots = (byParent.get(null) ?? []).filter((c) => c.side === side);
   const t = await getTranslations("thread_detail");
 
-  if (roots.length === 0) {
-    return (
-      <p className="text-[12px] text-muted-foreground italic">
-        — no claims yet
-      </p>
-    );
-  }
-
+  // Root-level entry point: every column gets an "+ add first / + add"
+  // button so a user can post a top-level pro/con. Hidden when
+  // attribution is null (auth ungated by tier policy or anon cookie not
+  // yet minted) — the same gate that hides the per-claim affordance.
   return (
     <div className="grid gap-3">
-      {roots.map((c) => (
-        <ClaimNode
-          key={c.id}
-          claim={c}
-          byParent={byParent}
-          depth={0}
-          parentSide={null}
+      {roots.length === 0 ? (
+        <p className="text-[12px] text-muted-foreground italic">
+          {attribution ? (
+            <L>{t(side === "pro" ? "be_first_pro" : "be_first_con")}</L>
+          ) : (
+            <L>{t("no_claims_yet")}</L>
+          )}
+        </p>
+      ) : (
+        roots.map((c) => (
+          <ClaimNode
+            key={c.id}
+            claim={c}
+            byParent={byParent}
+            depth={0}
+            parentSide={null}
+            threadId={threadId}
+            votedClaimIds={votedClaimIds}
+            attribution={attribution}
+            t={t}
+          />
+        ))
+      )}
+      {attribution && (
+        <RootClaimAddAffordance
           threadId={threadId}
-          votedClaimIds={votedClaimIds}
+          side={side}
           attribution={attribution}
-          t={t}
         />
-      ))}
+      )}
     </div>
   );
 }

@@ -1,4 +1,3 @@
-/* eslint-disable no-console */
 // Seed the database from the in-repo fixture arrays. Idempotent via
 // onConflictDoNothing, so re-running just logs zero new inserts.
 //

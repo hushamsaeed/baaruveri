@@ -10,6 +10,7 @@ import {
 } from "react";
 import { useRouter } from "next/navigation";
 import { useTranslations } from "next-intl";
+import { L } from "./i18n-text";
 
 // Saafu-restrained search affordance. Magnifying-glass icon collapses by
 // default; click or Cmd-K expands an inline input. Typing fires a
@@ -264,6 +265,17 @@ export function SearchAffordance() {
               )}
             </ul>
           ) : null}
+          {results && totalHits > 0 && (
+            <div className="border-t border-border">
+              <button
+                type="button"
+                onClick={() => navigate(`/search?q=${encodeURIComponent(query)}`)}
+                className="w-full text-start px-4 py-2 font-mono text-[11px] uppercase tracking-[0.14em] text-primary hover:bg-secondary transition-colors"
+              >
+                <L>{t("view_all_for", { q: query.trim() })}</L>
+              </button>
+            </div>
+          )}
         </div>
       )}
     </div>

@@ -27,7 +27,14 @@
     "error": "Search failed. Try again.",
     "group_islands": "Islands",
     "group_threads": "Threads",
-    "group_petitions": "Petitions"
+    "group_petitions": "Petitions",
+    "view_all_for": "View all results for \"{q}\" →",
+    "page_subtitle": "Search · Baaruveri",
+    "page_title_for": "Results for \"{q}\"",
+    "page_title_empty": "Search",
+    "page_count_meta": "{total} matches · {islands} islands · {threads} threads · {petitions} petitions",
+    "page_empty_hint": "Type a query in the search bar above (Cmd-K).",
+    "page_footnote": "Search uses Postgres ILIKE across bilingual title and body fields. pg_trgm-based ranking lands in a future iteration; for now results within each group are insertion order (threads ordered by vote_count desc)."
   },
   "home": {
     "tagline": "Per-island civic data, made browsable.",

@@ -1,4 +1,9 @@
-import "dotenv/config";
+import { config as loadEnv } from "dotenv";
+// Next.js loads .env* automatically at runtime; tsx scripts and drizzle-kit
+// don't, so we eager-load both here. Order matters — .env.local wins.
+loadEnv({ path: ".env.local" });
+loadEnv();
+
 import { drizzle } from "drizzle-orm/postgres-js";
 import postgres from "postgres";
 import * as schema from "./schema";

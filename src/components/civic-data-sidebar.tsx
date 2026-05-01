@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import type { Island } from "@/lib/types";
 import { getCouncilMembers } from "@/data/council-members";
 import { getBudgetLines } from "@/data/budget-lines";

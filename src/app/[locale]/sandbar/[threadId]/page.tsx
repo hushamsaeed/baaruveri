@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { threads } from "@/data/threads";
 import { getClaimsForThread, HERO_THREAD_ID } from "@/data/claims";
@@ -27,14 +27,18 @@ function relativeDate(iso: string): string {
   return d.toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
 }
 
+import { routing } from "@/i18n/routing";
+
 export async function generateStaticParams() {
-  return threads.map((t) => ({ threadId: t.id }));
+  return routing.locales.flatMap((locale) =>
+    threads.map((t) => ({ locale, threadId: t.id }))
+  );
 }
 
 export async function generateMetadata({
   params,
 }: {
-  params: Promise<{ threadId: string }>;
+  params: Promise<{ locale: string; threadId: string }>;
 }) {
   const { threadId } = await params;
   const thread = threads.find((t) => t.id === threadId);
@@ -48,7 +52,7 @@ export async function generateMetadata({
 export default async function ThreadDetailPage({
   params,
 }: {
-  params: Promise<{ threadId: string }>;
+  params: Promise<{ locale: string; threadId: string }>;
 }) {
   const { threadId } = await params;
   const thread = threads.find((t) => t.id === threadId);

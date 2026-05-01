@@ -8,12 +8,19 @@ import { IslandProfileHeader } from "@/components/island-profile-header";
 import { BudgetTable } from "@/components/budget-table";
 import { ThreadListItem } from "@/components/thread-list-item";
 import { PetitionListItem } from "@/components/petition-list-item";
+import { routing } from "@/i18n/routing";
 
 export async function generateStaticParams() {
-  return islands.map((i) => ({ slug: i.slug }));
+  return routing.locales.flatMap((locale) =>
+    islands.map((i) => ({ locale, slug: i.slug }))
+  );
 }
 
-export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }) {
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ locale: string; slug: string }>;
+}) {
   const { slug } = await params;
   const island = getIsland(slug);
   if (!island) return { title: "Not found — Baaruveri" };
@@ -50,7 +57,7 @@ function SectionLabel({ number, label, meta }: SectionLabelProps) {
 export default async function IslandProfilePage({
   params,
 }: {
-  params: Promise<{ slug: string }>;
+  params: Promise<{ locale: string; slug: string }>;
 }) {
   const { slug } = await params;
   const island = getIsland(slug);

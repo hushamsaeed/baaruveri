@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { STUB_USERS } from "@/lib/auth-stub";
 import { chooseStubUser } from "../actions";
 

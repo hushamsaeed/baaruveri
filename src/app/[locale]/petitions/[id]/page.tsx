@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { notFound } from "next/navigation";
 import { petitions, getPetition } from "@/data/petitions";
 import { getIslandById } from "@/data/islands";
@@ -7,7 +7,7 @@ import {
   getStubSignatureCount,
   hasSignedPetition,
 } from "@/lib/signature-store";
-import { signOutStubUser } from "@/app/auth/actions";
+import { signOutStubUser } from "@/app/[locale]/auth/actions";
 import { PetitionSignBlock } from "@/components/petition-sign-block";
 import { CivicDataSidebar } from "@/components/civic-data-sidebar";
 

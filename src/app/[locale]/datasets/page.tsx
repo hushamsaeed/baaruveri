@@ -1,4 +1,4 @@
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { budgetLines } from "@/data/budget-lines";
 import { islands } from "@/data/islands";
 

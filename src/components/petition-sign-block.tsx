@@ -1,8 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { Link } from "@/i18n/navigation";
 import { useOptimistic, useState, useTransition } from "react";
-import { signPetitionAction } from "@/app/petitions/[id]/actions";
+import { signPetitionAction } from "@/app/[locale]/petitions/[id]/actions";
 import type { StubUser } from "@/lib/auth-stub";
 
 interface PetitionSignBlockProps {

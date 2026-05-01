@@ -16,7 +16,6 @@ function rowToThread(r: Row): Thread {
     started_by_dv: r.startedByDv,
     started_by_en: r.startedByEn,
     started_at: r.startedAt,
-    reply_count: r.replyCount,
     claim_count: r.claimCount,
     vote_count: r.voteCount,
   };

@@ -50,7 +50,7 @@ export default async function ModerationPage({
           <ul className="space-y-2 mt-3 list-disc ps-5">
             <li>
               <strong>Anonymous tier</strong> — for everyday civic speech:
-              reading, voting, posting comments on threads, replying. No eFaas
+              reading, voting, posting positions on threads, replying. No eFaas
               verification required. We don&rsquo;t log your IP. Rate limits use
               a device fingerprint that we cannot reverse to identify you.
             </li>

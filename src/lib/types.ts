@@ -62,7 +62,6 @@ export interface Thread {
   started_by_dv: string;
   started_by_en: string;
   started_at: string;             // ISO date
-  reply_count: number;
   claim_count: number;
   vote_count: number;
 }

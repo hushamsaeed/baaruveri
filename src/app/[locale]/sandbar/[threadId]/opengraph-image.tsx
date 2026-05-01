@@ -154,8 +154,6 @@ export default async function Image({ params }: Params) {
             >
               <Stat value={thread.claim_count} label="claims" />
               <span style={{ color: RULE }}>·</span>
-              <Stat value={thread.reply_count} label="replies" />
-              <span style={{ color: RULE }}>·</span>
               <Stat value={thread.vote_count} label="votes" />
             </div>
           )}

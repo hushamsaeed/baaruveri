@@ -15,7 +15,6 @@ const COLUMNS = [
   "started_by_en",
   "started_by_dv",
   "started_at",
-  "reply_count",
   "claim_count",
   "vote_count",
 ] as const;
@@ -55,7 +54,6 @@ export async function GET(request: Request) {
     started_by_en: t.started_by_en,
     started_by_dv: t.started_by_dv,
     started_at: t.started_at,
-    reply_count: t.reply_count,
     claim_count: t.claim_count,
     vote_count: t.vote_count,
   }));

@@ -68,6 +68,48 @@ interface ClaimAddFormProps {
   onCancel: () => void;
 }
 
+// Root-level entry-point button. Exposes the same ClaimAddForm but with
+// a one-button toggle scoped to the column's side (pro or con). Used at
+// the top/bottom of each ClaimTree column so the "where do I post" gap
+// from v3.0 is closed.
+export function RootClaimAddAffordance({
+  threadId,
+  side,
+  attribution,
+}: {
+  threadId: string;
+  side: "pro" | "con";
+  attribution: ClaimAuthorAttribution;
+}) {
+  const t = useTranslations("thread_detail");
+  const [open, setOpen] = useState(false);
+  if (open) {
+    return (
+      <ClaimAddForm
+        threadId={threadId}
+        parentClaimId={null}
+        side={side}
+        attribution={attribution}
+        onCancel={() => setOpen(false)}
+      />
+    );
+  }
+  return (
+    <button
+      type="button"
+      onClick={() => setOpen(true)}
+      className={
+        "font-mono uppercase tracking-[0.1em] text-[11px] hover:underline underline-offset-2 self-start py-2 " +
+        (side === "pro"
+          ? "text-[color:var(--under)]/80 hover:text-[color:var(--under)]"
+          : "text-[color:var(--over)]/80 hover:text-[color:var(--over)]")
+      }
+    >
+      <L>{t(side === "pro" ? "add_pro_position" : "add_con_position")}</L>
+    </button>
+  );
+}
+
 function ClaimAddForm({
   threadId,
   parentClaimId,

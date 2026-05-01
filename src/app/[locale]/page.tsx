@@ -178,13 +178,6 @@ export default async function Home({
                 <span>·</span>
                 <span>
                   <span className="text-foreground font-semibold">
-                    {featuredThread.reply_count}
-                  </span>{" "}
-                  replies
-                </span>
-                <span>·</span>
-                <span>
-                  <span className="text-foreground font-semibold">
                     {featuredThread.vote_count}
                   </span>{" "}
                   votes

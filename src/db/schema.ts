@@ -127,7 +127,6 @@ export const threads = pgTable("threads", {
   startedByDv: text("started_by_dv").notNull(),
   startedByEn: text("started_by_en").notNull(),
   startedAt: text("started_at").notNull(),
-  replyCount: integer("reply_count").notNull().default(0),
   claimCount: integer("claim_count").notNull().default(0),
   voteCount: integer("vote_count").notNull().default(0),
 });
@@ -210,37 +209,11 @@ export const stubUsers = pgTable("stub_users", {
   verifiedAt: text("verified_at").notNull(),
 });
 
-// Free-form comments on threads. Author is either an eFaas-verified stub
-// user (author_stub_user_id set) OR an anon-tier poster (author_stub_user_id
-// null + anon_pseudonym set, derived per (anon-cookie × thread) pair).
-// Soft-delete via removed_at + foreign key into takedowns.
-export const comments = pgTable("comments", {
-  id: text("id").primaryKey(),
-  threadId: text("thread_id")
-    .notNull()
-    .references(() => threads.id, { onDelete: "cascade" }),
-  // Self-FK with cascade, mirroring claims.parentClaimId. AnyPgColumn
-  // breaks the typed self-cycle. Migration 0004 adds the constraint to
-  // existing rows; the application layer additionally enforces
-  // same-thread parent in submitCommentAction.
-  parentCommentId: text("parent_comment_id").references(
-    (): AnyPgColumn => comments.id,
-    { onDelete: "cascade" }
-  ),
-  bodyEn: text("body_en").notNull(),
-  bodyDv: text("body_dv"),
-  authorStubUserId: text("author_stub_user_id").references(() => stubUsers.id, {
-    onDelete: "set null",
-  }),
-  // Set when authorStubUserId is null (anon-tier). Stored at insert time so
-  // the displayed handle is stable even if the pseudonym vocab changes later.
-  anonPseudonym: text("anon_pseudonym"),
-  createdAt: timestamp("created_at", { withTimezone: true })
-    .notNull()
-    .defaultNow(),
-  removedAt: timestamp("removed_at", { withTimezone: true }),
-  removedTakedownId: text("removed_takedown_id"),
-});
+// Free-form comments primitive was dropped in v4.0 (migration 0006) —
+// the Kialo-style claim tree (claims + parent_claim_id self-FK) is the
+// thread interaction surface; every "post" is now a structured pro/con
+// position with voting + tier gating. takedown_target_kind retains the
+// "comment" enum value for legacy log entries.
 
 // Public takedown log (moderation policy §05). Every removal lands here;
 // anyone can read, drives the /about/takedowns page.
@@ -327,24 +300,6 @@ export const threadsRelations = relations(threads, ({ one, many }) => ({
     references: [islands.id],
   }),
   claims: many(claims),
-  comments: many(comments),
-}));
-
-export const commentsRelations = relations(comments, ({ one, many }) => ({
-  thread: one(threads, {
-    fields: [comments.threadId],
-    references: [threads.id],
-  }),
-  parent: one(comments, {
-    fields: [comments.parentCommentId],
-    references: [comments.id],
-    relationName: "comment_replies",
-  }),
-  replies: many(comments, { relationName: "comment_replies" }),
-  author: one(stubUsers, {
-    fields: [comments.authorStubUserId],
-    references: [stubUsers.id],
-  }),
 }));
 
 export const claimsRelations = relations(claims, ({ one, many }) => ({

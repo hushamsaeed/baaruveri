@@ -34,10 +34,6 @@ export function ThreadListItem({ thread }: ThreadListItemProps) {
       )}
       <div className="flex items-center gap-5 mt-4 pt-3 border-t border-border text-[11px] text-muted-foreground">
         <span>
-          <span className="font-mono font-semibold text-foreground">{thread.reply_count}</span>{" "}
-          <L>{tt("replies")}</L>
-        </span>
-        <span>
           <span className="font-mono font-semibold text-foreground">{thread.claim_count}</span>{" "}
           <L>{tt("claims")}</L>
         </span>

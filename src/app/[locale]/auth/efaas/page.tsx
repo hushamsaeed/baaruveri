@@ -24,7 +24,7 @@ export default async function EfaasStubPage({
             eFaas · stub provider
           </div>
           <h1 className="text-xl font-semibold mb-2">
-            <span className="dv-text mr-2">eFaas ޑިޖިޓަލް ޑީ</span>
+            <span className="dv-text me-2">eFaas ޑިޖިޓަލް ޑީ</span>
             <span className="text-muted-foreground">— development stub</span>
           </h1>
           <p className="text-[13.5px] text-muted-foreground leading-relaxed mb-6">
@@ -45,11 +45,11 @@ export default async function EfaasStubPage({
                   <input type="hidden" name="return_to" value={returnTo} />
                   <button
                     type="submit"
-                    className="block w-full text-left bg-card border border-border hover:border-primary/40 p-4 transition-colors"
+                    className="block w-full text-start bg-card border border-border hover:border-primary/40 p-4 transition-colors"
                   >
                     <div className="flex items-baseline justify-between gap-3 mb-1">
                       <span className="text-[15px] font-semibold">
-                        <span className="dv-text mr-2">{u.name_dv}</span>
+                        <span className="dv-text me-2">{u.name_dv}</span>
                       </span>
                       <span className="font-mono text-[10.5px] text-muted-foreground">
                         NID {u.nid}

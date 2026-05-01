@@ -35,7 +35,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
 
       <div className="pb-4 mb-4 border-b border-border">
         <div className="text-xs text-muted-foreground font-mono mb-1">
-          <span className="dv-text mr-1">{island.atoll_dv}</span>
+          <span className="dv-text me-1">{island.atoll_dv}</span>
           {island.atoll_en} · {island.atoll_code}
         </div>
         <div className="text-2xl font-semibold leading-tight">
@@ -101,7 +101,7 @@ export function CivicDataSidebar({ island, excludeThreadId }: CivicDataSidebarPr
                       <span className="num">{p.signatures.toLocaleString("en-US")}</span>
                       <span>/</span>
                       <span className="num">{p.threshold.toLocaleString("en-US")}</span>
-                      <span className="flex-1 h-[3px] bg-muted ml-1 relative overflow-hidden">
+                      <span className="flex-1 h-[3px] bg-muted ms-1 relative overflow-hidden">
                         <span
                           className="absolute left-0 top-0 h-full bg-primary"
                           style={{ width: `${pct}%` }}

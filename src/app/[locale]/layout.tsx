@@ -4,7 +4,8 @@ import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
-import { LocaleSwitcher } from "@/components/locale-switcher";
+import { TopNav } from "@/components/top-nav";
+import { getCurrentStubUser } from "@/lib/auth-stub";
 import "../globals.css";
 
 const inter = Inter({
@@ -45,6 +46,7 @@ export default async function LocaleLayout({
 
   const dir = locale === "dv" ? "rtl" : "ltr";
   const t = await getTranslations({ locale, namespace: "common" });
+  const user = await getCurrentStubUser();
 
   return (
     <html
@@ -54,11 +56,11 @@ export default async function LocaleLayout({
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>
+          <TopNav user={user} />
           {children}
           <footer className="mt-auto border-t border-border">
-            <div className="max-w-6xl mx-auto px-6 sm:px-10 py-5 flex flex-wrap items-center justify-between gap-4 text-[11px] text-muted-foreground">
-              <p className="m-0">{t("footer_disclaimer")}</p>
-              <LocaleSwitcher />
+            <div className="max-w-6xl mx-auto px-6 sm:px-10 py-5 text-[11px] text-muted-foreground text-center">
+              {t("footer_disclaimer")}
             </div>
           </footer>
         </NextIntlClientProvider>

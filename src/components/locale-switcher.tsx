@@ -5,7 +5,12 @@ import { usePathname, useRouter } from "@/i18n/navigation";
 import { useTransition } from "react";
 import { routing } from "@/i18n/routing";
 
-export function LocaleSwitcher() {
+interface LocaleSwitcherProps {
+  /** Compact: drops the "Language" label, used in the top nav. */
+  compact?: boolean;
+}
+
+export function LocaleSwitcher({ compact = false }: LocaleSwitcherProps) {
   const locale = useLocale();
   const t = useTranslations("locale_switcher");
   const router = useRouter();
@@ -20,17 +25,19 @@ export function LocaleSwitcher() {
   }
 
   return (
-    <div className="inline-flex items-center gap-0 border border-border bg-card text-[12px] font-mono">
-      <span className="px-2 py-1 text-muted-foreground border-e border-border">
-        {t("label")}
-      </span>
+    <div className="inline-flex items-center gap-0 border border-border bg-card text-[11px] font-mono">
+      {!compact && (
+        <span className="px-2 py-1 text-muted-foreground border-e border-border">
+          {t("label")}
+        </span>
+      )}
       {routing.locales.map((loc, i) => (
         <button
           key={loc}
           type="button"
           onClick={() => switchTo(loc)}
           disabled={pending}
-          className={`px-2.5 py-1 transition-colors ${
+          className={`px-2 py-1 transition-colors ${
             i > 0 ? "border-s border-border" : ""
           } ${
             loc === locale
@@ -39,7 +46,7 @@ export function LocaleSwitcher() {
           }`}
         >
           {loc === "dv" ? (
-            <span className="dv-text">{t("dv")}</span>
+            <span className="dv-text text-[12px]">{t("dv")}</span>
           ) : (
             <span>{t("en")}</span>
           )}

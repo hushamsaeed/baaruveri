@@ -62,7 +62,7 @@ export function PetitionSignBlock({
           </div>
           <div className="font-mono text-3xl sm:text-4xl font-semibold leading-none">
             <span className="num">{displayCount.toLocaleString("en-US")}</span>
-            <span className="text-muted-foreground text-2xl ml-2">
+            <span className="text-muted-foreground text-2xl ms-2">
               / {threshold.toLocaleString("en-US")}
             </span>
           </div>
@@ -79,10 +79,10 @@ export function PetitionSignBlock({
           </div>
         </div>
 
-        <div className="text-left sm:text-right">
+        <div className="text-start sm:text-right">
           <div className="font-mono text-2xl sm:text-3xl font-semibold leading-none">
             <span className="num">{daysLeft}</span>
-            <span className="text-muted-foreground text-xl ml-2">days</span>
+            <span className="text-muted-foreground text-xl ms-2">days</span>
           </div>
           <div className="font-mono text-[11px] text-muted-foreground mt-2">
             Closes{" "}

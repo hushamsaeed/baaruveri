@@ -58,7 +58,7 @@ export function ThreadListItem({ thread }: ThreadListItemProps) {
         <span>
           <span className="font-mono font-semibold text-foreground">{thread.vote_count}</span> votes
         </span>
-        <span className="ml-auto">
+        <span className="ms-auto">
           Started by <span className="dv-text mx-1">{thread.started_by_dv}</span>
         </span>
       </div>

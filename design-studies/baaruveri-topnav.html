@@ -1,0 +1,833 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Baaruveri — top-nav directions</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preconnect" href="https://raajjefonts.github.io" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  /* ===== Dhivehi web fonts (RaajjeFonts CDN) ===== */
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_reg_hinted_v2.ttf') format('truetype');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_bld_hinted_v2.ttf') format('truetype');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+
+  /* ===== Saafu tokens (locked) ===== */
+  :root {
+    --paper: #fafaf8;
+    --card: #ffffff;
+    --ink: #1a1a1a;
+    --ink-2: #444444;
+    --muted: #6b6b6b;
+    --rule: #dcdcdc;
+    --rule-strong: #9a9a9a;
+    --accent: #0d6e6e;
+    --accent-soft: #e8f1f1;
+  }
+
+  *, *::before, *::after { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    color: var(--ink);
+    background: #f4f4f2;
+    -webkit-font-smoothing: antialiased;
+  }
+  .dv {
+    font-family: 'MV Faseyha', 'MV Boli', 'Noto Sans Thaana', sans-serif;
+    direction: rtl;
+    unicode-bidi: isolate;
+    line-height: 1.7;
+  }
+  .num { font-variant-numeric: tabular-nums; }
+  .mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; }
+
+  /* ===== Page chrome ===== */
+  .page-header {
+    padding: 56px 48px 40px;
+    max-width: 1280px;
+    margin: 0 auto;
+    border-bottom: 1px solid var(--rule);
+  }
+  .page-header h1 {
+    font-size: 26px; font-weight: 600; margin: 0 0 8px; letter-spacing: -0.01em;
+  }
+  .page-header h1 .dv { font-weight: 600; margin-right: 12px; }
+  .page-header .lede {
+    font-size: 15px; color: var(--muted); max-width: 720px; line-height: 1.55; margin: 8px 0 16px;
+  }
+  .page-header .meta-row {
+    display: flex; gap: 24px; font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 20px;
+  }
+
+  /* ===== Section base ===== */
+  section.dir {
+    max-width: 1280px;
+    margin: 0 auto;
+    padding: 48px 48px 24px;
+    border-bottom: 1px solid var(--rule);
+  }
+  section.dir:last-of-type { border-bottom: none; }
+  .dir-meta { display: grid; grid-template-columns: 1fr 1.4fr; gap: 32px; align-items: end; margin-bottom: 32px; }
+  .dir-meta h2 { font-size: 30px; font-weight: 600; margin: 0; letter-spacing: -0.01em; }
+  .dir-meta .school {
+    font-size: 12px; margin: 6px 0 4px; color: var(--muted);
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .dir-meta .why { font-size: 14px; line-height: 1.6; margin: 0; color: var(--ink-2); }
+  .variant-label {
+    font-size: 10px; text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--muted); font-weight: 600; margin-bottom: 8px;
+    font-family: 'IBM Plex Mono', monospace;
+  }
+  .variant + .variant { margin-top: 28px; }
+
+  /* ===== Frame container — emulates a viewport ===== */
+  .frame {
+    background: var(--paper);
+    border: 1px solid var(--rule);
+    overflow: hidden;
+  }
+  .frame .preview-strip {
+    padding: 32px 32px 80px;
+    background: var(--paper);
+    border-top: 1px solid var(--rule);
+  }
+  .frame .preview-strip .breadcrumb {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; color: var(--muted);
+    text-transform: uppercase; letter-spacing: 0.1em;
+    margin-bottom: 8px;
+  }
+  .frame .preview-strip h3 {
+    font-size: 20px; font-weight: 600; margin: 0 0 6px; letter-spacing: -0.005em;
+  }
+  .frame .preview-strip h3 .dv { font-weight: 700; margin-right: 8px; font-size: 22px; }
+  .frame .preview-strip p {
+    font-size: 13px; color: var(--muted); margin: 0; line-height: 1.55;
+  }
+
+  /* ============================================ */
+  /* DIRECTION A · LEDGER BAR                    */
+  /* ============================================ */
+  .nav-A {
+    display: flex; align-items: center;
+    height: 56px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+    gap: 24px;
+  }
+  .nav-A .wordmark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 12px; font-weight: 600;
+    text-transform: uppercase; letter-spacing: 0.16em;
+    color: var(--ink);
+    text-decoration: none;
+    flex-shrink: 0;
+  }
+  .nav-A .wordmark .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    margin-inline-start: 8px; font-size: 14px;
+    font-weight: 600; letter-spacing: 0;
+    text-transform: none;
+  }
+  .nav-A .nav-links {
+    display: flex; align-items: center; gap: 0;
+    flex: 1; justify-content: flex-end;
+  }
+  .nav-A .nav-links a {
+    color: var(--ink-2); text-decoration: none;
+    font-size: 13px; font-weight: 500;
+    padding: 18px 14px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 120ms;
+  }
+  .nav-A .nav-links a:hover { color: var(--accent); }
+  .nav-A .nav-links a.active {
+    color: var(--ink); border-bottom-color: var(--accent);
+  }
+  .nav-A .nav-links a .dv {
+    font-size: 14px; font-weight: 500; margin-inline-start: 4px;
+  }
+  .nav-A .end-cluster {
+    display: flex; align-items: center; gap: 14px;
+    border-inline-start: 1px solid var(--rule);
+    padding-inline-start: 14px; height: 100%;
+    margin-inline-start: 8px;
+  }
+
+  /* Locale switcher chip (shared) */
+  .ls {
+    display: inline-flex; align-items: center;
+    border: 1px solid var(--rule);
+    background: var(--card);
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+  }
+  .ls .ls-label {
+    padding: 4px 7px; color: var(--muted);
+    border-inline-end: 1px solid var(--rule);
+  }
+  .ls a {
+    padding: 4px 8px; color: var(--ink-2); text-decoration: none;
+    transition: background 120ms;
+  }
+  .ls a + a { border-inline-start: 1px solid var(--rule); }
+  .ls a.active { background: var(--ink); color: var(--paper); }
+  .ls a:not(.active):hover { background: var(--accent-soft); color: var(--accent); }
+  .ls .dv { font-family: 'MV Faseyha', sans-serif; font-size: 12px; }
+
+  /* Auth chip */
+  .auth {
+    font-family: 'IBM Plex Mono', monospace; font-size: 11px;
+    color: var(--muted); display: inline-flex; align-items: baseline; gap: 6px;
+  }
+  .auth .name { color: var(--ink); }
+  .auth .name .dv {
+    font-family: 'MV Faseyha', sans-serif; font-size: 12.5px;
+    margin-inline-end: 4px;
+  }
+  .auth a {
+    color: var(--accent); text-decoration: underline;
+    text-underline-offset: 2px; text-decoration-thickness: 1px;
+  }
+  .auth.cta a {
+    color: var(--paper); background: var(--ink);
+    padding: 4px 10px; text-decoration: none;
+    transition: background 120ms;
+  }
+  .auth.cta a:hover { background: var(--accent); }
+
+  /* ============================================ */
+  /* DIRECTION B · GOV TWO-ROW                   */
+  /* ============================================ */
+  .nav-B {
+    background: var(--paper);
+    border-bottom: 1px solid var(--rule);
+  }
+  .nav-B .system-row {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 32px; padding: 0 24px;
+    border-bottom: 1px solid var(--rule);
+    background: #f4f3ef;
+  }
+  .nav-B .system-row .wordmark-mini {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.14em;
+    color: var(--ink-2); text-decoration: none;
+  }
+  .nav-B .system-row .wordmark-mini .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    margin-inline-start: 6px; font-size: 12.5px;
+    text-transform: none; letter-spacing: 0;
+  }
+  .nav-B .system-row .end-cluster {
+    display: flex; align-items: center; gap: 12px;
+  }
+  .nav-B .nav-row {
+    display: flex; align-items: center;
+    height: 52px; padding: 0 24px;
+    gap: 0;
+  }
+  .nav-B .nav-row a {
+    color: var(--ink-2); text-decoration: none;
+    font-size: 14.5px; font-weight: 500;
+    padding: 16px 18px;
+    border-bottom: 2px solid transparent;
+    margin-bottom: -1px;
+    transition: color 120ms;
+  }
+  .nav-B .nav-row a:hover { color: var(--accent); }
+  .nav-B .nav-row a.active {
+    color: var(--ink); border-bottom-color: var(--accent);
+  }
+  .nav-B .nav-row a .dv {
+    font-size: 16px; margin-inline-start: 4px; font-weight: 500;
+  }
+
+  /* ============================================ */
+  /* DIRECTION C · QUIET WORDMARK + PINNED INDEX */
+  /* ============================================ */
+  .nav-C {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 48px;
+    padding: 0 24px;
+    border-bottom: 1px solid var(--rule);
+    background: var(--paper);
+  }
+  .nav-C .wordmark {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 11px; font-weight: 500;
+    text-transform: uppercase; letter-spacing: 0.18em;
+    color: var(--ink-2); text-decoration: none;
+  }
+  .nav-C .wordmark .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    margin-inline-end: 8px; font-size: 16px; font-weight: 600;
+    color: var(--ink); letter-spacing: 0; text-transform: none;
+  }
+  .nav-C .end-cluster {
+    display: flex; align-items: center; gap: 14px;
+  }
+  /* Pinned rail (rendered inside preview area) */
+  .nav-C-rail-frame { display: grid; grid-template-columns: 180px 1fr; }
+  .nav-C-rail {
+    border-inline-end: 1px solid var(--rule);
+    padding: 32px 0 32px 24px;
+    background: var(--paper);
+  }
+  .nav-C-rail .rail-label {
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 9.5px; text-transform: uppercase;
+    letter-spacing: 0.14em; color: var(--muted);
+    margin-bottom: 14px;
+  }
+  .nav-C-rail ol {
+    list-style: none; padding: 0; margin: 0;
+    counter-reset: rail;
+  }
+  .nav-C-rail li {
+    counter-increment: rail;
+    padding: 6px 0;
+  }
+  .nav-C-rail li::before {
+    content: counter(rail, decimal-leading-zero);
+    font-family: 'IBM Plex Mono', monospace;
+    font-size: 10px; color: var(--muted);
+    margin-inline-end: 10px;
+  }
+  .nav-C-rail a {
+    color: var(--ink-2); text-decoration: none;
+    font-size: 13.5px; font-weight: 500;
+    border-inline-start: 2px solid transparent;
+    padding-inline-start: 0;
+  }
+  .nav-C-rail a.active {
+    color: var(--accent); font-weight: 600;
+  }
+  .nav-C-rail a.active::after {
+    content: '·'; margin-inline-start: 8px; color: var(--accent);
+  }
+  .nav-C-rail a:hover { color: var(--accent); }
+  .nav-C-rail a .dv { font-size: 14.5px; margin-inline-start: 4px; }
+  .nav-C-rail-frame .preview-strip {
+    border-top: none;
+    padding: 32px 32px 80px;
+  }
+
+  /* ============= Footer ============= */
+  footer.page-footer {
+    max-width: 1280px; margin: 0 auto;
+    padding: 32px 48px 48px;
+    border-top: 1px solid var(--rule);
+    font-size: 12px; color: var(--muted);
+    display: flex; justify-content: space-between; align-items: center; gap: 16px;
+  }
+  footer.page-footer p { margin: 0; }
+</style>
+</head>
+<body>
+
+<header class="page-header">
+  <div class="meta-row">
+    <span>Design study · 02</span>
+    <span>2026-05-01</span>
+    <span>Top-nav directions · pre-pick</span>
+  </div>
+  <h1>Baaruveri <span class="dv">ބާރުވެރި</span> — top-nav directions</h1>
+  <p class="lede">
+    Three differentiated layout mechanics for the global top nav, all in the locked
+    Saafu visual language. Same primitives in each: wordmark, 5 nav links, LocaleSwitcher,
+    auth chip. Each direction shown in 4 states — LTR unauthed, LTR authed, RTL unauthed,
+    RTL authed — with a thin content-preview strip below so the nav reads in context.
+  </p>
+</header>
+
+<!-- ========================================== -->
+<!-- DIRECTION A · LEDGER BAR                  -->
+<!-- ========================================== -->
+<section class="dir">
+  <div class="dir-meta">
+    <div>
+      <h2>A · Ledger Bar</h2>
+      <p class="school">Pentagram annual reports · Foundation Center · USAspending</p>
+    </div>
+    <p class="why">
+      A single 56px hairline-bound row. Wordmark on the start, nav links inline at the end,
+      LocaleSwitcher and auth chip in an end-cluster separated by a vertical hairline.
+      The most condensed, editorial reading — like a journal masthead. Active item gets a
+      2px gazette-teal underline that rhymes with the table-header rule downstream.
+    </p>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">A · 01 · LTR · unauthed</div>
+    <div class="frame">
+      <nav class="nav-A">
+        <a href="#" class="wordmark">BAARUVERI <span class="dv">ބާރުވެރި</span></a>
+        <div class="nav-links">
+          <a href="#" class="active">Atlas</a>
+          <a href="#">Sandbar</a>
+          <a href="#">Petitions</a>
+          <a href="#">Datasets</a>
+          <a href="#">About</a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label">bsc</span>
+              <a href="#"><span class="dv">ދިވެހި</span></a>
+              <a href="#" class="active">English</a>
+            </span>
+            <span class="auth cta">
+              <a href="#">Sign in with eFaas →</a>
+            </span>
+          </div>
+        </div>
+      </nav>
+      <div class="preview-strip">
+        <div class="breadcrumb">Atlas · ނ. Noonu Atoll</div>
+        <h3><span class="dv">މާފަރު</span> Maafaru</h3>
+        <p>Population 711 · 5 council seats · MVR 12.4M FY26 budget · 14 active threads.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">A · 02 · LTR · authed</div>
+    <div class="frame">
+      <nav class="nav-A">
+        <a href="#" class="wordmark">BAARUVERI <span class="dv">ބާރުވެރި</span></a>
+        <div class="nav-links">
+          <a href="#" class="active">Atlas</a>
+          <a href="#">Sandbar</a>
+          <a href="#">Petitions</a>
+          <a href="#">Datasets</a>
+          <a href="#">About</a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label">bsc</span>
+              <a href="#"><span class="dv">ދިވެހި</span></a>
+              <a href="#" class="active">English</a>
+            </span>
+            <span class="auth">
+              <span class="name"><span class="dv">ޚަދީޖާ ނަދީމާ</span></span>
+              <span>·</span>
+              <a href="#">sign out</a>
+            </span>
+          </div>
+        </div>
+      </nav>
+      <div class="preview-strip">
+        <div class="breadcrumb">Atlas · ނ. Noonu Atoll</div>
+        <h3><span class="dv">މާފަރު</span> Maafaru</h3>
+        <p>Population 711 · 5 council seats · MVR 12.4M FY26 budget · 14 active threads.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">A · 03 · RTL · unauthed (Dhivehi-primary)</div>
+    <div class="frame" dir="rtl">
+      <nav class="nav-A">
+        <a href="#" class="wordmark"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+        <div class="nav-links">
+          <a href="#" class="active"><span class="dv">އެޓްލަސް</span></a>
+          <a href="#"><span class="dv">ސޭންޑްބާރ</span></a>
+          <a href="#"><span class="dv">ޕެޓިޝަންތައް</span></a>
+          <a href="#"><span class="dv">ޑޭޓާ</span></a>
+          <a href="#"><span class="dv">އެބައުޓު</span></a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label"><span class="dv">ބަސް</span></span>
+              <a href="#" class="active"><span class="dv">ދިވެހި</span></a>
+              <a href="#">English</a>
+            </span>
+            <span class="auth cta">
+              <a href="#"><span class="dv">eFaas އިން ސޮއިކުރައްވާ →</span></a>
+            </span>
+          </div>
+        </div>
+      </nav>
+      <div class="preview-strip" dir="rtl">
+        <div class="breadcrumb"><span class="dv">އެޓްލަސް · ނ. ނޫނު އަތޮޅު</span></div>
+        <h3><span class="dv">މާފަރު</span></h3>
+        <p><span class="dv">ޢާއްމު ޢަދަދު 711 · 5 ކައުންސިލް ގޮނޑި · MVR 12.4M FY26 ބަޖެޓު · 14 އެކްޓިވް ތްރެޑު.</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">A · 04 · RTL · authed</div>
+    <div class="frame" dir="rtl">
+      <nav class="nav-A">
+        <a href="#" class="wordmark"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+        <div class="nav-links">
+          <a href="#" class="active"><span class="dv">އެޓްލަސް</span></a>
+          <a href="#"><span class="dv">ސޭންޑްބާރ</span></a>
+          <a href="#"><span class="dv">ޕެޓިޝަންތައް</span></a>
+          <a href="#"><span class="dv">ޑޭޓާ</span></a>
+          <a href="#"><span class="dv">އެބައުޓު</span></a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label"><span class="dv">ބަސް</span></span>
+              <a href="#" class="active"><span class="dv">ދިވެހި</span></a>
+              <a href="#">English</a>
+            </span>
+            <span class="auth">
+              <span class="name"><span class="dv">ޚަދީޖާ ނަދީމާ</span></span>
+              <span>·</span>
+              <a href="#"><span class="dv">ބޭރުވޭ</span></a>
+            </span>
+          </div>
+        </div>
+      </nav>
+      <div class="preview-strip" dir="rtl">
+        <div class="breadcrumb"><span class="dv">އެޓްލަސް · ނ. ނޫނު އަތޮޅު</span></div>
+        <h3><span class="dv">މާފަރު</span></h3>
+        <p><span class="dv">ޢާއްމު ޢަދަދު 711 · 5 ކައުންސިލް ގޮނޑި · MVR 12.4M FY26 ބަޖެޓު · 14 އެކްޓިވް ތްރެޑު.</span></p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ========================================== -->
+<!-- DIRECTION B · GOV TWO-ROW                 -->
+<!-- ========================================== -->
+<section class="dir">
+  <div class="dir-meta">
+    <div>
+      <h2>B · Gov Two-Row</h2>
+      <p class="school">gov.uk · Govt.nz · USDS · Singapore data.gov.sg</p>
+    </div>
+    <p class="why">
+      Two stacked rows: a 32px system row with the small wordmark + locale + auth, and a
+      52px primary-nav row beneath. Total 84px chrome. Strong information hierarchy — system
+      chrome separated from primary navigation. The proven civic-government pattern; reads
+      "official record" before it reads "product."
+    </p>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">B · 01 · LTR · unauthed</div>
+    <div class="frame">
+      <nav class="nav-B">
+        <div class="system-row">
+          <a href="#" class="wordmark-mini">BAARUVERI <span class="dv">ބާރުވެރި</span></a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label">bsc</span>
+              <a href="#"><span class="dv">ދިވެހި</span></a>
+              <a href="#" class="active">English</a>
+            </span>
+            <span class="auth cta">
+              <a href="#">Sign in with eFaas →</a>
+            </span>
+          </div>
+        </div>
+        <div class="nav-row">
+          <a href="#" class="active">Atlas</a>
+          <a href="#">Sandbar</a>
+          <a href="#">Petitions</a>
+          <a href="#">Datasets</a>
+          <a href="#">About</a>
+        </div>
+      </nav>
+      <div class="preview-strip">
+        <div class="breadcrumb">Atlas · ނ. Noonu Atoll</div>
+        <h3><span class="dv">މާފަރު</span> Maafaru</h3>
+        <p>Population 711 · 5 council seats · MVR 12.4M FY26 budget · 14 active threads.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">B · 02 · LTR · authed</div>
+    <div class="frame">
+      <nav class="nav-B">
+        <div class="system-row">
+          <a href="#" class="wordmark-mini">BAARUVERI <span class="dv">ބާރުވެރި</span></a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label">bsc</span>
+              <a href="#"><span class="dv">ދިވެހި</span></a>
+              <a href="#" class="active">English</a>
+            </span>
+            <span class="auth">
+              <span class="name"><span class="dv">ޚަދީޖާ ނަދީމާ</span></span>
+              <span>·</span>
+              <a href="#">sign out</a>
+            </span>
+          </div>
+        </div>
+        <div class="nav-row">
+          <a href="#" class="active">Atlas</a>
+          <a href="#">Sandbar</a>
+          <a href="#">Petitions</a>
+          <a href="#">Datasets</a>
+          <a href="#">About</a>
+        </div>
+      </nav>
+      <div class="preview-strip">
+        <div class="breadcrumb">Atlas · ނ. Noonu Atoll</div>
+        <h3><span class="dv">މާފަރު</span> Maafaru</h3>
+        <p>Population 711 · 5 council seats · MVR 12.4M FY26 budget · 14 active threads.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">B · 03 · RTL · unauthed</div>
+    <div class="frame" dir="rtl">
+      <nav class="nav-B">
+        <div class="system-row">
+          <a href="#" class="wordmark-mini"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label"><span class="dv">ބަސް</span></span>
+              <a href="#" class="active"><span class="dv">ދިވެހި</span></a>
+              <a href="#">English</a>
+            </span>
+            <span class="auth cta">
+              <a href="#"><span class="dv">eFaas އިން ސޮއިކުރައްވާ →</span></a>
+            </span>
+          </div>
+        </div>
+        <div class="nav-row">
+          <a href="#" class="active"><span class="dv">އެޓްލަސް</span></a>
+          <a href="#"><span class="dv">ސޭންޑްބާރ</span></a>
+          <a href="#"><span class="dv">ޕެޓިޝަންތައް</span></a>
+          <a href="#"><span class="dv">ޑޭޓާ</span></a>
+          <a href="#"><span class="dv">އެބައުޓު</span></a>
+        </div>
+      </nav>
+      <div class="preview-strip" dir="rtl">
+        <div class="breadcrumb"><span class="dv">އެޓްލަސް · ނ. ނޫނު އަތޮޅު</span></div>
+        <h3><span class="dv">މާފަރު</span></h3>
+        <p><span class="dv">ޢާއްމު ޢަދަދު 711 · 5 ކައުންސިލް ގޮނޑި · MVR 12.4M FY26 ބަޖެޓު · 14 އެކްޓިވް ތްރެޑު.</span></p>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">B · 04 · RTL · authed</div>
+    <div class="frame" dir="rtl">
+      <nav class="nav-B">
+        <div class="system-row">
+          <a href="#" class="wordmark-mini"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+          <div class="end-cluster">
+            <span class="ls">
+              <span class="ls-label"><span class="dv">ބަސް</span></span>
+              <a href="#" class="active"><span class="dv">ދިވެހި</span></a>
+              <a href="#">English</a>
+            </span>
+            <span class="auth">
+              <span class="name"><span class="dv">ޚަދީޖާ ނަދީމާ</span></span>
+              <span>·</span>
+              <a href="#"><span class="dv">ބޭރުވޭ</span></a>
+            </span>
+          </div>
+        </div>
+        <div class="nav-row">
+          <a href="#" class="active"><span class="dv">އެޓްލަސް</span></a>
+          <a href="#"><span class="dv">ސޭންޑްބާރ</span></a>
+          <a href="#"><span class="dv">ޕެޓިޝަންތައް</span></a>
+          <a href="#"><span class="dv">ޑޭޓާ</span></a>
+          <a href="#"><span class="dv">އެބައުޓު</span></a>
+        </div>
+      </nav>
+      <div class="preview-strip" dir="rtl">
+        <div class="breadcrumb"><span class="dv">އެޓްލަސް · ނ. ނޫނު އަތޮޅު</span></div>
+        <h3><span class="dv">މާފަރު</span></h3>
+        <p><span class="dv">ޢާއްމު ޢަދަދު 711 · 5 ކައުންސިލް ގޮނޑި · MVR 12.4M FY26 ބަޖެޓު · 14 އެކްޓިވް ތްރެޑު.</span></p>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<!-- ========================================== -->
+<!-- DIRECTION C · QUIET WORDMARK + RAIL       -->
+<!-- ========================================== -->
+<section class="dir">
+  <div class="dir-meta">
+    <div>
+      <h2>C · Quiet wordmark + pinned index rail</h2>
+      <p class="school">Tufte sites · Cabinet Magazine · Are.na editorial</p>
+    </div>
+    <p class="why">
+      A 48px wordmark-only top row (no nav links). Primary nav lives as a numbered left-rail
+      index inside content on every section page — orientation and navigation in one element.
+      The most restrained option; the platform stays quiet, content is the only loud thing.
+      Rail visible in this preview is what every Atlas / Sandbar / Petitions / Datasets page sees.
+    </p>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">C · 01 · LTR · unauthed</div>
+    <div class="frame">
+      <nav class="nav-C">
+        <a href="#" class="wordmark"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+        <div class="end-cluster">
+          <span class="ls">
+            <span class="ls-label">bsc</span>
+            <a href="#"><span class="dv">ދިވެހި</span></a>
+            <a href="#" class="active">English</a>
+          </span>
+          <span class="auth cta">
+            <a href="#">Sign in with eFaas →</a>
+          </span>
+        </div>
+      </nav>
+      <div class="nav-C-rail-frame">
+        <aside class="nav-C-rail">
+          <div class="rail-label">Section</div>
+          <ol>
+            <li><a href="#" class="active">Atlas</a></li>
+            <li><a href="#">Sandbar</a></li>
+            <li><a href="#">Petitions</a></li>
+            <li><a href="#">Datasets</a></li>
+            <li><a href="#">About</a></li>
+          </ol>
+        </aside>
+        <div class="preview-strip">
+          <div class="breadcrumb">Atlas · ނ. Noonu Atoll</div>
+          <h3><span class="dv">މާފަރު</span> Maafaru</h3>
+          <p>Population 711 · 5 council seats · MVR 12.4M FY26 budget · 14 active threads.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">C · 02 · LTR · authed</div>
+    <div class="frame">
+      <nav class="nav-C">
+        <a href="#" class="wordmark"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+        <div class="end-cluster">
+          <span class="ls">
+            <span class="ls-label">bsc</span>
+            <a href="#"><span class="dv">ދިވެހި</span></a>
+            <a href="#" class="active">English</a>
+          </span>
+          <span class="auth">
+            <span class="name"><span class="dv">ޚަދީޖާ ނަދީމާ</span></span>
+            <span>·</span>
+            <a href="#">sign out</a>
+          </span>
+        </div>
+      </nav>
+      <div class="nav-C-rail-frame">
+        <aside class="nav-C-rail">
+          <div class="rail-label">Section</div>
+          <ol>
+            <li><a href="#" class="active">Atlas</a></li>
+            <li><a href="#">Sandbar</a></li>
+            <li><a href="#">Petitions</a></li>
+            <li><a href="#">Datasets</a></li>
+            <li><a href="#">About</a></li>
+          </ol>
+        </aside>
+        <div class="preview-strip">
+          <div class="breadcrumb">Atlas · ނ. Noonu Atoll</div>
+          <h3><span class="dv">މާފަރު</span> Maafaru</h3>
+          <p>Population 711 · 5 council seats · MVR 12.4M FY26 budget · 14 active threads.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">C · 03 · RTL · unauthed</div>
+    <div class="frame" dir="rtl">
+      <nav class="nav-C">
+        <a href="#" class="wordmark"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+        <div class="end-cluster">
+          <span class="ls">
+            <span class="ls-label"><span class="dv">ބަސް</span></span>
+            <a href="#" class="active"><span class="dv">ދިވެހި</span></a>
+            <a href="#">English</a>
+          </span>
+          <span class="auth cta">
+            <a href="#"><span class="dv">eFaas އިން ސޮއިކުރައްވާ →</span></a>
+          </span>
+        </div>
+      </nav>
+      <div class="nav-C-rail-frame">
+        <aside class="nav-C-rail">
+          <div class="rail-label"><span class="dv">ބައި</span></div>
+          <ol>
+            <li><a href="#" class="active"><span class="dv">އެޓްލަސް</span></a></li>
+            <li><a href="#"><span class="dv">ސޭންޑްބާރ</span></a></li>
+            <li><a href="#"><span class="dv">ޕެޓިޝަންތައް</span></a></li>
+            <li><a href="#"><span class="dv">ޑޭޓާ</span></a></li>
+            <li><a href="#"><span class="dv">އެބައުޓު</span></a></li>
+          </ol>
+        </aside>
+        <div class="preview-strip" dir="rtl">
+          <div class="breadcrumb"><span class="dv">އެޓްލަސް · ނ. ނޫނު އަތޮޅު</span></div>
+          <h3><span class="dv">މާފަރު</span></h3>
+          <p><span class="dv">ޢާއްމު ޢަދަދު 711 · 5 ކައުންސިލް ގޮނޑި · MVR 12.4M FY26 ބަޖެޓު · 14 އެކްޓިވް ތްރެޑު.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="variant">
+    <div class="variant-label">C · 04 · RTL · authed</div>
+    <div class="frame" dir="rtl">
+      <nav class="nav-C">
+        <a href="#" class="wordmark"><span class="dv">ބާރުވެރި</span> BAARUVERI</a>
+        <div class="end-cluster">
+          <span class="ls">
+            <span class="ls-label"><span class="dv">ބަސް</span></span>
+            <a href="#" class="active"><span class="dv">ދިވެހި</span></a>
+            <a href="#">English</a>
+          </span>
+          <span class="auth">
+            <span class="name"><span class="dv">ޚަދީޖާ ނަދީމާ</span></span>
+            <span>·</span>
+            <a href="#"><span class="dv">ބޭރުވޭ</span></a>
+          </span>
+        </div>
+      </nav>
+      <div class="nav-C-rail-frame">
+        <aside class="nav-C-rail">
+          <div class="rail-label"><span class="dv">ބައި</span></div>
+          <ol>
+            <li><a href="#" class="active"><span class="dv">އެޓްލަސް</span></a></li>
+            <li><a href="#"><span class="dv">ސޭންޑްބާރ</span></a></li>
+            <li><a href="#"><span class="dv">ޕެޓިޝަންތައް</span></a></li>
+            <li><a href="#"><span class="dv">ޑޭޓާ</span></a></li>
+            <li><a href="#"><span class="dv">އެބައުޓު</span></a></li>
+          </ol>
+        </aside>
+        <div class="preview-strip" dir="rtl">
+          <div class="breadcrumb"><span class="dv">އެޓްލަސް · ނ. ނޫނު އަތޮޅު</span></div>
+          <h3><span class="dv">މާފަރު</span></h3>
+          <p><span class="dv">ޢާއްމު ޢަދަދު 711 · 5 ކައުންސިލް ގޮނޑި · MVR 12.4M FY26 ބަޖެޓު · 14 އެކްޓިވް ތްރެޑު.</span></p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+</section>
+
+<footer class="page-footer">
+  <p>Concept prototype · Not an official Government of Maldives product</p>
+  <p>Baaruveri <span class="dv">ބާރުވެރި</span> · design study 02 · 2026-05-01</p>
+</footer>
+
+</body>
+</html>

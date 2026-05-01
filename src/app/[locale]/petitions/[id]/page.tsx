@@ -92,8 +92,8 @@ export default async function PetitionDetailPage({
               <span
                 className={
                   petition.scope === "national"
-                    ? "bg-foreground text-background px-2 py-[2px] mr-2"
-                    : "bg-secondary text-secondary-foreground px-2 py-[2px] mr-2"
+                    ? "bg-foreground text-background px-2 py-[2px] me-2"
+                    : "bg-secondary text-secondary-foreground px-2 py-[2px] me-2"
                 }
               >
                 {petition.scope === "national" ? "National" : "Island"}

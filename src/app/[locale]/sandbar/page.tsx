@@ -35,7 +35,7 @@ export default function SandbarHomePage() {
             Sandbar · v0 prototype
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
-            <span className="dv-text mr-3 font-bold">ސޭންޑްބާރ</span>
+            <span className="dv-text me-3 font-bold">ސޭންޑްބާރ</span>
             <span>Threaded debate by issue × island</span>
           </h1>
           <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
@@ -81,7 +81,7 @@ export default function SandbarHomePage() {
                 key={t.tag}
                 className="bg-secondary text-secondary-foreground px-3 py-1 text-[12px] font-mono"
               >
-                <span className="dv-text mr-1.5">{t.dv}</span>
+                <span className="dv-text me-1.5">{t.dv}</span>
                 {t.en}
               </span>
             ))}

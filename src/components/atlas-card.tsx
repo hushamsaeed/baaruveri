@@ -27,7 +27,7 @@ export function AtlasCard({ island }: AtlasCardProps) {
           </div>
         </div>
         <span className="text-[10px] text-muted-foreground uppercase tracking-widest font-mono">
-          <span className="dv-text mr-1">{island.atoll_dv}</span>
+          <span className="dv-text me-1">{island.atoll_dv}</span>
           {island.atoll_en} · {island.atoll_code}
         </span>
       </div>

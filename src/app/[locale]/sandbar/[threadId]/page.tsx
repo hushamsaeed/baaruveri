@@ -86,7 +86,7 @@ export default async function ThreadDetailPage({
                 <>
                   <span>·</span>
                   <Link href={`/atlas/${island.slug}`} className="hover:text-foreground transition-colors">
-                    <span className="dv-text mr-1">{island.name_dv}</span>
+                    <span className="dv-text me-1">{island.name_dv}</span>
                     <span>{island.name_en}</span>
                   </Link>
                 </>

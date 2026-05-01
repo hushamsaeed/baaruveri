@@ -116,7 +116,7 @@ export const islands: Island[] = [
     active_threads: 14,
     active_petitions: 2,
     context_en:
-      "Small Noonu island. Maafaru International Airport (2019) was built with MVR 600M+ public investment; ongoing public scrutiny of its predominantly tourist-transit use vs. resident benefit.",
+      "Small Noonu island. Maafaru International Airport (commissioned 1 December 2019) was built with a USD 60M+ Abu Dhabi Fund for Development grant; the airport is now positioned as the country's private-jet hub. Ongoing public scrutiny of its predominantly tourist-transit use vs. resident benefit.",
     population_source: { label: "NBS census", year: 2024 },
     voters_source: { label: "Elections Commission register", date: "2026-04-04" },
   },

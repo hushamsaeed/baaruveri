@@ -20,7 +20,7 @@ export default function DatasetsIndexPage() {
             Open data · v0
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
-            <span className="dv-text mr-3 font-bold">ހުޅުވިފައި ހުރި ޑޭޓާ</span>
+            <span className="dv-text me-3 font-bold">ހުޅުވިފައި ހުރި ޑޭޓާ</span>
             <span>Open data</span>
           </h1>
           <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">
@@ -36,7 +36,7 @@ export default function DatasetsIndexPage() {
         <div className="bg-card border border-border p-6 sm:p-8">
           <div className="flex items-baseline justify-between mb-2 gap-4 flex-wrap">
             <h2 className="text-xl font-semibold">
-              <span className="dv-text mr-2">ކައުންސިލް ބަޖެޓު</span>
+              <span className="dv-text me-2">ކައުންސިލް ބަޖެޓު</span>
               <span>Council budgets</span>
             </h2>
             <span className="font-mono text-[11px] text-muted-foreground">

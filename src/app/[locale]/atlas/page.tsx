@@ -20,7 +20,7 @@ export default function AtlasPage() {
             Atlas · 6 islands · v0 prototype
           </div>
           <h1 className="text-3xl sm:text-4xl font-semibold tracking-tight mb-4">
-            <span className="dv-text mr-3 font-bold">އެޓްލަސް</span>
+            <span className="dv-text me-3 font-bold">އެޓްލަސް</span>
             <span>Per-island civic profiles</span>
           </h1>
           <p className="max-w-2xl text-base text-muted-foreground leading-relaxed">

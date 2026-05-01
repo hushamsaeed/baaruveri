@@ -28,8 +28,8 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
       <table className="w-full text-[13px]">
         <thead>
           <tr>
-            <th className="text-left pb-2 pr-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground">
-              <span className="dv-text mr-2">ބަޖެޓު ބައި</span>
+            <th className="text-start pb-2 pe-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground">
+              <span className="dv-text me-2">ބަޖެޓު ބައި</span>
               <span>· Line item</span>
             </th>
             <th className="text-right pb-2 px-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
@@ -41,7 +41,7 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
             <th className="text-right pb-2 px-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
               % spent
             </th>
-            <th className="text-right pb-2 pl-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
+            <th className="text-right pb-2 ps-3 border-b-[1.5px] border-foreground text-[10.5px] uppercase tracking-[0.08em] font-semibold text-muted-foreground font-mono">
               vs FY25 Q1
             </th>
           </tr>
@@ -53,15 +53,15 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
               : 0;
             return (
               <tr key={`${line.island_id}-${line.line_item_en}`} className="border-b border-border">
-                <td className="py-2 pr-3">
-                  <span className="dv-text mr-2">{line.line_item_dv}</span>
+                <td className="py-2 pe-3">
+                  <span className="dv-text me-2">{line.line_item_dv}</span>
                   <span className="text-muted-foreground">· {line.line_item_en}</span>
                 </td>
                 <td className="py-2 px-3 text-right num font-mono">{fmtMvr(line.allocated_mvr)}</td>
                 <td className="py-2 px-3 text-right num font-mono">{fmtMvr(line.spent_mvr)}</td>
                 <td className="py-2 px-3 text-right num font-mono">{pctSpent.toFixed(1)}%</td>
                 <td
-                  className={`py-2 pl-3 text-right num font-mono ${
+                  className={`py-2 ps-3 text-right num font-mono ${
                     line.yoy_pct > 5
                       ? "text-[color:var(--over)]"
                       : line.yoy_pct < -1
@@ -75,11 +75,11 @@ export function BudgetTable({ lines, islandSlug }: BudgetTableProps) {
             );
           })}
           <tr className="bg-muted/40">
-            <td className="py-2.5 pr-3 font-semibold">Total</td>
+            <td className="py-2.5 pe-3 font-semibold">Total</td>
             <td className="py-2.5 px-3 text-right num font-mono font-semibold">{fmtMvr(totalAlloc)}</td>
             <td className="py-2.5 px-3 text-right num font-mono font-semibold">{fmtMvr(totalSpent)}</td>
             <td className="py-2.5 px-3 text-right num font-mono font-semibold">{totalPctSpent.toFixed(1)}%</td>
-            <td className="py-2.5 pl-3 text-right num font-mono font-semibold">{fmtPct(weightedYoy)}%</td>
+            <td className="py-2.5 ps-3 text-right num font-mono font-semibold">{fmtPct(weightedYoy)}%</td>
           </tr>
         </tbody>
       </table>

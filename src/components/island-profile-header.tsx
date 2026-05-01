@@ -25,7 +25,7 @@ export function IslandProfileHeader({ island }: IslandProfileHeaderProps) {
         <div className="flex items-baseline justify-between mb-6 pb-4 border-b-[1.5px] border-foreground gap-4 flex-wrap">
           <div>
             <div className="text-[11px] text-muted-foreground uppercase tracking-[0.14em] font-mono mb-2">
-              <span className="dv-text mr-2">{island.atoll_dv}</span>
+              <span className="dv-text me-2">{island.atoll_dv}</span>
               {island.atoll_en} Atoll · {island.atoll_code}
             </div>
             <h1 className="text-[40px] sm:text-5xl font-semibold tracking-tight leading-none">

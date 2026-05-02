@@ -159,6 +159,8 @@
   },
   "thread": {
     "started_by": "ފެށީ",
+    "started_by_label": "ފެށީ",
+    "started_label": "ފެށި",
     "claims": "ދަޢުވާ",
     "votes": "ވޯޓު",
     "section_claims": "ދަޢުވާ · ޕްރޯ އަދި ކޮން",

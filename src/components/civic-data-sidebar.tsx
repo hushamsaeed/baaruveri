@@ -73,83 +73,152 @@ export async function CivicDataSidebar({
   const totalSpent = budgetLines.reduce((s, l) => s + l.spent_mvr, 0);
 
   return (
-    <aside className="bg-muted/40 border border-border p-5 lg:sticky lg:top-6 self-start">
-      <div className="font-mono text-[10px] uppercase tracking-[0.14em] text-muted-foreground mb-3">
+    <aside
+      className="lg:sticky lg:top-6 self-start"
+      style={{
+        background: "var(--paper)",
+        borderTop: "8px solid var(--ink)",
+        borderBottom: "2px solid var(--ink)",
+      }}
+    >
+      {/* Section head — Vignelli §3 */}
+      <div
+        className="px-5 py-2.5 text-[10px] uppercase font-bold tracking-[0.14em]"
+        style={{
+          fontFamily: "var(--font-sans-bold)",
+          background: "var(--ink)",
+          color: "var(--paper)",
+        }}
+      >
         <L>{ts("header")}</L>
       </div>
 
-      <div className="pb-4 mb-4 border-b border-border">
-        <div className="text-xs text-muted-foreground font-mono mb-1">
-          <span className="dv-text me-1">{island.atoll_dv}</span>
+      {/* Island block — atoll meta on top, name displayed monumentally */}
+      <div
+        className="px-5 py-4"
+        style={{ borderBottom: "1px solid var(--ink)" }}
+      >
+        <div
+          className="font-mono text-[10.5px] uppercase tracking-[0.14em] mb-2"
+          style={{ color: "var(--ink-soft)" }}
+        >
+          <span className="dv-text me-1.5 font-bold">{island.atoll_dv}</span>
           {island.atoll_en} · {island.atoll_code}
         </div>
-        <div className="text-2xl font-semibold leading-tight">
-          <span className="dv-text">{island.name_dv}</span>
+        <div className="dv-text font-bold text-[26px] leading-[1.05]">
+          {island.name_dv}
         </div>
-        <div className="text-[12px] text-muted-foreground mt-1">{island.name_en}</div>
+        <div
+          className="font-display text-[20px] mt-0.5"
+          style={{
+            fontFamily: "var(--font-display), sans-serif",
+            lineHeight: 0.95,
+            letterSpacing: "-0.02em",
+            textTransform: "uppercase",
+          }}
+        >
+          {island.name_en}
+        </div>
       </div>
 
-      <dl className="font-mono text-[12px] mb-4">
-        <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground"><L>{ts("stat_population")}</L></dt>
-          <dd className="num">{island.population.toLocaleString("en-US")}</dd>
-        </div>
-        <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground"><L>{ts("stat_voters")}</L></dt>
-          <dd className="num">{island.registered_voters.toLocaleString("en-US")}</dd>
-        </div>
-        <div className="grid grid-cols-[1fr_auto] py-1.5 border-b border-border">
-          <dt className="text-muted-foreground"><L>{ts("stat_budget")}</L></dt>
-          <dd className="num">MVR {fmtMvr(island.fy26_budget_mvr)}</dd>
-        </div>
-        <div className="grid grid-cols-[1fr_auto] py-1.5">
-          <dt className="text-muted-foreground"><L>{ts("stat_q1_spent")}</L></dt>
-          <dd className="num">
-            MVR {fmtMvr(totalSpent)}{" "}
-            <span className="text-muted-foreground">
-              ({totalAllocated ? Math.round((totalSpent / totalAllocated) * 100) : 0}%)
-            </span>
-          </dd>
-        </div>
+      {/* Tabular ledger — spec §7.5 */}
+      <dl>
+        <LedgerRow
+          label={ts("stat_population")}
+          value={island.population.toLocaleString("en-US")}
+        />
+        <LedgerRow
+          label={ts("stat_voters")}
+          value={island.registered_voters.toLocaleString("en-US")}
+        />
+        <LedgerRow
+          label={ts("stat_budget")}
+          value={`MVR ${fmtMvr(island.fy26_budget_mvr)}`}
+        />
+        <LedgerRow
+          label={ts("stat_q1_spent")}
+          value={`MVR ${fmtMvr(totalSpent)}`}
+          sub={`${
+            totalAllocated
+              ? Math.round((totalSpent / totalAllocated) * 100)
+              : 0
+          }% allocated`}
+        />
       </dl>
 
       {chair && (
-        <div className="pb-4 mb-4 border-b border-border">
-          <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-mono mb-1.5">
+        <div
+          className="px-5 py-3"
+          style={{ borderTop: "1px solid var(--ink)" }}
+        >
+          <div
+            className="text-[9.5px] uppercase font-bold tracking-[0.12em] mb-1"
+            style={{
+              fontFamily: "var(--font-sans-bold)",
+              color: "var(--ink-soft)",
+            }}
+          >
             <L>{ts("council_chair")}</L>
           </div>
-          <div className="text-[14px] font-semibold leading-tight">
-            <span className="dv-text">{chair.name_dv}</span>
+          <div className="dv-text font-bold text-[15px] leading-tight">
+            {chair.name_dv}
           </div>
-          <div className="text-[11.5px] text-muted-foreground font-mono mt-0.5">
+          <div
+            className="font-mono text-[10.5px] uppercase tracking-[0.1em] mt-0.5"
+            style={{ color: "var(--ink-soft)" }}
+          >
             {chair.name_en} · {chair.party}
           </div>
         </div>
       )}
 
       {petitions.length > 0 && (
-        <div className="pb-4 mb-4 border-b border-border">
-          <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-mono mb-2">
+        <div
+          className="px-5 py-3"
+          style={{ borderTop: "1px solid var(--ink)" }}
+        >
+          <div
+            className="text-[9.5px] uppercase font-bold tracking-[0.12em] mb-2"
+            style={{
+              fontFamily: "var(--font-sans-bold)",
+              color: "var(--ink-soft)",
+            }}
+          >
             <L>{ts("open_petitions_for", { island: island.name_en })}</L>
           </div>
-          <ul className="space-y-2.5">
+          <ul className="space-y-2">
             {petitions.slice(0, 3).map((p) => {
               const pct = Math.min(100, (p.signatures / p.threshold) * 100);
               return (
-                <li key={p.id} className="text-[12px]">
+                <li key={p.id}>
                   <Link
                     href={`/petitions/${p.id}`}
-                    className="block hover:text-primary transition-colors"
+                    className="block group"
                   >
-                    <div className="leading-snug mb-1">{p.title_en}</div>
-                    <div className="font-mono text-[11px] text-muted-foreground flex items-center gap-2">
-                      <span className="num">{p.signatures.toLocaleString("en-US")}</span>
-                      <span>/</span>
-                      <span className="num">{p.threshold.toLocaleString("en-US")}</span>
-                      <span className="flex-1 h-[3px] bg-muted ms-1 relative overflow-hidden">
+                    <div
+                      className="text-[12px] leading-snug mb-1.5 group-hover:underline underline-offset-2"
+                      style={{ color: "var(--ink)" }}
+                    >
+                      {p.title_en}
+                    </div>
+                    <div className="flex items-center gap-2 font-mono text-[10.5px] tabular-nums">
+                      <span style={{ color: "var(--ink)" }}>
+                        {p.signatures.toLocaleString("en-US")}
+                      </span>
+                      <span style={{ color: "var(--ink-soft)" }}>/</span>
+                      <span style={{ color: "var(--ink-soft)" }}>
+                        {p.threshold.toLocaleString("en-US")}
+                      </span>
+                      <span
+                        className="flex-1 h-[3px] ms-1 relative overflow-hidden"
+                        style={{ background: "var(--paper-rule)" }}
+                      >
                         <span
-                          className="absolute start-0 top-0 h-full bg-primary"
-                          style={{ width: `${pct}%` }}
+                          className="absolute start-0 top-0 h-full"
+                          style={{
+                            width: `${pct}%`,
+                            background: "var(--vignelli-red)",
+                          }}
                         />
                       </span>
                     </div>
@@ -162,16 +231,26 @@ export async function CivicDataSidebar({
       )}
 
       {otherThreads.length > 0 && (
-        <div className="pb-4 mb-4 border-b border-border">
-          <div className="text-[10px] uppercase tracking-[0.12em] text-muted-foreground font-mono mb-2">
+        <div
+          className="px-5 py-3"
+          style={{ borderTop: "1px solid var(--ink)" }}
+        >
+          <div
+            className="text-[9.5px] uppercase font-bold tracking-[0.12em] mb-2"
+            style={{
+              fontFamily: "var(--font-sans-bold)",
+              color: "var(--ink-soft)",
+            }}
+          >
             <L>{ts("other_threads")}</L>
           </div>
-          <ul className="space-y-2 text-[12px]">
+          <ul className="space-y-1.5">
             {otherThreads.slice(0, 3).map((t) => (
               <li key={t.id}>
                 <Link
                   href={`/sandbar/${t.id}`}
-                  className="block hover:text-primary transition-colors leading-snug"
+                  className="block text-[12px] leading-snug hover:underline underline-offset-2"
+                  style={{ color: "var(--ink)" }}
                 >
                   {t.title_en}
                 </Link>
@@ -181,12 +260,70 @@ export async function CivicDataSidebar({
         </div>
       )}
 
-      <Link
-        href={`/atlas/${island.slug}`}
-        className="inline-flex items-center text-[12px] text-primary hover:underline font-mono"
+      <div
+        className="px-5 py-3"
+        style={{ borderTop: "1px solid var(--ink)" }}
       >
-        <L>{ts("view_full_profile")}</L>
-      </Link>
+        <Link
+          href={`/atlas/${island.slug}`}
+          className="inline-flex items-baseline gap-1 text-[11px] font-bold uppercase tracking-[0.1em] hover:underline underline-offset-2"
+          style={{
+            fontFamily: "var(--font-sans-bold)",
+            color: "var(--vignelli-red)",
+          }}
+        >
+          <L>{ts("view_full_profile")}</L>
+          <span aria-hidden className="font-mono">
+            →
+          </span>
+        </Link>
+      </div>
     </aside>
+  );
+}
+
+function LedgerRow({
+  label,
+  value,
+  sub,
+}: {
+  label: string;
+  value: string;
+  sub?: string;
+}) {
+  return (
+    <div
+      className="grid grid-cols-[1fr_auto] gap-3 px-5 py-2.5"
+      style={{ borderBottom: "1px solid var(--paper-rule)" }}
+    >
+      <dt
+        className="text-[10px] uppercase font-bold tracking-[0.12em] self-center"
+        style={{
+          fontFamily: "var(--font-sans-bold)",
+          color: "var(--ink-soft)",
+        }}
+      >
+        <L>{label}</L>
+      </dt>
+      <dd className="text-end">
+        <div
+          className="font-display text-[20px] leading-none tabular-nums"
+          style={{
+            fontFamily: "var(--font-display), sans-serif",
+            letterSpacing: "-0.02em",
+          }}
+        >
+          {value}
+        </div>
+        {sub && (
+          <div
+            className="font-mono text-[10px] mt-0.5"
+            style={{ color: "var(--ink-soft)" }}
+          >
+            {sub}
+          </div>
+        )}
+      </dd>
+    </div>
   );
 }

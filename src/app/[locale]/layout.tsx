@@ -10,6 +10,7 @@ import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
 import { routing } from "@/i18n/routing";
 import { TopNav } from "@/components/top-nav";
+import { LaneRail } from "@/components/lane-rail";
 import { getCurrentStubUser } from "@/lib/auth-stub";
 import "../globals.css";
 
@@ -114,6 +115,7 @@ export default async function LocaleLayout({
             {t("skip_to_content")}
           </a>
           <TopNav user={user} />
+          <LaneRail />
           <div id="main-content">{children}</div>
           <footer className="mt-auto border-t border-border">
             <div className="max-w-6xl mx-auto px-6 sm:px-10 py-5 text-[11px] text-muted-foreground text-center">

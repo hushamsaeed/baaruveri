@@ -47,6 +47,13 @@
     "vol_strap": "Vol. 02 · Issue 14 · 2026",
     "publication_strap": "A civic public square for every island of the Maldives"
   },
+  "lane": {
+    "rail_aria": "Constitutional-branch lanes — the four problem-level filters for civic topics",
+    "judiciary_label": "Judiciary",
+    "parliamentary_label": "Parliamentary",
+    "presidency_label": "Presidency",
+    "council_label": "Council"
+  },
   "search": {
     "open": "Search Baaruveri",
     "placeholder": "Search islands, threads, petitions",

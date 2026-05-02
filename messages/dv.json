@@ -47,6 +47,13 @@
     "vol_strap": "Vol. 02 · Issue 14 · 2026",
     "publication_strap": "ދިވެހިރާއްޖޭގެ ކޮންމެ ރަށެއްގެ ޢާއްމު ޕަބްލިކް ސްކްއެއަރ"
   },
+  "lane": {
+    "rail_aria": "ހަތަރު ކަންކަން — ޤާނޫނީ ބްރާންޗުތަކުގެ ފިލްޓަރ",
+    "judiciary_label": "Judiciary",
+    "parliamentary_label": "Parliamentary",
+    "presidency_label": "Presidency",
+    "council_label": "Council"
+  },
   "search": {
     "open": "ބާރުވެރި ހޯދާ",
     "placeholder": "ރަށު، ތްރެޑު، ޕެޓިޝަން ހޯދާ",

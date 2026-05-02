@@ -3,17 +3,26 @@ import { setRequestLocale, getTranslations } from "next-intl/server";
 import { listIslands } from "@/db/queries/islands";
 import { listThreads } from "@/db/queries/threads";
 import { listPetitions } from "@/db/queries/petitions";
-import {
-  getSignatureCounts,
-  getTotalSessionSignatures,
-} from "@/db/queries/signatures";
-import { HERO_THREAD_ID } from "@/db/queries/claims";
+import { getSignatureCounts } from "@/db/queries/signatures";
+import { ThreadListItem } from "@/components/thread-list-item";
+import { PetitionListItem } from "@/components/petition-list-item";
+import { AtlasCard } from "@/components/atlas-card";
 import { L } from "@/components/i18n-text";
-import type { Island } from "@/lib/types";
 
-// Direction X (live data ribbon + atlas row + featured activity) per
-// huashu-design pass. All sections are server-rendered against live DB
-// data — first impression accurately reflects what's in the platform.
+// Vignelli civic-press home — spec §6 + §11.4 #4. The homepage is
+// the publication's front page: surface the actual content rather
+// than decorative hero. Masthead + lane rail are handled by the
+// locale layout; this file delivers:
+//   01  Hero strap — declarative tagline + lede
+//   02  Topics on Sandbar — top 4 threads, Vignelli topic cards
+//   03  Open petitions — top 3 petitions, Vignelli ledger rows
+//   04  Per-island profiles — featured island cards (Atlas grid)
+//   05  Footnote — what-is-this prose, mono caps eyebrow
+//
+// The Saafu live-data ribbon, atlas-row preview, and inline
+// featured-activity cards are gone — the Vignelli grammar puts the
+// data IN the topic/petition cards themselves rather than in a
+// separate teaser row.
 
 export const dynamic = "force-dynamic";
 
@@ -24,325 +33,206 @@ export default async function Home({
 }) {
   const { locale } = await params;
   setRequestLocale(locale);
-  const [islands, threads, petitions, sessionSignatures, t, tn] =
-    await Promise.all([
-      listIslands(),
-      listThreads(),
-      listPetitions(),
-      getTotalSessionSignatures(),
-      getTranslations({ locale, namespace: "home" }),
-      getTranslations({ locale, namespace: "nav" }),
-    ]);
+  const [islands, threads, petitions, t, tn] = await Promise.all([
+    listIslands(),
+    listThreads(),
+    listPetitions(),
+    getTranslations({ locale, namespace: "home" }),
+    getTranslations({ locale, namespace: "nav" }),
+  ]);
 
-  // Featured island row: first 3 islands. Skip Maafaru (it's already the
-  // hero thread referenced in the activity row below) so the homepage
-  // doesn't double-feature the same island.
-  const featuredIslands = islands
-    .filter((i) => i.slug !== "maafaru")
-    .slice(0, 3);
+  // Top topics — sort by claim count + vote count, take 4.
+  const topThreads = [...threads]
+    .sort(
+      (a, b) =>
+        b.claim_count + b.vote_count / 10 - (a.claim_count + a.vote_count / 10)
+    )
+    .slice(0, 4);
 
-  // Featured thread: the canonical hero (Maafaru airport).
-  const featuredThread =
-    threads.find((th) => th.id === HERO_THREAD_ID) ?? threads[0];
-
-  // Featured petition: highest live total (baseline + session signatures)
-  // so the homepage feature reflects current activity rather than the
-  // seed snapshot.
+  // Top petitions — enrich with live session signatures so the row
+  // shows what /petitions shows, then sort by signature count.
   const sessionCounts = await getSignatureCounts(petitions.map((p) => p.id));
   const petitionsLive = petitions.map((p) => ({
     ...p,
     signatures: p.signatures + (sessionCounts.get(p.id) ?? 0),
   }));
-  const featuredPetition = [...petitionsLive].sort(
-    (a, b) => b.signatures - a.signatures
-  )[0];
+  const topPetitions = [...petitionsLive]
+    .sort((a, b) => b.signatures - a.signatures)
+    .slice(0, 3);
+
+  // Featured islands — first 3 on the Atlas surface.
+  const featuredIslands = islands.slice(0, 3);
 
   return (
-    <main className="flex flex-1 flex-col">
-      {/* Hero block */}
-      <section className="px-6 sm:px-10 pt-20 sm:pt-24 pb-10 sm:pb-14 max-w-5xl mx-auto w-full">
-        <p className="text-[11px] uppercase tracking-[0.16em] text-muted-foreground font-mono mb-5">
-          <span className="dv-text">ބާރުވެރި</span>
-          <span> · Baaruveri · Concept prototype</span>
-        </p>
-        <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.05] mb-6 max-w-3xl">
-          {locale === "dv" ? (
-            <span className="dv-text">{t("tagline")}</span>
-          ) : (
-            t("tagline")
-          )}
-        </h1>
-        <p className="max-w-2xl text-base sm:text-[17px] text-muted-foreground leading-relaxed mb-9">
-          {locale === "dv" ? (
-            <span className="dv-text">{t("lede")}</span>
-          ) : (
-            t("lede")
-          )}
-        </p>
-        <div className="flex flex-wrap gap-3">
-          <Link
-            href="/atlas"
-            className="inline-flex items-center px-5 py-2.5 text-sm font-medium bg-primary text-primary-foreground hover:bg-primary/90 transition-colors"
-          >
-            {locale === "dv" ? (
-              <span className="dv-text">{tn("open_atlas")}</span>
-            ) : (
-              tn("open_atlas")
-            )}
-          </Link>
-          <Link
-            href="/sandbar"
-            className="inline-flex items-center px-5 py-2.5 text-sm font-medium border border-border text-foreground hover:bg-secondary transition-colors"
-          >
-            {locale === "dv" ? (
-              <span className="dv-text">{tn("go_to_sandbar")}</span>
-            ) : (
-              tn("go_to_sandbar")
-            )}
-          </Link>
-        </div>
-      </section>
-
-      {/* Live data ribbon */}
-      <section className="border-y border-border bg-muted/30">
-        <div className="px-6 sm:px-10 py-5 max-w-5xl mx-auto w-full">
-          {/* live-dot is petition-only by design — strip it here so the
-              homepage ribbon doesn't claim "live" pulses for the broader
-              ledger. The eyebrow text still names the four signals. */}
-          <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-3">
-            <L>{t("ribbon_eyebrow")}</L>
+    <main className="flex-1">
+      {/* 01 · HERO STRAP */}
+      <section
+        className="border-b"
+        style={{ borderBottomColor: "var(--ink)", background: "var(--paper)" }}
+      >
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 py-10 sm:py-12">
+          <div className="dv-text font-bold text-[36px] sm:text-[52px] leading-[1.05]">
+            {t("tagline")}
           </div>
-          <ul className="grid grid-cols-2 sm:grid-cols-4 gap-x-6 gap-y-3 font-mono tabular-nums text-[13px]">
-            <RibbonStat
-              value={islands.length}
-              label={t("ribbon_islands", { count: islands.length })}
-            />
-            <RibbonStat
-              value={threads.length}
-              label={t("ribbon_threads", { count: threads.length })}
-            />
-            <RibbonStat
-              value={petitions.length}
-              label={t("ribbon_petitions", { count: petitions.length })}
-            />
-            <RibbonStat
-              value={sessionSignatures}
-              label={t("ribbon_signatures", { count: sessionSignatures })}
-              showLabel={false}
-              fullLabel={t("ribbon_signatures", { count: sessionSignatures })}
-            />
-          </ul>
-        </div>
-      </section>
-
-      {/* Explore by island */}
-      <section className="px-6 sm:px-10 py-12 max-w-5xl mx-auto w-full">
-        <SectionHeader
-          number="01"
-          label={t("explore_section_label")}
-          meta={t("explore_section_meta")}
-        />
-        <div className="grid sm:grid-cols-3 gap-4 mt-6">
-          {featuredIslands.map((island) => (
-            <IslandCard key={island.id} island={island} cta={t("explore_card_open")} />
-          ))}
-        </div>
-      </section>
-
-      {/* Current activity */}
-      <section className="px-6 sm:px-10 pb-20 max-w-5xl mx-auto w-full">
-        <SectionHeader
-          number="02"
-          label={t("activity_section_label")}
-          meta={t("activity_section_meta")}
-        />
-        <div className="grid sm:grid-cols-2 gap-5 mt-6">
-          {featuredThread && (
-            <article className="bg-card border border-border p-5 flex flex-col">
-              <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-3">
-                <L>{t("activity_thread_label")}</L>
-              </div>
-              <h3 className="font-semibold text-[15px] leading-snug mb-2">
-                <span className="dv-text">{featuredThread.title_dv}</span>
-              </h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4 flex-1">
-                {featuredThread.title_en}
-              </p>
-              <div className="flex items-center gap-3 text-[11px] font-mono text-muted-foreground tabular-nums mb-3">
-                <span>
-                  <span className="text-foreground font-semibold">
-                    {featuredThread.claim_count}
-                  </span>{" "}
-                  claims
-                </span>
-                <span>·</span>
-                <span>
-                  <span className="text-foreground font-semibold">
-                    {featuredThread.vote_count}
-                  </span>{" "}
-                  votes
-                </span>
-              </div>
-              <Link
-                href={`/sandbar/${featuredThread.id}`}
-                className="text-[13px] text-primary hover:underline font-mono"
-              >
-                <L>{t("open_thread")}</L>
-              </Link>
-            </article>
-          )}
-          {featuredPetition && (
-            <article className="bg-card border border-border p-5 flex flex-col">
-              <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-3">
-                <L>{t("activity_petition_label")}</L>
-              </div>
-              <h3 className="font-semibold text-[15px] leading-snug mb-2">
-                <span className="dv-text">{featuredPetition.title_dv}</span>
-              </h3>
-              <p className="text-[13px] text-muted-foreground leading-relaxed mb-4 flex-1">
-                {featuredPetition.title_en}
-              </p>
-              <div className="flex items-center gap-3 text-[11px] font-mono text-muted-foreground tabular-nums mb-3">
-                <span>
-                  <span className="text-foreground font-semibold">
-                    {featuredPetition.signatures.toLocaleString("en-US")}
-                  </span>{" "}
-                  / {featuredPetition.threshold.toLocaleString("en-US")}
-                </span>
-                <span>·</span>
-                <span>
-                  <span className="text-foreground font-semibold">
-                    {Math.round(
-                      (featuredPetition.signatures / featuredPetition.threshold) * 100
-                    )}
-                    %
-                  </span>{" "}
-                  of threshold
-                </span>
-              </div>
-              <Link
-                href={`/petitions/${featuredPetition.id}`}
-                className="text-[13px] text-primary hover:underline font-mono"
-              >
-                <L>{t("open_petition")}</L>
-              </Link>
-            </article>
-          )}
-        </div>
-      </section>
-
-      {/* What is this */}
-      <section className="px-6 sm:px-10 pb-24 max-w-5xl mx-auto w-full">
-        <div className="border-t border-border pt-8 max-w-3xl">
-          <div className="text-[10.5px] font-mono uppercase tracking-[0.14em] text-muted-foreground mb-3">
-            <L>{t("what_is_label")}</L>
-          </div>
-          <p className="text-[14px] leading-relaxed text-muted-foreground">
-            {locale === "dv" ? (
-              <span className="dv-text">{t("what_is_body")}</span>
-            ) : (
-              t("what_is_body")
-            )}
+          <h1
+            className="font-display text-[30px] sm:text-[44px] mt-2 max-w-[28ch]"
+            style={{
+              fontFamily: "var(--font-display), sans-serif",
+              lineHeight: 0.95,
+              letterSpacing: "-0.025em",
+              textTransform: "uppercase",
+            }}
+          >
+            {t("tagline_en")}
+          </h1>
+          <p
+            className="mt-5 text-[15px] sm:text-[16px] leading-[1.5] max-w-[64ch]"
+            style={{ color: "var(--ink)", fontWeight: 500 }}
+          >
+            {t("lede")}
           </p>
         </div>
+      </section>
+
+      {/* 02 · TOPICS ON SANDBAR */}
+      <section style={{ borderBottom: "1px solid var(--ink)" }}>
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 py-8">
+          <SectionLabel
+            number="01"
+            label={t("topics_label")}
+            meta={t("topics_meta", { count: threads.length })}
+            cta={{ href: "/sandbar", label: tn("go_to_sandbar") }}
+          />
+        </div>
+        <ul>
+          {topThreads.map((thread) => (
+            <li key={thread.id}>
+              <ThreadListItem thread={thread} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 03 · OPEN PETITIONS */}
+      <section style={{ borderBottom: "1px solid var(--ink)" }}>
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 py-8">
+          <SectionLabel
+            number="02"
+            label={t("petitions_label")}
+            meta={t("petitions_meta", { count: petitions.length })}
+            cta={{ href: "/petitions", label: t("petitions_cta") }}
+          />
+        </div>
+        <ul>
+          {topPetitions.map((petition) => (
+            <li key={petition.id}>
+              <PetitionListItem petition={petition} />
+            </li>
+          ))}
+        </ul>
+      </section>
+
+      {/* 04 · PER-ISLAND PROFILES */}
+      <section style={{ borderBottom: "1px solid var(--ink)" }}>
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 py-8">
+          <SectionLabel
+            number="03"
+            label={t("islands_label")}
+            meta={t("islands_meta", { count: islands.length })}
+            cta={{ href: "/atlas", label: tn("open_atlas") }}
+          />
+        </div>
+        <div className="max-w-6xl mx-auto px-6 sm:px-10 pb-10">
+          <div className="grid gap-0 sm:grid-cols-2 lg:grid-cols-3">
+            {featuredIslands.map((island) => (
+              <div key={island.id} style={{ marginInlineEnd: "-1px" }}>
+                <AtlasCard island={island} />
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* 05 · FOOTNOTE */}
+      <section className="max-w-6xl mx-auto px-6 sm:px-10 py-10">
+        <div
+          className="text-[10px] uppercase font-bold tracking-[0.14em] mb-3"
+          style={{
+            fontFamily: "var(--font-sans-bold)",
+            color: "var(--ink-soft)",
+          }}
+        >
+          <L>{t("what_is_label")}</L>
+        </div>
+        <p
+          className="text-[14px] leading-[1.55] max-w-[64ch]"
+          style={{ color: "var(--ink)" }}
+        >
+          {locale === "dv" ? (
+            <span className="dv-text">{t("what_is_body")}</span>
+          ) : (
+            t("what_is_body")
+          )}
+        </p>
       </section>
     </main>
   );
 }
 
-function SectionHeader({
+function SectionLabel({
   number,
   label,
   meta,
+  cta,
 }: {
   number: string;
   label: string;
   meta: string;
+  cta?: { href: string; label: string };
 }) {
   return (
-    <div className="flex items-baseline justify-between gap-4 flex-wrap">
+    <div
+      className="flex items-baseline justify-between gap-4 flex-wrap pb-2"
+      style={{ borderBottom: "2px solid var(--ink)" }}
+    >
       <div className="flex items-baseline gap-3">
-        <span className="font-mono text-[10.5px] text-muted-foreground tracking-[0.12em]">
+        <span
+          className="font-display text-[28px] sm:text-[32px] leading-none"
+          style={{
+            fontFamily: "var(--font-display), sans-serif",
+            letterSpacing: "-0.02em",
+          }}
+        >
           {number}
         </span>
-        <h2 className="font-mono text-[12px] uppercase tracking-[0.14em] font-semibold">
+        <h2
+          className="text-[12px] uppercase tracking-[0.14em] font-bold"
+          style={{ fontFamily: "var(--font-sans-bold)" }}
+        >
           <L>{label}</L>
         </h2>
+        <span
+          className="font-mono text-[10.5px] uppercase tracking-[0.1em]"
+          style={{ color: "var(--ink-soft)" }}
+        >
+          <L>{meta}</L>
+        </span>
       </div>
-      <span className="font-mono text-[11px] text-muted-foreground">
-        <L>{meta}</L>
-      </span>
+      {cta && (
+        <Link
+          href={cta.href}
+          className="text-[11px] font-bold uppercase tracking-[0.1em] inline-flex items-baseline gap-1.5 hover:underline underline-offset-2"
+          style={{
+            fontFamily: "var(--font-sans-bold)",
+            color: "var(--vignelli-red)",
+          }}
+        >
+          <L>{cta.label}</L>
+          <span aria-hidden className="font-mono">
+            →
+          </span>
+        </Link>
+      )}
     </div>
-  );
-}
-
-function RibbonStat({
-  value,
-  label,
-  showLabel = true,
-  fullLabel,
-}: {
-  value: number;
-  label: string;
-  showLabel?: boolean;
-  fullLabel?: string;
-}) {
-  // For the signatures stat the ICU template already embeds the count, so
-  // we render the full templated string instead of "value · label".
-  if (!showLabel && fullLabel) {
-    return (
-      <li className="flex items-baseline gap-2">
-        <span className="text-foreground">{fullLabel}</span>
-      </li>
-    );
-  }
-  // For islands/threads/petitions the label already includes the count via
-  // ICU plural; we just render it.
-  return (
-    <li className="flex items-baseline gap-2">
-      <span className="text-foreground">{label}</span>
-      <span className="text-muted-foreground/60 sr-only">{value}</span>
-    </li>
-  );
-}
-
-function IslandCard({
-  island,
-  cta,
-}: {
-  island: Island;
-  cta: string;
-}) {
-  return (
-    <Link
-      href={`/atlas/${island.slug}`}
-      className="group bg-card border border-border p-4 flex flex-col hover:border-primary transition-colors"
-    >
-      <div className="flex items-baseline justify-between mb-2 text-[10.5px] font-mono uppercase tracking-[0.12em] text-muted-foreground">
-        <span className="dv-text text-[12.5px] normal-case tracking-normal">
-          {island.atoll_dv}
-        </span>
-        <span>{island.atoll_code}</span>
-      </div>
-      <div className="flex items-baseline gap-2 mb-3">
-        <span className="dv-text text-[18px] font-semibold">
-          {island.name_dv}
-        </span>
-        <span className="text-[14px] text-muted-foreground">{island.name_en}</span>
-      </div>
-      <ul className="space-y-1 text-[12px] font-mono tabular-nums text-muted-foreground flex-1">
-        <li className="flex justify-between">
-          <span>population</span>
-          <span className="text-foreground">{island.population.toLocaleString("en-US")}</span>
-        </li>
-        <li className="flex justify-between">
-          <span>active threads</span>
-          <span className="text-foreground">{island.active_threads}</span>
-        </li>
-      </ul>
-      <span className="mt-3 text-[12px] text-primary group-hover:underline font-mono">
-        {cta}
-      </span>
-    </Link>
   );
 }

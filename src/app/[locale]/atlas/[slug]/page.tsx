@@ -39,19 +39,38 @@ interface SectionLabelProps {
   meta?: string;
 }
 
+// Vignelli civic-press section header — Archivo Black ordinal block
+// + Archivo 700 caps title (spec §3 + §7.6 ledger headers).
 function SectionLabel({ number, label, meta }: SectionLabelProps) {
   return (
-    <div className="flex items-baseline justify-between mb-6 gap-4 flex-wrap">
+    <div
+      className="flex items-baseline justify-between mb-6 gap-4 flex-wrap pb-2"
+      style={{ borderBottom: "2px solid var(--ink)" }}
+    >
       <div className="flex items-baseline gap-3">
-        <span className="font-mono text-[10.5px] text-muted-foreground tracking-[0.12em]">
+        <span
+          className="font-display text-[28px] sm:text-[32px] leading-none"
+          style={{
+            fontFamily: "var(--font-display), sans-serif",
+            letterSpacing: "-0.02em",
+          }}
+        >
           {number}
         </span>
-        <h2 className="font-mono text-[12px] uppercase tracking-[0.14em] font-semibold">
+        <h2
+          className="text-[12px] uppercase tracking-[0.14em] font-bold"
+          style={{ fontFamily: "var(--font-sans-bold)" }}
+        >
           <L>{label}</L>
         </h2>
       </div>
       {meta && (
-        <span className="font-mono text-[11px] text-muted-foreground"><L>{meta}</L></span>
+        <span
+          className="font-mono text-[10.5px] uppercase tracking-[0.1em]"
+          style={{ color: "var(--ink-soft)" }}
+        >
+          <L>{meta}</L>
+        </span>
       )}
     </div>
   );
@@ -103,9 +122,9 @@ function ProfileBody({
     <main className="flex-1">
       <IslandProfileHeader island={island} />
 
-      <div className="max-w-6xl mx-auto px-6 sm:px-10 divide-y divide-border">
+      <div className="max-w-6xl mx-auto px-6 sm:px-10">
         {/* COUNCIL */}
-        <section className="py-12">
+        <section className="py-10" style={{ borderBottom: "1px solid var(--ink)" }}>
           <SectionLabel
             number="01"
             label={t("section_council")}
@@ -118,34 +137,63 @@ function ProfileBody({
                 : t("section_council_meta_hdc")
             }
           />
-          <ul className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {/* Council members per spec §5 identity tiers — verified-public
+              · council renders on a vignelli-green block with paper text. */}
+          <ul className="grid gap-0 sm:grid-cols-2 lg:grid-cols-3">
             {council.map((m) => (
               <li
                 key={m.id}
-                className="bg-card border border-border p-4"
+                className="p-4"
+                style={{
+                  background: "var(--vignelli-green)",
+                  color: "var(--paper)",
+                  borderInlineEnd: "1px solid var(--paper)",
+                  borderBottom: "1px solid var(--paper)",
+                }}
               >
-                <div className="flex items-baseline justify-between mb-1">
-                  <span className="font-mono text-[10px] uppercase tracking-[0.12em] text-muted-foreground">
+                <div className="flex items-baseline justify-between mb-2">
+                  <span
+                    className="text-[9.5px] uppercase font-bold tracking-[0.12em]"
+                    style={{ fontFamily: "var(--font-sans-bold)" }}
+                  >
                     {m.role_en}
                   </span>
-                  <span className="font-mono text-[10px] text-muted-foreground">
+                  <span
+                    className="font-mono text-[10px] tracking-[0.1em]"
+                    style={{ opacity: 0.85 }}
+                  >
                     {m.party}
                   </span>
                 </div>
-                <div className="text-[15px] font-semibold leading-tight">
-                  <span className="dv-text">{m.name_dv}</span>
+                <div className="dv-text font-bold text-[20px] leading-none">
+                  {m.name_dv}
                 </div>
-                <div className="text-[12px] text-muted-foreground mt-0.5">
+                <div
+                  className="font-display text-[15px] mt-1.5"
+                  style={{
+                    fontFamily: "var(--font-display), sans-serif",
+                    lineHeight: 1,
+                    letterSpacing: "-0.02em",
+                    textTransform: "uppercase",
+                  }}
+                >
                   {m.name_en}
-                  {m.ward_en ? ` · ${m.ward_en}` : ""}
                 </div>
+                {m.ward_en && (
+                  <div
+                    className="font-mono text-[10px] uppercase tracking-[0.12em] mt-1.5"
+                    style={{ opacity: 0.85 }}
+                  >
+                    {m.ward_en}
+                  </div>
+                )}
               </li>
             ))}
           </ul>
         </section>
 
         {/* BUDGET */}
-        <section className="py-12">
+        <section className="py-10" style={{ borderBottom: "1px solid var(--ink)" }}>
           <SectionLabel
             number="02"
             label={t("section_budget")}
@@ -154,14 +202,17 @@ function ProfileBody({
           {budgetLines.length > 0 ? (
             <BudgetTable lines={budgetLines} islandSlug={island.slug} />
           ) : (
-            <p className="text-[13px] text-muted-foreground">
-              Budget feed not yet wired for this island.
+            <p
+              className="font-mono text-[11px] uppercase tracking-[0.1em]"
+              style={{ color: "var(--ink-soft)" }}
+            >
+              <L>{t("budget_feed_not_wired")}</L>
             </p>
           )}
         </section>
 
         {/* THREADS */}
-        <section className="py-12">
+        <section className="py-10" style={{ borderBottom: "1px solid var(--ink)" }}>
           <SectionLabel
             number="03"
             label={t("section_threads")}
@@ -180,7 +231,7 @@ function ProfileBody({
         </section>
 
         {/* PETITIONS */}
-        <section className="py-12">
+        <section className="py-10" style={{ borderBottom: "1px solid var(--ink)" }}>
           <SectionLabel
             number="04"
             label={t("section_petitions")}
@@ -196,8 +247,11 @@ function ProfileBody({
         </section>
 
         {/* FOOTER */}
-        <section className="py-10">
-          <p className="text-[11px] text-muted-foreground leading-relaxed max-w-3xl">
+        <section className="py-8">
+          <p
+            className="font-mono text-[10.5px] leading-[1.6] max-w-3xl"
+            style={{ color: "var(--ink-soft)" }}
+          >
             <L>
               {t("footnote", {
                 pop_label: island.population_source.label,

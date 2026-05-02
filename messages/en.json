@@ -123,6 +123,7 @@
     "section_council_meta_hdc": "Administered by HDC · 3 citizen liaison reps shown",
     "section_budget": "Budget · FY26 Q1",
     "section_budget_meta": "Tabular numerals · footnoted",
+    "budget_feed_not_wired": "Budget feed not yet wired for this island.",
     "section_threads": "Active threads",
     "section_threads_meta": "{total} total · {shown} shown",
     "section_petitions": "Open petitions",

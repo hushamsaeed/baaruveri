@@ -144,6 +144,7 @@
     "atlas_card_label_budget": "FY26 budget",
     "atlas_card_label_threads": "Active threads",
     "atlas_card_label_petitions": "Open petitions",
+    "atlas_card_open": "Open profile",
     "footnote": "Source notes · Population: {pop_label} {pop_year}. Voters: {voter_label}, dated {voter_date}. Budget figures illustrative until live council quarterly returns wire. Threads and petitions are seed content for v0; real participation opens with eFaas integration."
   },
   "sandbar": {

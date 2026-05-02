@@ -1,0 +1,844 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Direction 1 · Vignelli civic press — Baaruveri Holhuashi</title>
+
+<!-- Latin: Archivo Black for hero display + Inter for body. Heavy + clean — Vignelli rigor without Helvetica slop. -->
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  /* Dhivehi — MV Faseyha BOLD only at hero scale; we want the Thaana to MATCH the Archivo Black weight visually */
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_bld_hinted_v2.ttf') format('truetype');
+    font-weight: 700;
+    font-style: normal;
+    font-display: swap;
+  }
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_reg_hinted_v2.ttf') format('truetype');
+    font-weight: 400;
+    font-style: normal;
+    font-display: swap;
+  }
+
+  :root {
+    --paper: #f4ebd8;          /* warm cream — Vignelli's Knoll-catalogue paper */
+    --paper-rule: #d4c9b0;
+    --ink: #0f0f0f;
+    --ink-soft: #2e2e2e;
+    /* Maldivian flag tones, editorial-tuned */
+    --vignelli-red: #c4221e;     /* Parliamentary lane / mosque-roof red */
+    --vignelli-green: #1e5f3d;   /* Council lane / palm green */
+    --vignelli-ochre: #d99a1f;   /* Presidency lane */
+    --vignelli-ink: #0f0f0f;     /* Judiciary lane (no color, only ink) */
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  body {
+    background-image:
+      repeating-linear-gradient(0deg, transparent 0 39px, var(--paper-rule) 39px 40px);
+    background-size: 100% 800px;
+  }
+  .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    direction: rtl;
+    unicode-bidi: isolate;
+  }
+  .num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+
+  /* ---------- Top rule + masthead ---------- */
+  .masthead {
+    border-top: 8px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper);
+    padding: 22px 48px 18px;
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    gap: 32px;
+    align-items: end;
+  }
+  .masthead .name {
+    font-family: 'Archivo Black', 'Archivo', sans-serif;
+    font-size: 38px;
+    line-height: 0.85;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    color: var(--ink);
+  }
+  .masthead .name .dv {
+    display: block;
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    margin-top: 4px;
+    letter-spacing: 0;
+  }
+  .masthead .meta {
+    align-self: end;
+    text-align: right;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.18em;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    font-weight: 600;
+  }
+  .masthead .meta .num { font-size: 12px; letter-spacing: 0.06em; }
+  .masthead .pub {
+    grid-row: 1 / span 2;
+    grid-column: 2;
+    align-self: end;
+    padding-bottom: 4px;
+    border-bottom: none;
+  }
+  .masthead .pub .vol {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 11px;
+    color: var(--ink-soft);
+  }
+  .masthead .pub .strap {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    margin-top: 4px;
+    line-height: 1.15;
+  }
+
+  /* ---------- Filter rail (lanes) ---------- */
+  .lane-rail {
+    border-bottom: 2px solid var(--ink);
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .lane {
+    padding: 14px 24px 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    border-right: 1px solid var(--ink);
+    background: var(--paper);
+    cursor: pointer;
+  }
+  .lane:last-child { border-right: none; }
+  .lane.active { background: var(--ink); color: var(--paper); }
+  .lane.active .lane-id { color: var(--paper); }
+  .lane .lane-id {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 36px;
+    line-height: 0.85;
+    letter-spacing: -0.02em;
+  }
+  .lane .lane-name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+  }
+  .lane .lane-dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    margin-top: 2px;
+  }
+  .lane[data-pl="parliamentary"] .lane-id { color: var(--vignelli-red); }
+  .lane[data-pl="council"] .lane-id { color: var(--vignelli-green); }
+  .lane[data-pl="presidency"] .lane-id { color: var(--vignelli-ochre); }
+  .lane[data-pl="judiciary"] .lane-id { color: var(--vignelli-ink); }
+
+  /* ---------- Body grid ---------- */
+  .grid {
+    display: grid;
+    grid-template-columns: 240px 1fr 280px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  /* Side rail — categories as monospace index */
+  .side {
+    border-right: 1px solid var(--ink);
+    padding: 24px 20px 32px;
+  }
+  .side h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .side ol {
+    list-style: none;
+    counter-reset: cat;
+  }
+  .side li {
+    counter-increment: cat;
+    display: flex;
+    gap: 12px;
+    padding: 6px 0;
+    border-bottom: 1px solid var(--paper-rule);
+    cursor: pointer;
+    font-size: 13px;
+    align-items: baseline;
+  }
+  .side li::before {
+    content: counter(cat, decimal-leading-zero);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+  .side li.active {
+    background: var(--ink);
+    color: var(--paper);
+    margin: 0 -20px;
+    padding: 6px 20px;
+  }
+  .side li.active::before { color: var(--paper); }
+  .side li:hover:not(.active) { color: var(--vignelli-red); }
+
+  .side .compose {
+    margin-top: 28px;
+    width: 100%;
+    background: var(--vignelli-red);
+    color: var(--paper);
+    border: none;
+    padding: 14px 18px 12px;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    cursor: pointer;
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+  }
+  .side .compose .arrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 22px;
+    font-weight: 700;
+  }
+
+  /* Center — topic lines */
+  .topics { padding: 8px 0 32px; }
+
+  .topic {
+    border-bottom: 1px solid var(--ink);
+    padding: 28px 36px 32px;
+    position: relative;
+  }
+  .topic:last-child { border-bottom: none; }
+
+  /* The "lane stripe" — Vignelli's signature color block as a left flag */
+  .topic[data-pl="parliamentary"] { border-left: 8px solid var(--vignelli-red); }
+  .topic[data-pl="council"]       { border-left: 8px solid var(--vignelli-green); }
+  .topic[data-pl="presidency"]    { border-left: 8px solid var(--vignelli-ochre); }
+  .topic[data-pl="judiciary"]     { border-left: 8px solid var(--vignelli-ink); }
+
+  .topic-id {
+    position: absolute;
+    top: 24px;
+    right: 36px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-soft);
+    font-weight: 700;
+  }
+
+  .topic .anchor {
+    display: flex;
+    gap: 14px;
+    align-items: baseline;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 11px;
+    margin-bottom: 14px;
+  }
+  .topic .anchor .island {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 4px 10px 3px;
+  }
+  .topic .anchor .pl {
+    padding: 4px 10px 3px;
+    color: var(--paper);
+  }
+  .topic[data-pl="parliamentary"] .anchor .pl { background: var(--vignelli-red); }
+  .topic[data-pl="council"]       .anchor .pl { background: var(--vignelli-green); }
+  .topic .anchor .cat {
+    color: var(--ink-soft);
+    border-bottom: 2px solid var(--ink-soft);
+    padding-bottom: 2px;
+  }
+
+  .topic h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 44px;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+    max-width: 22ch;
+  }
+  .topic h2.dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 36px;
+    line-height: 1.4;
+    margin-top: 14px;
+  }
+
+  .topic .lede {
+    font-family: 'Inter', sans-serif;
+    font-size: 16px;
+    line-height: 1.45;
+    color: var(--ink);
+    max-width: 56ch;
+    margin: 18px 0 22px;
+    font-weight: 500;
+  }
+  .topic .lede sup {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--vignelli-red);
+    margin-left: 3px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+  }
+
+  /* Stats — set as a tabular ledger */
+  .ledger {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border-top: 2px solid var(--ink);
+    border-bottom: 1px solid var(--ink);
+    margin-bottom: 22px;
+  }
+  .ledger > div {
+    padding: 12px 16px 10px;
+    border-right: 1px solid var(--paper-rule);
+  }
+  .ledger > div:last-child { border-right: none; }
+  .ledger .label {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--ink-soft);
+    margin-bottom: 4px;
+  }
+  .ledger .value {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 28px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .ledger .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 3px;
+  }
+
+  /* Adu strip — color rectangles WITHOUT photography. The data line is the form. */
+  .strip {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    border: 2px solid var(--ink);
+    margin-bottom: 8px;
+  }
+  .post {
+    padding: 18px 16px 14px;
+    border-right: 1px solid var(--ink);
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    position: relative;
+  }
+  .post:last-child { border-right: none; }
+
+  /* Each post is a SOLID color block by tier — color carries the tier signal */
+  .post.public-citizen { background: var(--paper); color: var(--ink); }
+  .post.public-council { background: var(--vignelli-green); color: var(--paper); }
+  .post.public-journalist { background: var(--vignelli-red); color: var(--paper); }
+  .post.shielded { background: var(--ink); color: var(--paper); }
+
+  .post .post-meta {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+  .post .post-meta .role { display: block; font-size: 11px; }
+  .post .quote {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 17px;
+    line-height: 1.15;
+    letter-spacing: -0.005em;
+  }
+  .post .post-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 36px;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+  .post .post-num small {
+    display: block;
+    font-family: 'Archivo', sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-top: 4px;
+    font-weight: 700;
+    opacity: 0.8;
+  }
+  /* shielded post — audio-only, indicated by a TYPESET waveform: solid bars */
+  .post.shielded .waveform-flat {
+    display: flex;
+    align-items: end;
+    gap: 3px;
+    height: 36px;
+  }
+  .post.shielded .waveform-flat span {
+    width: 4px;
+    background: var(--paper);
+    display: block;
+  }
+
+  /* Reaction strip — set as a poll bar of the four reactions */
+  .reactions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    border: 2px solid var(--ink);
+    border-top: none;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .reactions > div {
+    padding: 10px 14px 8px;
+    border-right: 1px solid var(--paper);
+    cursor: pointer;
+  }
+  .reactions > div:last-child { border-right: none; }
+  .reactions .name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+  }
+  .reactions .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(244, 235, 216, 0.7);
+    margin-top: 2px;
+  }
+
+  /* Right rail — "now reading" + "people posting" — set as a printer's box */
+  .now-rail { border-left: 1px solid var(--ink); padding: 24px 20px; }
+  .now-rail h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 14px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 14px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .now-rail .person {
+    padding: 10px 0;
+    border-bottom: 1px solid var(--paper-rule);
+    display: grid;
+    grid-template-columns: 36px 1fr;
+    gap: 12px;
+    align-items: start;
+  }
+  .now-rail .person .ord {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 22px;
+    line-height: 1;
+    color: var(--vignelli-red);
+    letter-spacing: -0.02em;
+  }
+  .now-rail .person .name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    line-height: 1.2;
+  }
+  .now-rail .person .role {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    margin-top: 2px;
+  }
+  .now-rail .person .reason {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--ink);
+    margin-top: 4px;
+    font-style: italic;
+    line-height: 1.4;
+    max-width: 22ch;
+  }
+
+  /* Footer */
+  .colophon {
+    padding: 22px 48px 32px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    line-height: 1.7;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .colophon strong { color: var(--vignelli-red); }
+
+  /* Direction marker — non-design chrome, the "this is direction 1" label */
+  .direction-tag {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    z-index: 1000;
+  }
+  .direction-tag strong { color: var(--vignelli-red); }
+</style>
+</head>
+<body>
+
+<header class="masthead">
+  <div class="name">
+    BAARUVERI<br>
+    HOLHUASHI
+    <span class="dv">ހޮޅުއަށި</span>
+  </div>
+  <div class="pub">
+    <div class="vol">VOL. 02 · ISSUE 14 · 2026</div>
+    <div class="strap">A CIVIC PUBLIC SQUARE FOR EVERY ISLAND OF THE MALDIVES</div>
+  </div>
+  <div class="meta">
+    <div>FRIDAY · <span class="num">02 · 05 · 2026</span></div>
+    <div>1,247 ACTIVE TOPICS</div>
+    <div>312 COUNCILS, ON RECORD</div>
+  </div>
+</header>
+
+<!-- Lanes — problem-level filters as numbered transit lines -->
+<nav class="lane-rail">
+  <div class="lane" data-pl="judiciary">
+    <div class="lane-id">01</div>
+    <div class="lane-name">JUDICIARY</div>
+    <div class="lane-dv">ކޯޓާ ގުޅޭ</div>
+  </div>
+  <div class="lane active" data-pl="parliamentary">
+    <div class="lane-id">02</div>
+    <div class="lane-name">PARLIAMENTARY</div>
+    <div class="lane-dv">މަޖިލީހާ ގުޅޭ</div>
+  </div>
+  <div class="lane" data-pl="presidency">
+    <div class="lane-id">03</div>
+    <div class="lane-name">PRESIDENCY</div>
+    <div class="lane-dv">ރައީސާ ގުޅޭ</div>
+  </div>
+  <div class="lane" data-pl="council">
+    <div class="lane-id">04</div>
+    <div class="lane-name">COUNCIL</div>
+    <div class="lane-dv">ކައުންސިލާ ގުޅޭ</div>
+  </div>
+</nav>
+
+<div class="grid">
+
+  <!-- LEFT SIDE — categories indexed -->
+  <aside class="side">
+    <h3>INDEX BY DOMAIN</h3>
+    <ol>
+      <li class="active">Anti-corruption</li>
+      <li>Infrastructure</li>
+      <li>Climate adaptation</li>
+      <li>Environmental</li>
+      <li>Health &amp; Wellbeing</li>
+      <li>Education</li>
+      <li>Tourism</li>
+      <li>Economic</li>
+      <li>Housing</li>
+      <li>GBV &amp; family law</li>
+      <li>Drug policy</li>
+      <li>Expat labour</li>
+      <li>Legal</li>
+      <li>Foreign affairs</li>
+      <li>Social &amp; cultural</li>
+      <li>Sports</li>
+    </ol>
+
+    <button class="compose">
+      POST
+      <span class="arrow">→</span>
+    </button>
+  </aside>
+
+  <!-- CENTER — topics as transit-line entries -->
+  <main class="topics">
+
+    <!-- Topic 1 -->
+    <article class="topic" data-pl="parliamentary">
+      <div class="topic-id">T·02·MAA·001</div>
+      <div class="anchor">
+        <span class="island">MAAFARU</span>
+        <span class="pl">PARLIAMENTARY</span>
+        <span class="cat">INFRASTRUCTURE</span>
+      </div>
+      <h2>MAAFARU AIRPORT —<br>WHO DID THE GRANT BENEFIT?</h2>
+      <h2 class="dv">މާފަރު އެއަރޕޯޓު — ޢާންމުންގެ މަންފާ</h2>
+
+      <p class="lede">
+        Has the airport delivered measurable public benefit proportionate to the USD 60M+ ADFD grant? Procurement file due Q3 has not yet been gazetted.<sup>illustrative</sup>
+      </p>
+
+      <div class="ledger">
+        <div>
+          <div class="label">CLAIMS</div>
+          <div class="value num">47</div>
+          <div class="sub">ON SANDBAR</div>
+        </div>
+        <div>
+          <div class="label">SIGNATURES</div>
+          <div class="value num">1,238</div>
+          <div class="sub">/ 5,000 NATIONAL</div>
+        </div>
+        <div>
+          <div class="label">OPEN Q.</div>
+          <div class="value num">3</div>
+          <div class="sub">14-DAY CLOCK</div>
+        </div>
+        <div>
+          <div class="label">RESPONSE</div>
+          <div class="value num">63<small style="font-size:18px;">%</small></div>
+          <div class="sub">COUNCIL · 30D</div>
+        </div>
+      </div>
+
+      <!-- Adu strip — solid color blocks. No photography. -->
+      <div class="strip">
+        <div class="post public-journalist">
+          <div class="post-meta">
+            <span class="role">FATHMATH NASEERA</span>
+            JOURNALIST · MIHAARU
+          </div>
+          <div class="quote">"The 5-year operating costs are not in the 2024 audit."</div>
+          <div class="post-num">1.2k <small>VIEWS · VIDEO</small></div>
+        </div>
+
+        <div class="post shielded">
+          <div class="post-meta">
+            <span class="role">@YELLOW-GROUPER-12</span>
+            VERIFIED · SHIELDED · MAAFARU
+          </div>
+          <div class="waveform-flat">
+            <span style="height:30%"></span><span style="height:55%"></span><span style="height:80%"></span>
+            <span style="height:42%"></span><span style="height:90%"></span><span style="height:60%"></span>
+            <span style="height:35%"></span><span style="height:72%"></span><span style="height:50%"></span>
+            <span style="height:88%"></span><span style="height:64%"></span><span style="height:30%"></span>
+            <span style="height:78%"></span><span style="height:48%"></span><span style="height:66%"></span>
+          </div>
+          <div class="quote" style="font-size:14px;">"My family lost the access boat route. Nobody tracks that loss."</div>
+          <div class="post-num"><small>AUDIO · 78 SEC</small></div>
+        </div>
+
+        <div class="post public-council">
+          <div class="post-meta">
+            <span class="role">AISHATH SHAMEEM</span>
+            COUNCIL · MAAFARU
+          </div>
+          <div class="quote">"Procurement file is on /datasets/budgets.csv. Read it."</div>
+          <div class="post-num">394 <small>VIEWS · VIDEO</small></div>
+        </div>
+
+        <div class="post public-citizen" style="background:var(--paper-rule);">
+          <div class="post-meta" style="color:var(--ink-soft);">+ 5 MORE ADU</div>
+          <div class="post-num">+5 <small>SCROLL THROUGH →</small></div>
+          <div></div>
+        </div>
+      </div>
+
+      <div class="reactions">
+        <div><div class="name">SOURCED</div><div class="count num">142</div></div>
+        <div><div class="name">CITE NEEDED</div><div class="count num">MANY</div></div>
+        <div><div class="name">COUNTER</div><div class="count num">31</div></div>
+        <div><div class="name">FOLLOWING</div><div class="count num">A FEW</div></div>
+      </div>
+    </article>
+
+    <!-- Topic 2 -->
+    <article class="topic" data-pl="council">
+      <div class="topic-id">T·04·VTH·002</div>
+      <div class="anchor">
+        <span class="island">V.THINADHOO</span>
+        <span class="pl">COUNCIL</span>
+        <span class="cat">TOURISM</span>
+      </div>
+      <h2>NAMING RIGHTS —<br>WHO SPEAKS FOR<br>V.THINADHOO?</h2>
+      <h2 class="dv">ވ.ތިނަދޫގެ ނަން ޚާއްޞަކުރުން</h2>
+
+      <p class="lede">
+        Should the council grant exclusive naming rights to V.Thinadhoo as a recognised tourist destination? Resort partners want the brand. Council voted Tuesday.<sup>illustrative</sup>
+      </p>
+
+      <div class="ledger">
+        <div><div class="label">CLAIMS</div><div class="value num">23</div><div class="sub">ON SANDBAR</div></div>
+        <div><div class="label">SIGNATURES</div><div class="value num">412</div><div class="sub">/ 1,750 (5%)</div></div>
+        <div><div class="label">OPEN Q.</div><div class="value num">1</div><div class="sub">7-DAY CLOCK</div></div>
+        <div><div class="label">RESPONSE</div><div class="value num">41<small style="font-size:18px;">%</small></div><div class="sub">COUNCIL · 30D</div></div>
+      </div>
+
+      <div class="strip">
+        <div class="post public-citizen">
+          <div class="post-meta">
+            <span class="role">MOHAMED ASJADH</span>
+            VERIFIED · DIASPORA
+          </div>
+          <div class="quote">"Why V.Thinadhoo and not the four other Thinadhoos?"</div>
+          <div class="post-num">957 <small>VIEWS · VIDEO</small></div>
+        </div>
+
+        <div class="post shielded">
+          <div class="post-meta">
+            <span class="role">@REEF-SHARK-04</span>
+            VERIFIED · SHIELDED · V.THINADHOO
+          </div>
+          <div class="waveform-flat">
+            <span style="height:60%"></span><span style="height:35%"></span><span style="height:78%"></span>
+            <span style="height:88%"></span><span style="height:42%"></span><span style="height:65%"></span>
+            <span style="height:33%"></span><span style="height:74%"></span><span style="height:56%"></span>
+            <span style="height:82%"></span><span style="height:48%"></span><span style="height:70%"></span>
+            <span style="height:38%"></span><span style="height:62%"></span><span style="height:88%"></span>
+          </div>
+          <div class="quote" style="font-size:14px;">"Resort partners want the brand. Council voted Tuesday."</div>
+          <div class="post-num"><small>AUDIO · 64 SEC</small></div>
+        </div>
+
+        <div class="post public-citizen">
+          <div class="post-meta">
+            <span class="role">LAYANA IBRAHIM</span>
+            VERIFIED · CITIZEN
+          </div>
+          <div class="quote">"A name is not a brand asset."</div>
+          <div class="post-num">112 <small>VIEWS · VIDEO</small></div>
+        </div>
+
+        <div class="post public-citizen" style="background:var(--paper-rule);">
+          <div class="post-meta" style="color:var(--ink-soft);">+ 5 MORE ADU</div>
+          <div class="post-num">+5 <small>SCROLL →</small></div>
+          <div></div>
+        </div>
+      </div>
+
+      <div class="reactions">
+        <div><div class="name">SOURCED</div><div class="count num">MANY</div></div>
+        <div><div class="name">CITE NEEDED</div><div class="count num">A FEW</div></div>
+        <div><div class="name">COUNTER</div><div class="count num">22</div></div>
+        <div><div class="name">FOLLOWING</div><div class="count num">A FEW</div></div>
+      </div>
+    </article>
+
+  </main>
+
+  <!-- RIGHT SIDE — now-reading list -->
+  <aside class="now-rail">
+    <h3>POSTING ON MAAFARU</h3>
+    <div class="person">
+      <div class="ord num">01</div>
+      <div>
+        <div class="name">A. SHAMEEM</div>
+        <div class="role">Council member</div>
+        <div class="reason">Responded to 3 open questions this week.</div>
+      </div>
+    </div>
+    <div class="person">
+      <div class="ord num">02</div>
+      <div>
+        <div class="name">M. ASJADH</div>
+        <div class="role">Verified · Diaspora</div>
+        <div class="reason">Cited 7 gazette references on this island.</div>
+      </div>
+    </div>
+    <div class="person">
+      <div class="ord num">03</div>
+      <div>
+        <div class="name">F. NASEERA</div>
+        <div class="role">Journalist · Mihaaru</div>
+        <div class="reason">Covered the Maafaru airport story.</div>
+      </div>
+    </div>
+    <div class="person">
+      <div class="ord num">04</div>
+      <div>
+        <div class="name">I. LATHEEF</div>
+        <div class="role">Verified · V.Thinadhoo</div>
+        <div class="reason">Opted into the recommendation pool.</div>
+      </div>
+    </div>
+
+    <h3 style="margin-top:32px;">ELECTION WATCH</h3>
+    <div style="font-family:'Inter',sans-serif; font-size:12px; line-height:1.55; color:var(--ink); padding:8px 0 4px;">
+      No election period active. <strong>72 days</strong> until next council window opens. Posting velocity normal.
+    </div>
+  </aside>
+</div>
+
+<footer class="colophon">
+  <span>BAARUVERI · CONCEPT PROTOTYPE — NOT AN OFFICIAL GOVERNMENT PRODUCT.</span>
+  <span>NAMES &amp; FIGURES <strong>ILLUSTRATIVE</strong> · MOCK DATA FOOTNOTED · CC-BY-SA 4.0</span>
+</footer>
+
+<div class="direction-tag">
+  DIRECTION <strong>01</strong> · VIGNELLI CIVIC PRESS
+</div>
+
+</body>
+</html>

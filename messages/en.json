@@ -36,7 +36,16 @@
     "open_atlas": "Open the atlas →",
     "go_to_sandbar": "Sandbar",
     "back_to_atlas": "← Atlas",
-    "back_to_sandbar": "← Sandbar"
+    "back_to_sandbar": "← Sandbar",
+    "primary_nav_aria": "Primary surfaces"
+  },
+  "masthead": {
+    "brand_aria": "Baaruveri Holhuashi — back to the home feed",
+    "brand_line_1": "Baaruveri",
+    "brand_line_2": "Holhuashi",
+    "brand_dv": "ހޮޅުއަށި",
+    "vol_strap": "Vol. 02 · Issue 14 · 2026",
+    "publication_strap": "A civic public square for every island of the Maldives"
   },
   "search": {
     "open": "Search Baaruveri",

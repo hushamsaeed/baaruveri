@@ -1,0 +1,1039 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Topic detail — Maafaru airport · Baaruveri Holhuashi</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo+Black&family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+<style>
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_bld_hinted_v2.ttf') format('truetype');
+    font-weight: 700; font-style: normal; font-display: swap;
+  }
+  @font-face {
+    font-family: 'MV Faseyha';
+    src: url('https://raajjefonts.github.io/fonts/Faseyha_reg_hinted_v2.ttf') format('truetype');
+    font-weight: 400; font-style: normal; font-display: swap;
+  }
+
+  :root {
+    --paper: #f4ebd8;
+    --paper-rule: #d4c9b0;
+    --paper-deep: #ece2c8;
+    --ink: #0f0f0f;
+    --ink-soft: #2e2e2e;
+    --vignelli-red: #c4221e;
+    --vignelli-green: #1e5f3d;
+    --vignelli-ochre: #d99a1f;
+    --vignelli-ink: #0f0f0f;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html, body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'Inter', -apple-system, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+  .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    direction: rtl;
+    unicode-bidi: isolate;
+  }
+  .num { font-family: 'JetBrains Mono', monospace; font-variant-numeric: tabular-nums; }
+
+  /* ------------------ MASTHEAD (compact, second-page) ------------------ */
+  .masthead {
+    border-top: 8px solid var(--ink);
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper);
+    padding: 14px 48px 12px;
+    display: flex;
+    justify-content: space-between;
+    align-items: baseline;
+    gap: 32px;
+  }
+  .masthead .name {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 20px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .masthead .name .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    margin-left: 12px;
+    font-size: 18px;
+  }
+  .masthead .crumb {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--ink-soft);
+    flex: 1;
+    text-align: center;
+  }
+  .masthead .crumb a { color: var(--ink-soft); text-decoration: none; }
+  .masthead .crumb .arrow { color: var(--vignelli-red); margin: 0 10px; font-family: 'JetBrains Mono', monospace; }
+  .masthead .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* ------------------ LANE BREADCRUMB ------------------ */
+  .lane-breadcrumb {
+    background: var(--vignelli-red);
+    color: var(--paper);
+    padding: 12px 48px;
+    border-bottom: 2px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 20px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+  }
+  .lane-breadcrumb .ord {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 22px;
+    line-height: 1;
+    letter-spacing: -0.02em;
+  }
+  .lane-breadcrumb .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    font-size: 14px;
+    letter-spacing: 0;
+  }
+  .lane-breadcrumb .topic-id {
+    margin-left: auto;
+    font-family: 'JetBrains Mono', monospace;
+    letter-spacing: 0.06em;
+    font-size: 11px;
+  }
+  .lane-breadcrumb .sep { opacity: 0.5; }
+
+  /* ------------------ HERO BAND ------------------ */
+  .hero {
+    padding: 48px 48px 36px;
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper);
+    position: relative;
+  }
+  .hero .anchor-tags {
+    display: flex;
+    gap: 0;
+    margin-bottom: 28px;
+  }
+  .hero .anchor-tags > * {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+    padding: 6px 14px 5px;
+    border-right: 1px solid var(--ink);
+  }
+  .hero .anchor-tags > *:last-child { border-right: none; }
+  .hero .anchor-tags .island { background: var(--ink); color: var(--paper); }
+  .hero .anchor-tags .atoll { background: var(--paper-deep); color: var(--ink); }
+  .hero .anchor-tags .lane  { background: var(--vignelli-red); color: var(--paper); }
+  .hero .anchor-tags .cat   { background: var(--paper); color: var(--ink); border: 1px solid var(--ink); border-right: none; }
+  .hero .anchor-tags .cat:last-child { border-right: 1px solid var(--ink); }
+
+  .hero h1 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 84px;
+    line-height: 0.9;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    max-width: 16ch;
+    margin-bottom: 18px;
+  }
+  .hero h1.dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 60px;
+    line-height: 1.4;
+    margin-top: 18px;
+    max-width: 22ch;
+  }
+  .hero .lede {
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    line-height: 1.5;
+    color: var(--ink);
+    max-width: 64ch;
+    margin-top: 28px;
+    font-weight: 500;
+  }
+  .hero .lede sup {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--vignelli-red);
+    margin-left: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  /* Subject of post — verified-public council member named, right-of-reply notified */
+  .subject-line {
+    margin-top: 32px;
+    padding-top: 20px;
+    border-top: 1px solid var(--ink);
+    display: flex;
+    align-items: baseline;
+    gap: 14px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 11px;
+  }
+  .subject-line .label { color: var(--ink-soft); }
+  .subject-line .name {
+    background: var(--vignelli-green);
+    color: var(--paper);
+    padding: 4px 10px 3px;
+    font-family: 'Archivo Black', sans-serif;
+    letter-spacing: 0.06em;
+  }
+  .subject-line .status {
+    font-family: 'JetBrains Mono', monospace;
+    color: var(--ink-soft);
+    margin-left: auto;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+  }
+  .subject-line .status .dot {
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--vignelli-red);
+    border-radius: 50%;
+    margin-right: 8px;
+    animation: pulse 1.6s ease-in-out infinite;
+  }
+  @keyframes pulse { 0%,100% { opacity: 0.4; } 50% { opacity: 1; } }
+
+  /* ------------------ EXPANDED LEDGER ------------------ */
+  .ledger {
+    display: grid;
+    grid-template-columns: repeat(6, 1fr);
+    border-bottom: 2px solid var(--ink);
+    background: var(--paper);
+  }
+  .ledger > div {
+    padding: 24px 22px 22px;
+    border-right: 1px solid var(--paper-rule);
+  }
+  .ledger > div:last-child { border-right: none; }
+  .ledger .label {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    font-size: 10px;
+    color: var(--ink-soft);
+    margin-bottom: 8px;
+  }
+  .ledger .value {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 38px;
+    line-height: 0.95;
+    letter-spacing: -0.02em;
+    color: var(--ink);
+  }
+  .ledger .value .unit {
+    font-size: 18px;
+    margin-left: 1px;
+  }
+  .ledger .sub {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: var(--ink-soft);
+    margin-top: 6px;
+    letter-spacing: 0.04em;
+    line-height: 1.4;
+  }
+  .ledger .live::before {
+    content: '';
+    display: inline-block;
+    width: 6px; height: 6px;
+    background: var(--vignelli-red);
+    border-radius: 50%;
+    margin-right: 7px;
+    animation: pulse 1.6s ease-in-out infinite;
+    vertical-align: 2px;
+  }
+  /* response-clock cell — specifically called out */
+  .ledger .clock {
+    background: var(--ink);
+    color: var(--paper);
+    border-right: 1px solid var(--ink);
+  }
+  .ledger .clock .label { color: rgba(244, 235, 216, 0.7); }
+  .ledger .clock .sub { color: rgba(244, 235, 216, 0.7); }
+
+  /* ------------------ BODY GRID ------------------ */
+  .body {
+    display: grid;
+    grid-template-columns: 1fr 320px;
+    border-bottom: 2px solid var(--ink);
+  }
+
+  .col-main { padding: 36px 48px 56px; min-width: 0; }
+  .col-side { padding: 36px 32px 56px; border-left: 1px solid var(--ink); background: var(--paper); }
+
+  /* ------------------ ADU STRIP (wider — 5-up) ------------------ */
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    margin-bottom: 18px;
+    border-bottom: 2px solid var(--ink);
+    padding-bottom: 8px;
+  }
+  .section-head h2 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 18px;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+  }
+  .section-head h2 .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    margin-left: 14px;
+    text-transform: none;
+    letter-spacing: 0;
+    font-size: 18px;
+  }
+  .section-head .meta {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--ink-soft);
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+  }
+
+  .adu-strip {
+    display: grid;
+    grid-template-columns: repeat(5, 1fr);
+    border: 2px solid var(--ink);
+    margin-bottom: 8px;
+  }
+  .post {
+    padding: 18px 16px 14px;
+    border-right: 1px solid var(--ink);
+    aspect-ratio: 3 / 4;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    cursor: pointer;
+    position: relative;
+  }
+  .post:last-child { border-right: none; }
+  .post.public-citizen   { background: var(--paper); color: var(--ink); }
+  .post.public-council   { background: var(--vignelli-green); color: var(--paper); }
+  .post.public-journalist{ background: var(--vignelli-red); color: var(--paper); }
+  .post.shielded         { background: var(--ink); color: var(--paper); }
+  .post.public-diaspora  { background: var(--vignelli-ochre); color: var(--ink); }
+
+  .post .post-meta {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 9px;
+    line-height: 1.4;
+  }
+  .post .post-meta .role { display: block; font-size: 11px; }
+  .post .quote {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 16px;
+    line-height: 1.18;
+    letter-spacing: -0.005em;
+  }
+  .post .post-num {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 32px;
+    line-height: 0.9;
+    letter-spacing: -0.02em;
+  }
+  .post .post-num small {
+    display: block;
+    font-family: 'Archivo', sans-serif;
+    font-size: 9px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    margin-top: 4px;
+    font-weight: 700;
+    opacity: 0.85;
+  }
+  .post.shielded .waveform-flat {
+    display: flex;
+    align-items: end;
+    gap: 3px;
+    height: 36px;
+    margin-bottom: 4px;
+  }
+  .post.shielded .waveform-flat span {
+    width: 4px;
+    background: var(--paper);
+    display: block;
+  }
+
+  /* Reaction strip */
+  .reactions {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr) auto;
+    border: 2px solid var(--ink);
+    border-top: none;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .reactions > div {
+    padding: 12px 16px 10px;
+    border-right: 1px solid var(--paper);
+    cursor: pointer;
+  }
+  .reactions > div:last-child { border-right: none; }
+  .reactions > div.engaged { background: var(--vignelli-red); }
+  .reactions .name {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 11px;
+  }
+  .reactions .count {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: rgba(244, 235, 216, 0.7);
+    margin-top: 2px;
+  }
+  .reactions > div.engaged .count { color: var(--paper); }
+  .reactions .views {
+    padding: 12px 20px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    color: rgba(244, 235, 216, 0.7);
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    align-self: center;
+    white-space: nowrap;
+  }
+
+  /* ------------------ PROS / CONS CLAIM TREE ------------------ */
+  .claim-section { margin-top: 56px; }
+
+  .claim {
+    border-bottom: 1px solid var(--ink);
+    padding: 22px 0 22px;
+    display: grid;
+    grid-template-columns: 110px 1fr 130px;
+    gap: 20px;
+    align-items: start;
+  }
+  .claim:first-of-type { border-top: 2px solid var(--ink); }
+
+  .claim .tag-col {
+    display: flex;
+    flex-direction: column;
+    gap: 6px;
+  }
+  .claim .tag {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    padding: 4px 10px 3px;
+    color: var(--paper);
+    width: max-content;
+  }
+  .claim .tag.pro    { background: var(--vignelli-green); }
+  .claim .tag.con    { background: var(--vignelli-red); }
+  .claim .tag.openq  { background: var(--vignelli-ochre); color: var(--ink); }
+  .claim .id {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    color: var(--ink-soft);
+    letter-spacing: 0.04em;
+    font-weight: 600;
+  }
+
+  .claim .body {
+    font-family: 'Inter', sans-serif;
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink);
+    max-width: 60ch;
+    font-weight: 500;
+  }
+  .claim .body sup,
+  .claim .body .src {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9.5px;
+    color: var(--vignelli-red);
+    margin-left: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    cursor: pointer;
+    border-bottom: 1px solid var(--vignelli-red);
+    padding-bottom: 1px;
+  }
+  .claim .body .src.ok { color: var(--vignelli-green); border-bottom-color: var(--vignelli-green); }
+  .claim .body .author {
+    display: block;
+    margin-top: 8px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--ink-soft);
+  }
+  .claim .body .author strong { color: var(--ink); font-weight: 800; }
+
+  .claim .meta-col {
+    text-align: right;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--ink-soft);
+    line-height: 1.5;
+  }
+  .claim .meta-col .vote {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 22px;
+    color: var(--ink);
+    letter-spacing: -0.02em;
+    line-height: 1;
+    margin-bottom: 3px;
+    cursor: pointer;
+  }
+  .claim .meta-col .vote::before { content: '▲ '; font-size: 14px; vertical-align: 2px; }
+
+  /* sub-claims indent */
+  .claim.sub {
+    grid-template-columns: 90px 1fr 130px;
+    margin-left: 110px;
+    border-bottom: 1px solid var(--paper-rule);
+    border-top: 1px solid var(--paper-rule);
+    background: var(--paper-deep);
+    padding: 16px 14px;
+  }
+  .claim.sub:first-of-type { border-top: 1px solid var(--paper-rule); }
+  .claim.sub .body { font-size: 14px; }
+
+  /* ------------------ SIDEBAR — civic data ------------------ */
+  .side-block { margin-bottom: 36px; }
+  .side-block h3 {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    padding-bottom: 8px;
+    border-bottom: 2px solid var(--ink);
+  }
+  .side-block h3 .dv {
+    font-family: 'MV Faseyha', sans-serif;
+    font-weight: 700;
+    margin-left: 10px;
+    font-size: 13px;
+    letter-spacing: 0;
+    text-transform: none;
+  }
+
+  .ledger-table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 12.5px;
+  }
+  .ledger-table tr { border-bottom: 1px solid var(--paper-rule); }
+  .ledger-table tr:last-child { border-bottom: 1px solid var(--ink); }
+  .ledger-table td {
+    padding: 10px 0;
+    vertical-align: top;
+  }
+  .ledger-table .key {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--ink-soft);
+  }
+  .ledger-table .val {
+    text-align: right;
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 18px;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+  }
+  .ledger-table .val.mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    font-weight: 600;
+  }
+  .ledger-table .val sup {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 9px;
+    color: var(--vignelli-red);
+    margin-left: 4px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    cursor: pointer;
+  }
+  .ledger-table .val.over { color: var(--vignelli-red); }
+  .ledger-table .val.under { color: var(--vignelli-green); }
+
+  /* council-response clock — large, prominent */
+  .clock-card {
+    background: var(--ink);
+    color: var(--paper);
+    padding: 22px 22px 18px;
+    margin-bottom: 36px;
+  }
+  .clock-card .label {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 10.5px;
+    color: rgba(244, 235, 216, 0.7);
+    margin-bottom: 10px;
+  }
+  .clock-card .countdown {
+    font-family: 'Archivo Black', sans-serif;
+    font-size: 48px;
+    line-height: 0.9;
+    letter-spacing: -0.025em;
+  }
+  .clock-card .countdown small {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 12px;
+    margin-left: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: rgba(244, 235, 216, 0.7);
+    vertical-align: 4px;
+  }
+  .clock-card .question {
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid rgba(244, 235, 216, 0.18);
+    font-family: 'Inter', sans-serif;
+    font-style: normal;
+    font-size: 13px;
+    line-height: 1.45;
+    color: rgba(244, 235, 216, 0.92);
+  }
+  .clock-card .question .who {
+    display: block;
+    margin-top: 8px;
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    color: var(--vignelli-red);
+  }
+
+  /* Source notes */
+  .source-notes {
+    font-family: 'Inter', sans-serif;
+    font-size: 11px;
+    color: var(--ink-soft);
+    line-height: 1.6;
+    padding: 16px 0;
+    border-top: 1px solid var(--ink);
+    margin-top: 20px;
+  }
+  .source-notes strong {
+    font-family: 'Archivo', sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    font-size: 10px;
+    color: var(--ink);
+    display: block;
+    margin-bottom: 4px;
+  }
+  .source-notes .ill { color: var(--vignelli-red); font-family: 'JetBrains Mono', monospace; font-size: 10px; }
+
+  /* ------------------ FOOTER ------------------ */
+  .colophon {
+    padding: 22px 48px 32px;
+    background: var(--ink);
+    color: var(--paper);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10.5px;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    line-height: 1.7;
+    display: flex;
+    justify-content: space-between;
+    gap: 32px;
+  }
+  .colophon strong { color: var(--vignelli-red); }
+
+  .direction-tag {
+    position: fixed;
+    bottom: 18px;
+    right: 18px;
+    background: var(--ink);
+    color: var(--paper);
+    padding: 8px 12px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-weight: 700;
+    z-index: 1000;
+  }
+  .direction-tag strong { color: var(--vignelli-red); }
+</style>
+</head>
+<body>
+
+<!-- COMPACT MASTHEAD (this is page 2 of the same paper) -->
+<header class="masthead">
+  <div class="name">
+    BAARUVERI
+    <span class="dv">ހޮޅުއަށި</span>
+  </div>
+  <div class="crumb">
+    <a href="#">HOLHUASHI</a><span class="arrow">→</span><a href="#">PARLIAMENTARY</a><span class="arrow">→</span>MAAFARU AIRPORT
+  </div>
+  <div class="meta">FRIDAY · 02·05·2026</div>
+</header>
+
+<!-- LANE BREADCRUMB — full-width red band, you are in lane 02 -->
+<div class="lane-breadcrumb">
+  <span class="ord">02</span>
+  <span>PARLIAMENTARY</span>
+  <span class="dv">މަޖިލީހާ ގުޅޭ</span>
+  <span class="sep">·</span>
+  <span>INFRASTRUCTURE</span>
+  <span class="topic-id">T·02·MAA·001</span>
+</div>
+
+<!-- HERO BAND -->
+<section class="hero">
+  <div class="anchor-tags">
+    <span class="island">MAAFARU</span>
+    <span class="atoll">NOONU ATOLL</span>
+    <span class="lane">PARLIAMENTARY</span>
+    <span class="cat">INFRASTRUCTURE</span>
+  </div>
+
+  <h1>MAAFARU AIRPORT —<br>WHO DID THE GRANT BENEFIT?</h1>
+  <h1 class="dv">މާފަރު އެއަރޕޯޓު — ޢާންމުންގެ މަންފާ</h1>
+
+  <p class="lede">
+    Has the airport delivered measurable public benefit proportionate to the USD 60M+ ADFD grant? The Q3 utilisation report has not yet been gazetted. The conversation is here, ahead of it.<sup>illustrative</sup>
+  </p>
+
+  <div class="subject-line">
+    <span class="label">SUBJECT OF POST</span>
+    <span class="name">HON. AHMED SOLIH</span>
+    <span class="label" style="color:var(--ink);">ATOLL COUNCIL · MAAFARU</span>
+    <span class="status"><span class="dot"></span>RIGHT-OF-REPLY NOTIFIED · 11D ON CLOCK</span>
+  </div>
+</section>
+
+<!-- EXPANDED LEDGER -->
+<section class="ledger">
+  <div>
+    <div class="label">CLAIMS</div>
+    <div class="value num">47</div>
+    <div class="sub">5 NESTED · 12 CITED</div>
+  </div>
+  <div>
+    <div class="label">SIGNATURES</div>
+    <div class="value num"><span class="live"></span>1,238</div>
+    <div class="sub">/ 5,000 NATIONAL · +12 / 24H</div>
+  </div>
+  <div>
+    <div class="label">COUNCIL THRESHOLD</div>
+    <div class="value num" style="color:var(--vignelli-green)">16 / 16</div>
+    <div class="sub" style="color:var(--vignelli-green)">5% MET · 2026·04·11</div>
+  </div>
+  <div>
+    <div class="label">OPEN QUESTIONS</div>
+    <div class="value num">3</div>
+    <div class="sub">14·DAY CLOCK</div>
+  </div>
+  <div>
+    <div class="label">RESPONSE RATE</div>
+    <div class="value num">63<span class="unit">%</span></div>
+    <div class="sub">COUNCIL · 30D ROLLING</div>
+  </div>
+  <div class="clock">
+    <div class="label">VIEWS · ON RECORD</div>
+    <div class="value num">8.4<span class="unit">k</span></div>
+    <div class="sub">3 RESORT MEDIA · 2 NGO</div>
+  </div>
+</section>
+
+<!-- BODY -->
+<section class="body">
+
+  <main class="col-main">
+
+    <!-- ADU STRIP (5-up, wider on detail page) -->
+    <div class="section-head">
+      <h2>VOICES ON THIS QUESTION <span class="dv">އަޑުތައް</span></h2>
+      <div class="meta">8 ADU · 4 SHOWN BELOW</div>
+    </div>
+
+    <div class="adu-strip">
+      <div class="post public-journalist">
+        <div class="post-meta">
+          <span class="role">FATHMATH NASEERA</span>
+          JOURNALIST · MIHAARU
+        </div>
+        <div class="quote">"The 5-year operating costs are not in the 2024 audit."</div>
+        <div class="post-num">1.2k <small>VIDEO · 30·IV</small></div>
+      </div>
+
+      <div class="post shielded">
+        <div class="post-meta">
+          <span class="role">@YELLOW-GROUPER-12</span>
+          VERIFIED · SHIELDED · MAAFARU
+        </div>
+        <div class="waveform-flat">
+          <span style="height:30%"></span><span style="height:55%"></span><span style="height:80%"></span>
+          <span style="height:42%"></span><span style="height:90%"></span><span style="height:60%"></span>
+          <span style="height:35%"></span><span style="height:72%"></span><span style="height:50%"></span>
+          <span style="height:88%"></span><span style="height:64%"></span><span style="height:30%"></span>
+          <span style="height:78%"></span><span style="height:48%"></span><span style="height:66%"></span>
+        </div>
+        <div class="quote" style="font-size:13.5px;">"My family lost the access boat route. Nobody tracks that loss."</div>
+        <div class="post-num"><small>AUDIO · 78s · 28·IV</small></div>
+      </div>
+
+      <div class="post public-council">
+        <div class="post-meta">
+          <span class="role">A. SHAMEEM</span>
+          COUNCIL · MAAFARU
+        </div>
+        <div class="quote">"Procurement file is on /datasets/budgets.csv. Read it."</div>
+        <div class="post-num">394 <small>VIDEO · 28·IV</small></div>
+      </div>
+
+      <div class="post public-diaspora">
+        <div class="post-meta">
+          <span class="role">M. ASJADH</span>
+          VERIFIED · DIASPORA
+        </div>
+        <div class="quote">"Lost-route compensation should be a line item."</div>
+        <div class="post-num">957 <small>VIDEO · 22·IV</small></div>
+      </div>
+
+      <div class="post public-citizen" style="background:var(--paper-deep);">
+        <div class="post-meta" style="color:var(--ink-soft);">+ 4 MORE ADU</div>
+        <div class="post-num">+4 <small>OPEN STREAM →</small></div>
+        <div></div>
+      </div>
+    </div>
+
+    <!-- REACTIONS — engaged state shown -->
+    <div class="reactions">
+      <div class="engaged"><div class="name">SOURCED</div><div class="count num">142</div></div>
+      <div><div class="name">CITE NEEDED</div><div class="count num">MANY</div></div>
+      <div><div class="name">COUNTER</div><div class="count num">31</div></div>
+      <div><div class="name">FOLLOWING</div><div class="count num">A FEW</div></div>
+      <div class="views">8,402 VIEWS · TOPIC AGGREGATE</div>
+    </div>
+
+    <!-- CLAIMS — Sandbar bottom-half integrated as one civic-press register -->
+    <div class="claim-section">
+      <div class="section-head">
+        <h2>THE RECORD — PROS, CONS, OPEN QUESTIONS <span class="dv">ބަހުސް</span></h2>
+        <div class="meta">47 CLAIMS · 12 CITED</div>
+      </div>
+
+      <article class="claim">
+        <div class="tag-col">
+          <span class="tag pro">PRO · v14</span>
+          <span class="id">#C-0042</span>
+        </div>
+        <div class="body">
+          The 2024 procurement audit shows MVR 12.4M in operational savings vs. the pre-airport ferry contract.<span class="src ok">2024-Q3-AUD-MAA</span> Net benefit accrues from year three.
+          <span class="author">POSTED BY <strong>MOHAMED ASJADH</strong> · DIASPORA · 4D AGO</span>
+        </div>
+        <div class="meta-col">
+          <div class="vote num">14</div>
+          5 SUB-CLAIMS<br>2026·04·28
+        </div>
+      </article>
+
+      <article class="claim sub">
+        <div class="tag-col">
+          <span class="tag con">CON · v9</span>
+          <span class="id">#C-0043</span>
+        </div>
+        <div class="body">
+          The audit excludes lost-route compensation for the 4 affected residential dhonis.<sup>illustrative</sup> Operational savings are calculated against the wrong baseline.
+          <span class="author">POSTED BY <strong>@YELLOW-GROUPER-12</strong> · VERIFIED · SHIELDED · 3D AGO</span>
+        </div>
+        <div class="meta-col">
+          <div class="vote num">9</div>
+          2 SUB-CLAIMS
+        </div>
+      </article>
+
+      <article class="claim">
+        <div class="tag-col">
+          <span class="tag openq">OPEN Q · 11d</span>
+          <span class="id">#C-0048</span>
+        </div>
+        <div class="body">
+          ADFD grant utilisation report due 2026-Q3 has not been gazetted.<span class="src ok">gazette.gov.mv/2024-447</span> Public-benefit accounting cannot be evaluated until it is.
+          <span class="author">POSED TO <strong>HON. AHMED SOLIH</strong> · ATOLL COUNCIL · COUNCIL CLOCK · 11D REMAINING</span>
+        </div>
+        <div class="meta-col">
+          <div class="vote num">22</div>
+          3 SUB-CLAIMS<br>OPEN QUESTION
+        </div>
+      </article>
+
+      <article class="claim">
+        <div class="tag-col">
+          <span class="tag pro">PRO · v7</span>
+          <span class="id">#C-0051</span>
+        </div>
+        <div class="body">
+          Resort-employment intake for Maafaru residents rose 38% post-airport.<span class="src ok">MMPRC-2026-Q1</span> Direct benefit is measurable even before grant accounting closes.
+          <span class="author">POSTED BY <strong>@REEF-SHARK-04</strong> · VERIFIED · SHIELDED · 1D AGO</span>
+        </div>
+        <div class="meta-col">
+          <div class="vote num">7</div>
+          1 SUB-CLAIM
+        </div>
+      </article>
+
+      <article class="claim">
+        <div class="tag-col">
+          <span class="tag con">CON · v5</span>
+          <span class="id">#C-0055</span>
+        </div>
+        <div class="body">
+          The 38% intake figure includes seasonal contracts (≤ 4 months) which are not "employment" in the labour-act sense.<sup>illustrative</sup> The headline number overstates durable benefit.
+          <span class="author">POSTED BY <strong>FATHMATH NASEERA</strong> · JOURNALIST · MIHAARU · 18H AGO</span>
+        </div>
+        <div class="meta-col">
+          <div class="vote num">5</div>
+          NEW · 0 SUB
+        </div>
+      </article>
+    </div>
+
+    <div class="source-notes">
+      <strong>SOURCE NOTES</strong>
+      Population from 2022 Census (NBS). Voter register from Elections Commission 2024. Budget figures from FY26 council appropriation, gazetted 2024-12-15. Mocked figures footnoted as <span class="ill">illustrative</span>. Concept prototype — not a Government of Maldives product.
+    </div>
+  </main>
+
+  <!-- SIDEBAR -->
+  <aside class="col-side">
+
+    <!-- COUNCIL-RESPONSE CLOCK — prominent -->
+    <div class="clock-card">
+      <div class="label">COUNCIL CLOCK · OPEN QUESTION</div>
+      <div class="countdown num">11<small>DAYS</small></div>
+      <div class="question">
+        Will the ADFD grant utilisation report be gazetted by the council deadline of 2026·06·15?
+        <span class="who">POSED TO HON. AHMED SOLIH</span>
+      </div>
+    </div>
+
+    <div class="side-block">
+      <h3>ATLAS — MAAFARU <span class="dv">މާފަރު</span></h3>
+      <table class="ledger-table">
+        <tbody>
+          <tr><td class="key">ATOLL</td><td class="val mono">Noonu</td></tr>
+          <tr><td class="key">POPULATION</td><td class="val">487<sup>2022·CEN</sup></td></tr>
+          <tr><td class="key">REG. VOTERS</td><td class="val">312<sup>2024·EC</sup></td></tr>
+          <tr><td class="key">COUNCIL SEATS</td><td class="val">5</td></tr>
+          <tr><td class="key">FY26 BUDGET</td><td class="val">MVR 4.2M<sup>illustrative</sup></td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="side-block">
+      <h3>PETITION STATUS <span class="dv">ޕެޓިޝަން</span></h3>
+      <table class="ledger-table">
+        <tbody>
+          <tr><td class="key">SIGNATURES</td><td class="val">1,238</td></tr>
+          <tr><td class="key">COUNCIL · 5%</td><td class="val under">16 / 16 ✓</td></tr>
+          <tr><td class="key">PARLIAMENT · 5K</td><td class="val">1,238 / 5,000</td></tr>
+          <tr><td class="key">RATE · 24H</td><td class="val mono">+12</td></tr>
+          <tr><td class="key">DAYS LEFT</td><td class="val">37</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="side-block">
+      <h3>COUNCIL ON RECORD <span class="dv">ކައުންސިލް</span></h3>
+      <table class="ledger-table">
+        <tbody>
+          <tr><td class="key">RESPONSE RATE</td><td class="val">63<sup>30D</sup></td></tr>
+          <tr><td class="key">OPEN QUESTIONS</td><td class="val">3</td></tr>
+          <tr><td class="key">MEDIAN REPLY</td><td class="val mono">9d</td></tr>
+          <tr><td class="key">SUBSTANCE LINK-OUT</td><td class="val">42<sup>%</sup></td></tr>
+          <tr><td class="key">STANDING</td><td class="val under">RESPONSIVE</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div class="side-block">
+      <h3>OPEN DATA <span class="dv">ޑޭޓާ</span></h3>
+      <table class="ledger-table">
+        <tbody>
+          <tr><td class="key">CSV · BUDGETS</td><td class="val mono">↓</td></tr>
+          <tr><td class="key">CSV · CLAIMS</td><td class="val mono">↓</td></tr>
+          <tr><td class="key">JSON · v1</td><td class="val mono">↓</td></tr>
+          <tr><td class="key">FEED · ATOM</td><td class="val mono">↓</td></tr>
+        </tbody>
+      </table>
+    </div>
+
+  </aside>
+</section>
+
+<footer class="colophon">
+  <span>BAARUVERI · CONCEPT PROTOTYPE — NOT AN OFFICIAL GOVERNMENT PRODUCT.</span>
+  <span>NAMES &amp; FIGURES <strong>ILLUSTRATIVE</strong> · MOCK DATA FOOTNOTED · CC-BY-SA 4.0</span>
+</footer>
+
+<div class="direction-tag">
+  DIRECTION <strong>01</strong> · TOPIC DETAIL · VIGNELLI CIVIC PRESS
+</div>
+
+</body>
+</html>

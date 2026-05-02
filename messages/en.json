@@ -159,6 +159,8 @@
   },
   "thread": {
     "started_by": "Started by",
+    "started_by_label": "Started by",
+    "started_label": "Started",
     "claims": "claims",
     "votes": "votes",
     "section_claims": "Claims · pros & cons",

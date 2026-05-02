@@ -112,7 +112,7 @@ export function AtlasMap({
               {
                 id: "ocean-bg",
                 type: "background",
-                paint: { "background-color": "#e8f1f4" },
+                paint: { "background-color": "#ece2c8" },
               },
             ],
           },
@@ -177,8 +177,8 @@ export function AtlasMap({
                 10,
                 3,
               ],
-              "circle-color": "#9aa9ae",
-              "circle-opacity": 0.65,
+              "circle-color": "#2e2e2e",
+              "circle-opacity": 0.7,
               "circle-stroke-width": 0,
             },
           });
@@ -209,13 +209,13 @@ export function AtlasMap({
             id: "featured-fill",
             type: "fill",
             source: "featured",
-            paint: { "fill-color": "#7fa9b3", "fill-opacity": 0.75 },
+            paint: { "fill-color": "#c4221e", "fill-opacity": 0.85 },
           });
           map.addLayer({
             id: "featured-outline",
             type: "line",
             source: "featured",
-            paint: { "line-color": "#3d6470", "line-width": 1.5 },
+            paint: { "line-color": "#0f0f0f", "line-width": 1.5 },
           });
 
           map.on("click", "featured-fill", (e) => {
@@ -243,7 +243,7 @@ export function AtlasMap({
           type: "line",
           source: "selected-crosshair",
           paint: {
-            "line-color": "#3d6470",
+            "line-color": "#0f0f0f",
             "line-width": 1,
             "line-opacity": 0.55,
             "line-dasharray": [3, 3],
@@ -255,7 +255,7 @@ export function AtlasMap({
           source: "selected-marker",
           paint: {
             "circle-radius": 14,
-            "circle-color": "#3d6470",
+            "circle-color": "#0f0f0f",
             "circle-opacity": 0.12,
             "circle-stroke-width": 0,
           },
@@ -268,7 +268,7 @@ export function AtlasMap({
             "circle-radius": 8,
             "circle-color": "rgba(0,0,0,0)",
             "circle-stroke-width": 1.5,
-            "circle-stroke-color": "#3d6470",
+            "circle-stroke-color": "#0f0f0f",
           },
         });
         map.addLayer({
@@ -277,9 +277,9 @@ export function AtlasMap({
           source: "selected-marker",
           paint: {
             "circle-radius": 4,
-            "circle-color": "#3d6470",
+            "circle-color": "#0f0f0f",
             "circle-stroke-width": 1,
-            "circle-stroke-color": "#fbf8f3",
+            "circle-stroke-color": "#f4ebd8",
           },
         });
       });

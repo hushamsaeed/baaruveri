@@ -36,7 +36,16 @@
     "open_atlas": "އެޓްލަސް ހުޅުވާ →",
     "go_to_sandbar": "ސޭންޑްބާރ",
     "back_to_atlas": "← އެޓްލަސް",
-    "back_to_sandbar": "← ސޭންޑްބާރ"
+    "back_to_sandbar": "← ސޭންޑްބާރ",
+    "primary_nav_aria": "މައި ޞަފްޙާތައް"
+  },
+  "masthead": {
+    "brand_aria": "ބާރުވެރި ހޮޅުއަށި — ހޯމް ފީޑު",
+    "brand_line_1": "Baaruveri",
+    "brand_line_2": "Holhuashi",
+    "brand_dv": "ހޮޅުއަށި",
+    "vol_strap": "Vol. 02 · Issue 14 · 2026",
+    "publication_strap": "ދިވެހިރާއްޖޭގެ ކޮންމެ ރަށެއްގެ ޢާއްމު ޕަބްލިކް ސްކްއެއަރ"
   },
   "search": {
     "open": "ބާރުވެރި ހޯދާ",

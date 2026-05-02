@@ -1,5 +1,10 @@
 import type { Metadata } from "next";
-import { Inter, IBM_Plex_Mono } from "next/font/google";
+import {
+  Archivo,
+  Archivo_Black,
+  Inter,
+  JetBrains_Mono,
+} from "next/font/google";
 import { NextIntlClientProvider, hasLocale } from "next-intl";
 import { getTranslations, setRequestLocale } from "next-intl/server";
 import { notFound } from "next/navigation";
@@ -8,16 +13,37 @@ import { TopNav } from "@/components/top-nav";
 import { getCurrentStubUser } from "@/lib/auth-stub";
 import "../globals.css";
 
-const inter = Inter({
-  variable: "--font-sans",
+// Vignelli civic-press type system (locked 2026-05-02; spec §3).
+// Three Latin faces: Archivo Black (display, hero numerals, masthead),
+// Archivo 500/700 (labels, all-caps captions), Inter 400/500 (reading
+// body), JetBrains Mono (IDs, deltas, dates, source-link tags).
+// Dhivehi MV Faseyha 400/700 stays loaded from RaajjeFonts CDN via
+// the @font-face declarations in globals.css.
+const archivoBlack = Archivo_Black({
+  variable: "--font-display",
   subsets: ["latin"],
+  weight: "400", // Archivo Black ships only as 400 — already heavy
   display: "swap",
 });
 
-const plexMono = IBM_Plex_Mono({
+const archivo = Archivo({
+  variable: "--font-sans-bold",
+  subsets: ["latin"],
+  weight: ["500", "600", "700", "800"],
+  display: "swap",
+});
+
+const inter = Inter({
+  variable: "--font-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+  display: "swap",
+});
+
+const jetbrainsMono = JetBrains_Mono({
   variable: "--font-mono",
   subsets: ["latin"],
-  weight: ["400", "500", "600"],
+  weight: ["500", "700"],
   display: "swap",
 });
 
@@ -80,7 +106,7 @@ export default async function LocaleLayout({
     <html
       lang={locale}
       dir={dir}
-      className={`${inter.variable} ${plexMono.variable} h-full`}
+      className={`${archivoBlack.variable} ${archivo.variable} ${inter.variable} ${jetbrainsMono.variable} h-full`}
     >
       <body className="min-h-full flex flex-col bg-background text-foreground">
         <NextIntlClientProvider>

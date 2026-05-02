@@ -37,12 +37,27 @@
 }
 
 @theme inline {
+  /* Vignelli civic press — locked 2026-05-02 (supersedes Saafu).
+     Spec: design-studies/baaruveri-vignelli-civic-press-spec.md §2-3. */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-sans);
-  --font-mono: var(--font-mono);
+  --font-display: var(--font-display);          /* Archivo Black — hero, ledger numerals, masthead */
+  --font-sans: var(--font-sans);                /* Inter — reading body */
+  --font-sans-bold: var(--font-sans-bold);      /* Archivo 500/600/700/800 — labels, captions, all-caps */
+  --font-mono: var(--font-mono);                /* JetBrains Mono — IDs, dates, deltas, source tags */
   --font-dv: 'MV Faseyha', 'MV Boli', 'Noto Sans Thaana', sans-serif;
-  --font-heading: var(--font-sans);
+  --font-heading: var(--font-display);
+  /* Vignelli lane colors (Maldivian flag tones, editorial-tuned) */
+  --color-vignelli-red: var(--vignelli-red);
+  --color-vignelli-green: var(--vignelli-green);
+  --color-vignelli-ochre: var(--vignelli-ochre);
+  --color-vignelli-ink: var(--vignelli-ink);
+  --color-paper: var(--paper);
+  --color-paper-rule: var(--paper-rule);
+  --color-paper-deep: var(--paper-deep);
+  --color-ink: var(--ink);
+  --color-ink-soft: var(--ink-soft);
+  /* shadcn-compat aliases (existing components use these) */
   --color-sidebar-ring: var(--sidebar-ring);
   --color-sidebar-border: var(--sidebar-border);
   --color-sidebar-accent-foreground: var(--sidebar-accent-foreground);
@@ -76,57 +91,71 @@
   --color-rule-strong: var(--rule-strong);
   --color-over: var(--over);
   --color-under: var(--under);
-  --radius-sm: calc(var(--radius) * 0.6);
-  --radius-md: calc(var(--radius) * 0.8);
-  --radius-lg: var(--radius);
-  --radius-xl: calc(var(--radius) * 1.4);
-  --radius-2xl: calc(var(--radius) * 1.8);
-  --radius-3xl: calc(var(--radius) * 2.2);
-  --radius-4xl: calc(var(--radius) * 2.6);
+  --radius-sm: 0;                                /* Vignelli is poster-rigid — no rounded corners (spec §10) */
+  --radius-md: 0;
+  --radius-lg: 0;
+  --radius-xl: 0;
+  --radius-2xl: 0;
+  --radius-3xl: 0;
+  --radius-4xl: 0;
 }
 
-/* ===== Saafu palette — Pentagram civic-ledger ===== */
-/* Direction locked 2026-05-01 (see project_design_direction.md) */
+/* ===== Vignelli civic-press palette =====
+   Direction locked 2026-05-02 (see project_design_direction.md;
+   full spec at design-studies/baaruveri-vignelli-civic-press-spec.md §2). */
 :root {
-  --background: oklch(0.984 0.003 90);          /* paper: #fafaf8 */
-  --foreground: oklch(0.18 0 0);                /* ink: #1a1a1a */
-  --card: oklch(1 0 0);                          /* white */
-  --card-foreground: oklch(0.18 0 0);
-  --popover: oklch(1 0 0);
-  --popover-foreground: oklch(0.18 0 0);
-  --primary: oklch(0.46 0.067 196);             /* gazette teal: #0d6e6e */
-  --primary-foreground: oklch(0.985 0 0);
-  --secondary: oklch(0.96 0.013 196);           /* teal soft: #e8f1f1 */
-  --secondary-foreground: oklch(0.46 0.067 196);
-  --muted: oklch(0.96 0.005 90);                /* near-paper */
-  --muted-foreground: oklch(0.51 0 0);          /* #6b6b6b */
-  --accent: oklch(0.96 0.013 196);
-  --accent-foreground: oklch(0.46 0.067 196);
-  --destructive: oklch(0.51 0.13 50);           /* over warning: #b54708 */
-  --over: oklch(0.51 0.13 50);                   /* over: #b54708 */
-  --under: oklch(0.49 0.10 155);                 /* under positive: #1f7a4d */
-  --border: oklch(0.88 0 0);                     /* hairline: #dcdcdc */
-  --rule: oklch(0.88 0 0);                       /* hairline: #dcdcdc */
-  --rule-strong: oklch(0.69 0 0);                /* stronger rule */
-  --input: oklch(0.88 0 0);
-  --ring: oklch(0.46 0.067 196);                 /* gazette teal */
-  --chart-1: oklch(0.46 0.067 196);              /* primary teal */
-  --chart-2: oklch(0.51 0.13 50);                /* warning over */
-  --chart-3: oklch(0.49 0.10 155);               /* positive under */
-  --chart-4: oklch(0.62 0 0);                    /* neutral mid */
-  --chart-5: oklch(0.34 0 0);                    /* neutral dark */
-  --radius: 0.25rem;                             /* tight, archival; not pill */
-  --sidebar: oklch(0.984 0.003 90);
-  --sidebar-foreground: oklch(0.18 0 0);
-  --sidebar-primary: oklch(0.46 0.067 196);
-  --sidebar-primary-foreground: oklch(0.985 0 0);
-  --sidebar-accent: oklch(0.96 0.013 196);
-  --sidebar-accent-foreground: oklch(0.46 0.067 196);
-  --sidebar-border: oklch(0.88 0 0);
-  --sidebar-ring: oklch(0.46 0.067 196);
+  /* Paper / ink (the only neutral surfaces) */
+  --paper: #f4ebd8;                              /* warm cream — Knoll-catalogue paper */
+  --paper-rule: #d4c9b0;                         /* hairline rule, warm */
+  --paper-deep: #ece2c8;                         /* subtle alternation for ledger rows */
+  --ink: #0f0f0f;                                /* near-black ink */
+  --ink-soft: #2e2e2e;                           /* secondary ink */
+  /* Four lane colors — Maldivian flag tones, editorial-tuned */
+  --vignelli-red: #c4221e;                       /* Parliamentary · mosque-roof red */
+  --vignelli-green: #1e5f3d;                     /* Council · palm green */
+  --vignelli-ochre: #d99a1f;                     /* Presidency · turmeric ochre */
+  --vignelli-ink: #0f0f0f;                       /* Judiciary · ink only */
+
+  /* shadcn-compat aliases — all map onto the Vignelli tokens above */
+  --background: var(--paper);
+  --foreground: var(--ink);
+  --card: var(--paper);                          /* spec §10: no card surfaces; flush to page */
+  --card-foreground: var(--ink);
+  --popover: var(--paper);
+  --popover-foreground: var(--ink);
+  --primary: var(--vignelli-red);                /* compose CTA + verb-action color (spec §7.9) */
+  --primary-foreground: var(--paper);
+  --secondary: var(--paper-deep);
+  --secondary-foreground: var(--ink);
+  --muted: var(--paper-deep);
+  --muted-foreground: var(--ink-soft);
+  --accent: var(--paper-deep);
+  --accent-foreground: var(--ink);
+  --destructive: var(--vignelli-red);
+  --over: var(--vignelli-red);                   /* legacy "over" semantics now ride the Parliamentary red */
+  --under: var(--vignelli-green);                /* legacy "under" semantics now ride the Council green */
+  --border: var(--paper-rule);
+  --rule: var(--paper-rule);
+  --rule-strong: var(--ink);
+  --input: var(--paper-rule);
+  --ring: var(--ink);
+  --chart-1: var(--vignelli-red);
+  --chart-2: var(--vignelli-green);
+  --chart-3: var(--vignelli-ochre);
+  --chart-4: var(--vignelli-ink);
+  --chart-5: var(--ink-soft);
+  --radius: 0;                                   /* spec §10: no rounded corners */
+  --sidebar: var(--paper);
+  --sidebar-foreground: var(--ink);
+  --sidebar-primary: var(--vignelli-red);
+  --sidebar-primary-foreground: var(--paper);
+  --sidebar-accent: var(--paper-deep);
+  --sidebar-accent-foreground: var(--ink);
+  --sidebar-border: var(--paper-rule);
+  --sidebar-ring: var(--ink);
 }
 
-/* Dark mode left at scaffold defaults (intentionally unused — Saafu is light-only) */
+/* Dark mode left at scaffold defaults (intentionally unused — Vignelli is light-only) */
 .dark {
   --background: oklch(0.145 0 0);
   --foreground: oklch(0.985 0 0);
@@ -154,17 +183,33 @@
   }
   body {
     @apply bg-background text-foreground antialiased;
-    font-feature-settings: "ss01", "cv11";
   }
   html {
     @apply font-sans;
   }
-  /* Tabular numerals everywhere (Saafu signature) */
+  /* Tabular numerals everywhere (Vignelli numerals are monumental — spec §3 §9.1).
+     Latin numerals only; Eastern-Arabic numerals are forbidden because they
+     break tabular alignment in the bilingual ledger views. */
   .num,
   table,
-  .figure {
+  .figure,
+  body {
     font-variant-numeric: tabular-nums;
     font-feature-settings: "tnum";
+  }
+  /* Display utility — Archivo Black, hero scale rules per spec §3 */
+  .font-display {
+    font-family: var(--font-display, 'Archivo Black'), var(--font-sans-bold, 'Archivo'), sans-serif;
+    line-height: 0.95;
+    letter-spacing: -0.025em;
+    text-transform: uppercase;
+  }
+  /* All-caps label utility — spec §3 */
+  .font-label {
+    font-family: var(--font-sans-bold, 'Archivo'), sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
   }
 }
 

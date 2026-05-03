@@ -83,7 +83,8 @@
     "islands_label": "Per-island profiles",
     "islands_meta": "{count, plural, one {# featured island} other {# featured islands}}",
     "what_is_label": "What is this?",
-    "what_is_body": "Baaruveri (“empowered”) is a civic platform that makes per-island accountability legible. Anonymous reading and discussion; eFaas-verified signatures and flagged-issue posting. A concept prototype, not an official Government of Maldives product."
+    "what_is_body": "Baaruveri (“empowered”) is a civic platform that makes per-island accountability legible. Anonymous reading and discussion; eFaas-verified signatures and flagged-issue posting. A concept prototype, not an official Government of Maldives product.",
+    "side_index_aria": "Issue index and compose action"
   },
   "atlas": {
     "title": "Per-island civic profiles",
@@ -248,6 +249,18 @@
     "education": "Education",
     "decentralisation": "Decentralisation",
     "procurement": "Procurement"
+  },
+  "side_index": {
+    "heading": "Index by domain"
+  },
+  "posting_rail": {
+    "heading": "Verified citizens",
+    "role": "Verified · {island}",
+    "reason": "eFaas-verified {date}.",
+    "footnote": "Activity ranking not yet wired — verified-citizen list shown."
+  },
+  "compose_cta": {
+    "label": "Post"
   },
   "budget_table": {
     "col_line_item": "Line item",
